@@ -1,7 +1,7 @@
 package hwr.oop
 
 class KotlinExample {
-  fun sayHello(): String {
-    return "Hello World!"
-  }
+    fun sayHello(): String {
+      return "Hello World!"
+    }
 }
