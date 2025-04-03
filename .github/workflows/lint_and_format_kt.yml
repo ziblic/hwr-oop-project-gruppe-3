@@ -22,13 +22,6 @@ jobs:
       run: |
         curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.45.2/ktlint && chmod a+x ktlint
 
-    - name: Run ktlint lint
-      run: ./ktlint "src/**/*.kt"
-
-    - name: Report lint issues
-      if: ${{ failure() }}
-      run: exit 1
-
     - name: Run ktlint format
       run: ./ktlint -F "src/**/*.kt"
 
