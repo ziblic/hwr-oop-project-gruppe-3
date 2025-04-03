@@ -1,5 +1,5 @@
-![Lint/Fmt](https://github.com/ziblic/hwr-oop-project-gruppe-3/actions/workflows/main.yml/badge.svg)
-![Testing](https://github.com/ziblic/hwr-oop-project-gruppe-3/actions/workflows/test.yml/badge.svg)
+![Lint/Fmt](https://github.com/ziblic/hwr-oop-project-gruppe-3/actions/workflows/lint_and_format_kt.yml/badge.svg?branch=main)
+![Testing](https://github.com/ziblic/hwr-oop-project-gruppe-3/actions/workflows/test.yml/badge.svg?branch=main)
 
 # HWR OOP Lecture Project Template
 
