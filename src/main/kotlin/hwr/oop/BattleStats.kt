@@ -1,7 +1,7 @@
 package hwr.oop
 
 class BattleStats(
-    private val hp : Int,
+    private val hp: Int,
     private val speed: Int,
     private val attack: Int,
     private val defense: Int,

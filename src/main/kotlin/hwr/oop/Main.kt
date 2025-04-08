@@ -1,6 +1,6 @@
 package hwr.oop
 
 fun main() {
-  val answer = KotlinExample().sayHello()
-  println(answer)
+    val answer = KotlinExample().sayHello()
+    println(answer)
 }
