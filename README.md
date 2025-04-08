@@ -41,12 +41,11 @@ chmod +x ./cli
 ## Abstract
 
 A simple Pokémon clone written in Kotlin with OOP and test-driven development in mind.
-[TODO]: # (State most important features.)
-[TODO]: # (State the most interesting problems you encountered during the project.)
+
+<!-- TODO: State most important features. -->
+<!-- TODO: State the most interesting problems you encountered during the project. -->
 
 ## Feature List
-
-[TODO]: # (For each feature implemented, add a row to the table!)
 
 | Number | Feature | Tests |
 |--------|---------|-------|
@@ -54,11 +53,6 @@ A simple Pokémon clone written in Kotlin with OOP and test-driven development i
 
 ## Additional Dependencies
 
-[TODO]: # (For each additional dependency your project requires- Add an additional row to the table!)
-
 | Number | Dependency Name | Dependency Description | Why is it necessary? |
 |--------|-----------------|------------------------|----------------------|
 | 1      | /               | /                      | /                    |
-
-[maven]: https://maven.apache.org/
-[just]: https://github.com/casey/just
