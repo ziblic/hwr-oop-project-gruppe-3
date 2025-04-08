@@ -33,3 +33,7 @@ build/
 ### Maven Wrapper ###
 /.mvn/wrapper/maven-wrapper.jar
 /.env/
+
+### Custom ###
+.stylua.toml
+kls_database.db
