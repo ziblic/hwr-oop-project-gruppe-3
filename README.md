@@ -1,3 +1,6 @@
+![Lint/Fmt](https://github.com/ziblic/hwr-oop-project-gruppe-3/actions/workflows/lint_and_format_kt.yml/badge.svg?branch=main)
+![Testing](https://github.com/ziblic/hwr-oop-project-gruppe-3/actions/workflows/test.yml/badge.svg?branch=main)
+
 # HWR OOP Lecture Project Template
 
 [TODO]: # (Change README.md Headline to better fit to your project!)
