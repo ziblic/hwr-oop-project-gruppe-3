@@ -1,33 +1,81 @@
 package hwr.oop
 
-import com.xenomachina.argparser.ArgParser
-import com.xenomachina.argparser.default
-import com.xenomachina.argparser.mainBody
+class GameParser(private val gameManager: GameManager) {
+    fun parseArguments(args: Array<String>) {
+        if (args.isEmpty()) {
+            printHelp()
+            return
+        }
 
-class Arguments(parser: ArgParser) {
-    val verbose by parser.flagging("-v", "--verbose", help = "enable verbose mode")
+        val command = args[0]
+        when (command) {
+            "new_trainer" -> gameManager.createTrainer()
+            "add_monster" -> gameManager.addMonster()
+            "battle" -> gameManager.initiateBattle()
+            "view" -> gameManager.viewStatus()
+            "on" -> gameManager.toggleFeature()
+            "help" -> printHelp()
+            else -> println("'$command' is not a valid command. Use 'help' for usage.")
+        }
+    }
 
-    val name by parser.storing("-N", "--name", help = "name of the widget").default("John Doe")
-
-    val size by parser.storing("-s", "--size", help = "size of the plumbus") { toInt() }
-
-    val sources by
-    parser.positionalList("SOURCE", help = "source filename", sizeRange = 1..Int.MAX_VALUE)
-
-    val destination by parser.positional("DEST", help = "destination filename")
+    private fun printHelp() {
+        println("Usage: command [options]")
+        println("Commands:")
+        println("  new_trainer     - Creates a new trainer")
+        println("  add_monster     - Adds a new monster to your roster")
+        println("  battle          - Starts a battle sequence")
+        println("  view            - Views current game status")
+        println("  on              - Select a attack to perform")
+        println("  help            - Shows this help message")
+    }
 }
 
-fun main(args: Array<String>) = mainBody {
-    val parsedArgs = ArgParser(args).parseInto(::Arguments)
-    parsedArgs.run {
-        println(
-            """
-                verbose =     $verbose
-                name =        $name
-                size =        $size
-                sources =     $sources
-                destination = $destination
-            """.trimIndent()
-        )
+class GameLoader {
+    fun loadGame() {
+        println("Loading game from savefile...")
     }
+
+    fun saveGame() {
+        println("Saving game to savefile...")
+    }
+}
+
+class GameManager(private val gameLoader: GameLoader) {
+
+    fun createTrainer() {
+        println("Executing new_trainer...")
+    }
+
+    fun addMonster() {
+        println("Executing add_monster...")
+    }
+
+    fun initiateBattle() {
+        println("Executing battle...")
+    }
+
+    fun viewStatus() {
+        println("Executing view...")
+    }
+
+    fun toggleFeature() {
+        println("Executing attack...")
+    }
+
+    private fun manageLoading() {
+        gameLoader.loadGame()
+    }
+
+    private fun manageSaving() {
+        gameLoader.saveGame()
+    }
+}
+
+fun main(args: Array<String>) {
+    // TODO: add the file to the GameLoader constructor
+    val gameLoader = GameLoader()
+    val gameManager = GameManager(gameLoader)
+    val parser = GameParser(gameManager)
+    parser.parseArguments(args)
 }
