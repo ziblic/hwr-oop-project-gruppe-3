@@ -52,13 +52,19 @@ class GameParser(private val gameManager: GameManager) {
         }
 
         val monsterName = args[0]
-        val hp = parseToInt(args[1])
-        val attack = parseToInt(args[2])
-        val defense = parseToInt(args[3])
-        val specAttack = parseToInt(args[4])
-        val specDefense = parseToInt(args[5])
 
-        gameManager.addMonster(monsterName, hp, attack, defense, specAttack, specDefense)
+        try {
+            val hp = parseToInt(args[1])
+            val attack = parseToInt(args[2])
+            val defense = parseToInt(args[3])
+            val specAttack = parseToInt(args[4])
+            val specDefense = parseToInt(args[5])
+
+            gameManager.addMonster(monsterName, hp, attack, defense, specAttack, specDefense)
+        } catch (e: Exception) {
+            println("Some of the provided arguments could not be parsed to an Int")
+            return
+        }
     }
 
     private fun newBattleProcedure(args: Array<String>) {
@@ -122,15 +128,15 @@ class GameManager(private val gameLoader: GameLoader) {
     }
 
     fun addMonster(
-        monsterName: String,
-        hp: Int,
-        attack: Int,
-        defense: Int,
-        specAttack: Int,
-        specDefense: Int
+            monsterName: String,
+            hp: Int,
+            attack: Int,
+            defense: Int,
+            specAttack: Int,
+            specDefense: Int
     ) {
         println(
-            """Created new Monster:
+                """Created new Monster:
 Name:               $monsterName
 HP:                 $hp
 Attack:             $attack
