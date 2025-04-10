@@ -2,10 +2,10 @@ package hwr.oop
 
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
-import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.jvm.isAccessible
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
+import kotlin.reflect.full.declaredFunctions
+import kotlin.reflect.jvm.isAccessible
 
 class MainTest : AnnotationSpec() {
 
@@ -74,9 +74,9 @@ class MainTest : AnnotationSpec() {
     fun `Create new trainer`() {
         val output = captureStandardOut { main(arrayOf("new_trainer", "Bob")) }.trim()
         assertThat(output)
-                .isEqualTo(
-                        captureStandardOut { GameManager(GameLoader()).createTrainer("Bob") }.trim()
-                )
+            .isEqualTo(
+                captureStandardOut { GameManager(GameLoader()).createTrainer("Bob") }.trim()
+            )
     }
 
     @Test
@@ -88,17 +88,17 @@ class MainTest : AnnotationSpec() {
     @Test
     fun `Add new monster`() {
         val output =
-                captureStandardOut {
-                            main(arrayOf("add_monster", "Bob", "100", "20", "10", "5", "20"))
-                        }
-                        .trim()
+            captureStandardOut {
+                main(arrayOf("add_monster", "Bob", "100", "20", "10", "5", "20"))
+            }
+                .trim()
         assertThat(output)
-                .isEqualTo(
-                        captureStandardOut {
-                                    GameManager(GameLoader()).addMonster("Bob", 100, 20, 10, 5, 20)
-                                }
-                                .trim()
-                )
+            .isEqualTo(
+                captureStandardOut {
+                    GameManager(GameLoader()).addMonster("Bob", 100, 20, 10, 5, 20)
+                }
+                    .trim()
+            )
     }
 
     @Test
@@ -110,23 +110,23 @@ class MainTest : AnnotationSpec() {
     @Test
     fun `Add new monster with not enough or to many arguments`() {
         val output1 =
-                captureStandardOut {
-                            main(
-                                    arrayOf(
-                                            "add_monster",
-                                            "Bob",
-                                            "100",
-                                            "20",
-                                            "10",
-                                            "5",
-                                            "20",
-                                            "too many args"
-                                    )
-                            )
-                        }
-                        .trim()
+            captureStandardOut {
+                main(
+                    arrayOf(
+                        "add_monster",
+                        "Bob",
+                        "100",
+                        "20",
+                        "10",
+                        "5",
+                        "20",
+                        "too many args"
+                    )
+                )
+            }
+                .trim()
         val output2 =
-                captureStandardOut { main(arrayOf("add_monster", "Bob", "100", "20", "10")) }.trim()
+            captureStandardOut { main(arrayOf("add_monster", "Bob", "100", "20", "10")) }.trim()
         assertThat(output1).isEqualTo(addMonsterHelp)
         assertThat(output2).isEqualTo(addMonsterHelp)
     }
@@ -135,12 +135,12 @@ class MainTest : AnnotationSpec() {
     fun `Start new battle`() {
         val output = captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa")) }.trim()
         assertThat(output)
-                .isEqualTo(
-                        captureStandardOut {
-                                    GameManager(GameLoader()).initiateBattle("Bob", "Lisa")
-                                }
-                                .trim()
-                )
+            .isEqualTo(
+                captureStandardOut {
+                    GameManager(GameLoader()).initiateBattle("Bob", "Lisa")
+                }
+                    .trim()
+            )
     }
 
     @Test
@@ -152,8 +152,8 @@ class MainTest : AnnotationSpec() {
     @Test
     fun `Start new battle with not enough or to many arguments`() {
         val output1 =
-                captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa", "to many args")) }
-                        .trim()
+            captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa", "to many args")) }
+                .trim()
         val output2 = captureStandardOut { main(arrayOf("new_battle", "Bob")) }.trim()
         assertThat(output1).isEqualTo(newBattleHelp)
         assertThat(output2).isEqualTo(newBattleHelp)
@@ -163,7 +163,7 @@ class MainTest : AnnotationSpec() {
     fun `View battle status`() {
         val output = captureStandardOut { main(arrayOf("view_battle", "0")) }.trim()
         assertThat(output)
-                .isEqualTo(captureStandardOut { GameManager(GameLoader()).viewStatus() }.trim())
+            .isEqualTo(captureStandardOut { GameManager(GameLoader()).viewStatus() }.trim())
     }
 
     @Test
@@ -176,12 +176,12 @@ class MainTest : AnnotationSpec() {
     fun `Attack enemy`() {
         val output = captureStandardOut { main(arrayOf("on", "0", "Bob", "Tackle")) }.trim()
         assertThat(output)
-                .isEqualTo(
-                        captureStandardOut {
-                                    GameManager(GameLoader()).performAttack(0, "Bob", "Tackle")
-                                }
-                                .trim()
-                )
+            .isEqualTo(
+                captureStandardOut {
+                    GameManager(GameLoader()).performAttack(0, "Bob", "Tackle")
+                }
+                    .trim()
+            )
     }
 
     @Test
@@ -193,8 +193,8 @@ class MainTest : AnnotationSpec() {
     @Test
     fun `Attack enemy with not enough or to many arguments`() {
         val output1 =
-                captureStandardOut { main(arrayOf("on", "0", "Lisa", "Tackle", "to many args")) }
-                        .trim()
+            captureStandardOut { main(arrayOf("on", "0", "Lisa", "Tackle", "to many args")) }
+                .trim()
         val output2 = captureStandardOut { main(arrayOf("on", "0", "Lisa")) }.trim()
         assertThat(output1).isEqualTo(attackHelp)
         assertThat(output2).isEqualTo(attackHelp)
