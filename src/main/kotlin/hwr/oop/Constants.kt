@@ -1,10 +1,10 @@
 package hwr.oop
 
 val commands: List<String> =
-        listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
+    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
 
 val defaultHelp =
-        """___________  _____  ___     _______
+    """___________  _____  ___     _______
 ("     _   ")(\"   \|"  \   |   __ "\
  )__/  \\__/ |.\\   \    |  (. |__) :)
     \\_ /    |: \.   \\  |  |:  ____/
@@ -22,7 +22,7 @@ Totally Not Pokémon Usage: ./tnp command [arguments]
       help            - Shows this help message"""
 
 val newTrainerHelp =
-        """._____          _                   _   _      _
+    """._____          _                   _   _      _
 |_   _| __ __ _(_)_ __   ___ _ __  | | | | ___| |_ __
   | || '__/ _` | | '_ \ / _ \ '__| | |_| |/ _ \ | '_ \
   | || | | (_| | | | | |  __/ |    |  _  |  __/ | |_) |
@@ -32,7 +32,7 @@ val newTrainerHelp =
 Usage: ./tnp new_trainer <TRAINERNAME>"""
 
 val addMonsterHelp =
-        """.   _       _     _   __  __                 _              _   _      _
+    """.   _       _     _   __  __                 _              _   _      _
    / \   __| | __| | |  \/  | ___  _ __  ___| |_ ___ _ __  | | | | ___| |_ __
   / _ \ / _` |/ _` | | |\/| |/ _ \| '_ \/ __| __/ _ \ '__| | |_| |/ _ \ | '_ \
  / ___ \ (_| | (_| | | |  | | (_) | | | \__ \ ||  __/ |    |  _  |  __/ | |_) |
@@ -42,7 +42,7 @@ val addMonsterHelp =
 Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <ATTACK_VALUE> <DEFENSE_VALUE> <SPECIALATTACK_VALUE> <SPECIALDEFENSE_VALUE>"""
 
 val newBattleHelp =
-        """._   _                 ____        _   _   _        _   _      _
+    """._   _                 ____        _   _   _        _   _      _
 | \ | | _____      __ | __ )  __ _| |_| |_| | ___  | | | | ___| |_ __
 |  \| |/ _ \ \ /\ / / |  _ \ / _` | __| __| |/ _ \ | |_| |/ _ \ | '_ \
 | |\  |  __/\ V  V /  | |_) | (_| | |_| |_| |  __/ |  _  |  __/ | |_) |
@@ -53,7 +53,7 @@ Usage: ./tnp new_battle <TRAINERNAME 1> <TRAINERNAME 2>"""
 
 // TODO: Add help message when implemented
 val viewBattleHelp =
-        """__     ___                 ____        _   _   _        _   _      _
+    """__     ___                 ____        _   _   _        _   _      _
 \ \   / (_) _____      __ | __ )  __ _| |_| |_| | ___  | | | | ___| |_ __
  \ \ / /| |/ _ \ \ /\ / / |  _ \ / _` | __| __| |/ _ \ | |_| |/ _ \ | '_ \
   \ V / | |  __/\ V  V /  | |_) | (_| | |_| |_| |  __/ |  _  |  __/ | |_) |
@@ -63,7 +63,7 @@ val viewBattleHelp =
 Usage: ./tnp view_battle <ARGUMENTS>"""
 
 val attackHelp =
-        """.   _   _   _             _      _   _      _
+    """.   _   _   _             _      _   _      _
    / \ | |_| |_ __ _  ___| | __ | | | | ___| |_ __
   / _ \| __| __/ _` |/ __| |/ / | |_| |/ _ \ | '_ \
  / ___ \ |_| || (_| | (__|   <  |  _  |  __/ | |_) |
