@@ -32,10 +32,10 @@ all of its tests:
 just build
 ```
 
-To run the command line interface use the `./cli` command. Make sure that it is executable:
+To run the command line interface use the `./tnp` command. Make sure that it is executable:
 
 ```
-chmod +x ./cli
+chmod +x ./tnp
 ```
 
 ## Abstract
