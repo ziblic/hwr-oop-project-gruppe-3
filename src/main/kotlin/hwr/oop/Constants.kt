@@ -1,10 +1,10 @@
 package hwr.oop
 
 val commands: List<String> =
-        listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
+    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
 
 val defaultHelp =
-        """Usage: command [options]
+    """Usage: command [options]
    Commands:
       new_trainer     - Creates a new trainer
       add_monster     - Adds a new monster to your roster
