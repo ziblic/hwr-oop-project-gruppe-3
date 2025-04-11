@@ -4,6 +4,7 @@ import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
+import java.io.PrintStream
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.jvm.isAccessible
 
@@ -15,21 +16,53 @@ class MainTest : AnnotationSpec() {
     // CLI TESTS
     @Test
     fun `test parseToInt with valid input`() {
-        val gameParser = GameParser(GameManager(GameLoader()))
-        val parseToIntMethod = gameParser::class.declaredFunctions.find { it.name == "parseToInt" }
-        parseToIntMethod?.isAccessible = true // Allow access to the private method
+        val originalOut = System.out
 
-        val result = parseToIntMethod?.call(gameParser, "123") as? Int
-        assertThat(result).isEqualTo(123)
+        System.setOut(
+            PrintStream(
+                object : java.io.OutputStream() {
+                    override fun write(b: Int) {}
+                }
+            )
+        )
+
+        try {
+            val args = arrayOf("")
+            val gameParser = GameParser(args)
+            val parseToIntMethod =
+                gameParser::class.declaredFunctions.find { it.name == "parseToInt" }
+            parseToIntMethod?.isAccessible = true // Allow access to the private method
+
+            val result = parseToIntMethod?.call(gameParser, "123") as? Int
+            assertThat(result).isEqualTo(123)
+        } finally {
+            System.setOut(originalOut)
+        }
     }
 
     @Test
     fun `test parseToInt with invalid input`() {
-        val gameParser = GameParser(GameManager(GameLoader()))
-        val parseToIntMethod = gameParser::class.declaredFunctions.find { it.name == "parseToInt" }
-        parseToIntMethod?.isAccessible = true
+        val originalOut = System.out
 
-        assertThrows(Exception::class.java) { parseToIntMethod?.call(gameParser, "abc") }
+        System.setOut(
+            PrintStream(
+                object : java.io.OutputStream() {
+                    override fun write(b: Int) {}
+                }
+            )
+        )
+
+        try {
+            val args = arrayOf("")
+            val gameParser = GameParser(args)
+            val parseToIntMethod =
+                gameParser::class.declaredFunctions.find { it.name == "parseToInt" }
+            parseToIntMethod?.isAccessible = true
+
+            assertThrows(Exception::class.java) { parseToIntMethod?.call(gameParser, "abc") }
+        } finally {
+            System.setOut(originalOut)
+        }
     }
 
     @Test
@@ -74,9 +107,7 @@ class MainTest : AnnotationSpec() {
     fun `Create new trainer`() {
         val output = captureStandardOut { main(arrayOf("new_trainer", "Bob")) }.trim()
         assertThat(output)
-            .isEqualTo(
-                captureStandardOut { GameManager(GameLoader()).createTrainer("Bob") }.trim()
-            )
+            .isEqualTo(captureStandardOut { GameManager().createTrainer("Bob") }.trim())
     }
 
     @Test
@@ -94,9 +125,7 @@ class MainTest : AnnotationSpec() {
                 .trim()
         assertThat(output)
             .isEqualTo(
-                captureStandardOut {
-                    GameManager(GameLoader()).addMonster("Bob", 100, 20, 10, 5, 20)
-                }
+                captureStandardOut { GameManager().addMonster("Bob", 100, 20, 10, 5, 20) }
                     .trim()
             )
     }
@@ -136,10 +165,7 @@ class MainTest : AnnotationSpec() {
         val output = captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa")) }.trim()
         assertThat(output)
             .isEqualTo(
-                captureStandardOut {
-                    GameManager(GameLoader()).initiateBattle("Bob", "Lisa")
-                }
-                    .trim()
+                captureStandardOut { GameManager().initiateBattle("Bob", "Lisa") }.trim()
             )
     }
 
@@ -162,8 +188,7 @@ class MainTest : AnnotationSpec() {
     @Test
     fun `View battle status`() {
         val output = captureStandardOut { main(arrayOf("view_battle", "0")) }.trim()
-        assertThat(output)
-            .isEqualTo(captureStandardOut { GameManager(GameLoader()).viewStatus() }.trim())
+        assertThat(output).isEqualTo(captureStandardOut { GameManager().viewStatus() }.trim())
     }
 
     @Test
@@ -177,9 +202,7 @@ class MainTest : AnnotationSpec() {
         val output = captureStandardOut { main(arrayOf("on", "0", "Bob", "Tackle")) }.trim()
         assertThat(output)
             .isEqualTo(
-                captureStandardOut {
-                    GameManager(GameLoader()).performAttack(0, "Bob", "Tackle")
-                }
+                captureStandardOut { GameManager().performAttack(0, "Bob", "Tackle") }
                     .trim()
             )
     }

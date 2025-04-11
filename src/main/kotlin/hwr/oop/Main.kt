@@ -1,8 +1,11 @@
 package hwr.oop
 
-import java.io.File
+class GameParser(private val args: Array<String>) {
 
-class GameParser(private val gameManager: GameManager) {
+    init {
+        this.parseArguments(this.args)
+    }
+
     fun parseArguments(args: Array<String>) {
         if (args.isEmpty()) {
             printHelp()
@@ -42,6 +45,7 @@ class GameParser(private val gameManager: GameManager) {
             return
         }
 
+        val gameManager = GameManager()
         gameManager.createTrainer(args[0])
     }
 
@@ -60,6 +64,7 @@ class GameParser(private val gameManager: GameManager) {
             val specAttack = parseToInt(args[4])
             val specDefense = parseToInt(args[5])
 
+            val gameManager = GameManager()
             gameManager.addMonster(monsterName, hp, attack, defense, specAttack, specDefense)
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
@@ -73,6 +78,7 @@ class GameParser(private val gameManager: GameManager) {
             return
         }
 
+        val gameManager = GameManager()
         gameManager.initiateBattle(args[0], args[1])
     }
 
@@ -82,6 +88,7 @@ class GameParser(private val gameManager: GameManager) {
             return
         }
 
+        val gameManager = GameManager()
         gameManager.viewStatus()
     }
 
@@ -91,7 +98,13 @@ class GameParser(private val gameManager: GameManager) {
             return
         }
 
-        gameManager.performAttack(parseToInt(args[0]), args[1], args[2])
+        try {
+            val gameManager = GameManager()
+            gameManager.performAttack(parseToInt(args[0]), args[1], args[2])
+        } catch (e: Exception) {
+            println("Some of the provided arguments could not be parsed to an Int")
+            return
+        }
     }
 
     private fun printHelp(command: String = "") {
@@ -106,72 +119,6 @@ class GameParser(private val gameManager: GameManager) {
     }
 }
 
-class GameLoader {
-
-    private val saveFile = File(System.getProperty("user.dir"), "save_file.json")
-    // TODO: Use JSON later
-    lateinit var saveData: Set<Int>
-
-    fun loadGame() {
-        println("Loading game from savefile...")
-    }
-
-    fun saveGame() {
-        println("Saving game to savefile...")
-    }
-}
-
-class GameManager(private val gameLoader: GameLoader) {
-
-    fun createTrainer(trainerName: String) {
-        println("Created Trainer with name $trainerName")
-    }
-
-    fun addMonster(
-        monsterName: String,
-        hp: Int,
-        attack: Int,
-        defense: Int,
-        specAttack: Int,
-        specDefense: Int
-    ) {
-        println(
-            """Created new Monster:
-Name:               $monsterName
-HP:                 $hp
-Attack:             $attack
-Defense:            $defense
-Special Attack:     $specAttack
-Special Defense:    $specDefense
-"""
-        )
-    }
-
-    fun initiateBattle(trainer1: String, trainer2: String) {
-        println("Executing battle...")
-    }
-
-    fun viewStatus() {
-        println("Executing view...")
-    }
-
-    // TODO: Change Type to `selectedAttack: Attack`
-    fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {
-        println("Executing attack...")
-    }
-
-    private fun manageLoading() {
-        gameLoader.loadGame()
-    }
-
-    private fun manageSaving() {
-        gameLoader.saveGame()
-    }
-}
-
 fun main(args: Array<String>) {
-    val gameLoader = GameLoader()
-    val gameManager = GameManager(gameLoader)
-    val parser = GameParser(gameManager)
-    parser.parseArguments(args)
+    GameParser(args)
 }
