@@ -10,9 +10,6 @@ import kotlin.reflect.jvm.isAccessible
 
 class MainTest : AnnotationSpec() {
 
-    // TODO: test gameloader
-    // TODO: test gamemanager
-
     // CLI TESTS
     @Test
     fun `test parseToInt with valid input`() {

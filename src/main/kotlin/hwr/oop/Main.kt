@@ -3,17 +3,17 @@ package hwr.oop
 class GameParser(private val args: Array<String>) {
 
     init {
-        this.parseArguments(this.args)
+        this.parseArguments()
     }
 
-    fun parseArguments(args: Array<String>) {
-        if (args.isEmpty()) {
+    fun parseArguments() {
+        if (this.args.isEmpty()) {
             printHelp()
             return
         }
 
-        val command = args[0]
-        val arguments = args.sliceArray(1..args.size - 1)
+        val command = this.args[0]
+        val arguments = this.args.sliceArray(1..this.args.size - 1)
         when (command) {
             commands[0] -> this.createTrainerProcedure(arguments)
             commands[1] -> this.addMonsterProcedure(arguments)
@@ -82,6 +82,7 @@ class GameParser(private val args: Array<String>) {
         gameManager.initiateBattle(args[0], args[1])
     }
 
+    // TODO: Rework when the view logic is implemented
     private fun viewBattleProcedure(args: Array<String>) {
         if (args.isEmpty()) {
             println(viewBattleHelp)
