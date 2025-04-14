@@ -1,4 +1,4 @@
-package hwr.oop
+package hwr.oop.tnp
 
 data class BattleStats(
     val hp: Int,

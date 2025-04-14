@@ -1,4 +1,6 @@
-package hwr.oop
+package hwr.oop.tnp
+
+const val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
 
 const val defaultHelp =
     """___________  _____  ___     _______
