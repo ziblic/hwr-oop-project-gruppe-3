@@ -21,9 +21,9 @@ class GameParser(private val args: Array<String>) {
             commands[3] -> this.viewBattleProcedure(arguments)
             commands[4] -> this.performAttackProcedure(arguments)
             commands[5] -> {
-                try {
+                if (args.size > 1) {
                     printHelp(args[1])
-                } catch (e: ArrayIndexOutOfBoundsException) {
+                } else {
                     printHelp()
                 }
             }
@@ -109,14 +109,8 @@ class GameParser(private val args: Array<String>) {
     }
 
     private fun printHelp(command: String = "") {
-        when (command) {
-            commands[0] -> println(newTrainerHelp)
-            commands[1] -> println(addMonsterHelp)
-            commands[2] -> println(newBattleHelp)
-            commands[3] -> println(viewBattleHelp)
-            commands[4] -> println(attackHelp)
-            else -> println(defaultHelp)
-        }
+        val helpMsg = commandsHelpMap.getOrDefault(command, defaultHelp)
+        println(helpMsg)
     }
 }
 
