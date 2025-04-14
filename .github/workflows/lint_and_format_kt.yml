@@ -44,6 +44,12 @@ jobs:
 
     - name: Push changes
       if: steps.diff.outcome == 'failure'
-      run: git push origin HEAD:${{ github.event.pull_request.head.ref }}
+      run: |
+          if [ -z "${{ github.event.pull_request.head.ref }}" ]
+          then
+            git push origin main
+          else
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
