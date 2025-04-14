@@ -8,31 +8,31 @@ class BattleStatsTest : AnnotationSpec() {
 
     @Test
     fun `test battleStats has HP`() {
-        assertThat(battleStats.getHp()).isEqualTo(200)
+        assertThat(battleStats.hp).isEqualTo(200)
     }
 
     @Test
     fun `test battleStats has speed`() {
-        assertThat(battleStats.getSpeed()).isEqualTo(100)
+        assertThat(battleStats.speed).isEqualTo(100)
     }
 
     @Test
     fun `test battleStats has attack`() {
-        assertThat(battleStats.getAttack()).isEqualTo(30)
+        assertThat(battleStats.attack).isEqualTo(30)
     }
 
     @Test
     fun `test battleStats has defense`() {
-        assertThat(battleStats.getDefense()).isEqualTo(30)
+        assertThat(battleStats.defense).isEqualTo(30)
     }
 
     @Test
     fun `test battleStats has special attack`() {
-        assertThat(battleStats.getSpecialAttack()).isEqualTo(40)
+        assertThat(battleStats.specialAttack).isEqualTo(40)
     }
 
     @Test
     fun `test battleStats has special defense`() {
-        assertThat(battleStats.getSpecialDefense()).isEqualTo(40)
+        assertThat(battleStats.specialDefense).isEqualTo(40)
     }
 }
