@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
 
     - name: Set up JDK
       uses: actions/setup-java@v2
@@ -25,7 +27,7 @@ jobs:
         curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.45.2/ktlint && chmod a+x ktlint
 
     - name: Run ktlint format
-      run: ./ktlint -F "src/**/*.kt"
+      run: ./ktlint -F "src/**/*.kt" "test/**/*.kt"
 
     - name: Check for changed files
       run: git diff --exit-code --name-only
@@ -42,6 +44,12 @@ jobs:
 
     - name: Push changes
       if: steps.diff.outcome == 'failure'
-      run: git push
+      run: |
+          if [ -z "${{ github.event.pull_request.head.ref }}" ]
+          then
+            git push origin main
+          else
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
