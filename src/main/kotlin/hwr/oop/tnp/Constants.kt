@@ -1,4 +1,6 @@
-package hwr.oop
+package hwr.oop.tnp
+
+const val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
 
 val commands: List<String> =
     listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
