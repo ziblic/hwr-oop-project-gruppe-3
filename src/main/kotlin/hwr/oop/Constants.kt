@@ -1,8 +1,5 @@
 package hwr.oop
 
-val commands: List<String> =
-    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
-
 val defaultHelp =
     """___________  _____  ___     _______
 ("     _   ")(\"   \|"  \   |   __ "\
@@ -71,3 +68,16 @@ val attackHelp =
                                              |_|
 
 Usage: ./tnp on <BATTLE_ID> <TRAINERNAME> <ATTACKNAME>"""
+
+val commands: List<String> =
+    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
+
+val commandsHelpMap: Map<String, String> =
+    mapOf(
+        commands[0] to newTrainerHelp,
+        commands[1] to addMonsterHelp,
+        commands[2] to newBattleHelp,
+        commands[3] to viewBattleHelp,
+        commands[4] to attackHelp,
+        commands[5] to defaultHelp,
+    )
