@@ -10,5 +10,4 @@ class TypeTest : AnnotationSpec() {
     fun `test type has Type Wasser`() {
         assertThat(type.getName()).isEqualTo("Wasser")
     }
-    }
-
+}

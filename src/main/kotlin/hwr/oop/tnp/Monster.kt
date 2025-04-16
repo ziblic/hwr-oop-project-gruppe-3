@@ -2,18 +2,19 @@ package hwr.oop.tnp
 
 import kotlin.math.max
 
-class Monster(private val name: String,
-              private val stats:BattleStats,
-              private val type:Type,
-              private val attacks: List<Attack>
+class Monster(
+    private val name: String,
+    private val stats: BattleStats,
+    private val type: Type,
+    private val attacks: List<Attack>
 ) {
-    private var hp : Int =stats.hp
+    private var hp: Int = stats.hp
 
-    fun getHp() : Int {
+    fun getHp(): Int {
         return this.hp
     }
 
-    fun getName() : String {
+    fun getName(): String {
         return this.name
     }
 
@@ -21,23 +22,21 @@ class Monster(private val name: String,
         return this.stats
     }
 
-    fun getType() : Type {
+    fun getType(): Type {
         return this.type
     }
 
-    fun getAttack() :List<Attack>{
+    fun getAttack(): List<Attack> {
         return this.attacks
     }
 
-    fun attack(other: Monster){
- TODO()
+    fun attack(other: Monster) {
+        TODO()
     }
 
-    fun takeDamage(amountOfDamage: Int){
+    fun takeDamage(amountOfDamage: Int) {
 
-        val newHp = max(this.hp-amountOfDamage, 0)
+        val newHp = max(this.hp - amountOfDamage, 0)
         this.hp = newHp
     }
-
-
 }
