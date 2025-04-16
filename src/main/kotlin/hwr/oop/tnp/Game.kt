@@ -1,6 +1,6 @@
 package hwr.oop.tnp
 
-class GameManager {
+class Game {
 
     private val gameLoader = GameLoader()
 

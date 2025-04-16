@@ -45,7 +45,7 @@ class GameParser(private val args: Array<String>) {
             return
         }
 
-        val gameManager = GameManager()
+        val gameManager = Game()
         gameManager.createTrainer(args[0])
     }
 
@@ -64,7 +64,7 @@ class GameParser(private val args: Array<String>) {
             val specAttack = parseToInt(args[4])
             val specDefense = parseToInt(args[5])
 
-            val gameManager = GameManager()
+            val gameManager = Game()
             gameManager.addMonster(monsterName, hp, attack, defense, specAttack, specDefense)
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
@@ -78,7 +78,7 @@ class GameParser(private val args: Array<String>) {
             return
         }
 
-        val gameManager = GameManager()
+        val gameManager = Game()
         gameManager.initiateBattle(args[0], args[1])
     }
 
@@ -89,7 +89,7 @@ class GameParser(private val args: Array<String>) {
             return
         }
 
-        val gameManager = GameManager()
+        val gameManager = Game()
         gameManager.viewStatus()
     }
 
@@ -100,7 +100,7 @@ class GameParser(private val args: Array<String>) {
         }
 
         try {
-            val gameManager = GameManager()
+            val gameManager = Game()
             gameManager.performAttack(parseToInt(args[0]), args[1], args[2])
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")

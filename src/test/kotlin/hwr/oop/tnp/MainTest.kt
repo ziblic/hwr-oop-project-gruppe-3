@@ -103,8 +103,7 @@ class MainTest : AnnotationSpec() {
     @Test
     fun `Create new trainer`() {
         val output = captureStandardOut { main(arrayOf("new_trainer", "Bob")) }.trim()
-        assertThat(output)
-            .isEqualTo(captureStandardOut { GameManager().createTrainer("Bob") }.trim())
+        assertThat(output).isEqualTo(captureStandardOut { Game().createTrainer("Bob") }.trim())
     }
 
     @Test
@@ -122,8 +121,7 @@ class MainTest : AnnotationSpec() {
                 .trim()
         assertThat(output)
             .isEqualTo(
-                captureStandardOut { GameManager().addMonster("Bob", 100, 20, 10, 5, 20) }
-                    .trim()
+                captureStandardOut { Game().addMonster("Bob", 100, 20, 10, 5, 20) }.trim()
             )
     }
 
@@ -161,9 +159,7 @@ class MainTest : AnnotationSpec() {
     fun `Start new battle`() {
         val output = captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa")) }.trim()
         assertThat(output)
-            .isEqualTo(
-                captureStandardOut { GameManager().initiateBattle("Bob", "Lisa") }.trim()
-            )
+            .isEqualTo(captureStandardOut { Game().initiateBattle("Bob", "Lisa") }.trim())
     }
 
     @Test
@@ -185,7 +181,7 @@ class MainTest : AnnotationSpec() {
     @Test
     fun `View battle status`() {
         val output = captureStandardOut { main(arrayOf("view_battle", "0")) }.trim()
-        assertThat(output).isEqualTo(captureStandardOut { GameManager().viewStatus() }.trim())
+        assertThat(output).isEqualTo(captureStandardOut { Game().viewStatus() }.trim())
     }
 
     @Test
@@ -198,10 +194,7 @@ class MainTest : AnnotationSpec() {
     fun `Attack enemy`() {
         val output = captureStandardOut { main(arrayOf("on", "0", "Bob", "Tackle")) }.trim()
         assertThat(output)
-            .isEqualTo(
-                captureStandardOut { GameManager().performAttack(0, "Bob", "Tackle") }
-                    .trim()
-            )
+            .isEqualTo(captureStandardOut { Game().performAttack(0, "Bob", "Tackle") }.trim())
     }
 
     @Test
