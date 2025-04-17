@@ -15,7 +15,4 @@ class TypeTest : AnnotationSpec() {
     fun `test type Water is effectless against Plant`() {
         assertThat(type.effectlessAgainst).isEqualTo(Type.Plant)
     }
-
-
-    }
-
+}

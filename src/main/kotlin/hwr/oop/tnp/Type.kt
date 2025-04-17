@@ -9,19 +9,19 @@ enum class Type {
 
     val effectiveAgainst: Type?
         get() = when (this) {
-            Water  -> Fire
-            Fire   -> Plant
-            Plant  -> Water
+            Water -> Fire
+            Fire -> Plant
+            Plant -> Water
             Spirit -> Spirit
-            else   -> null
+            else -> null
         }
 
     val effectlessAgainst: Type?
         get() = when (this) {
-            Water  -> Plant
-            Fire   -> Water
-            Plant  -> Fire
+            Water -> Plant
+            Fire -> Water
+            Plant -> Fire
             Spirit -> Spirit
-            else   -> null
+            else -> null
         }
 }
