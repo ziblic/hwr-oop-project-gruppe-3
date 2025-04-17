@@ -5,8 +5,9 @@ import org.assertj.core.api.Assertions.assertThat
 
 class MonsterTest : AnnotationSpec() {
     private val stats = BattleStats(200, 20, 20, 20, 40, 40)
-    private val monstertype = Type("wasser")
+    private val monstertype = Type.Water
     private val attacks=listOf(Attack(),Attack())
+
 
     private val monster = Monster(
         "Kevin", stats,
@@ -40,5 +41,16 @@ class MonsterTest : AnnotationSpec() {
     fun `Monster takes 20 danmage`(){
         monster.takeDamage(20)
         assertThat(monster.getHp()).isEqualTo(200-20)
+    }
+
+    @Test
+    fun `check if Monster is not KO`(){
+        assertThat(monster.isKO()).isFalse()
+    }
+
+    @Test
+    fun `check if Monster is KO`(){
+        monster.takeDamage(200)
+        assertThat(monster.isKO()).isTrue()
     }
 }
