@@ -12,16 +12,20 @@ enum class Type {
             Water -> Fire
             Fire -> Plant
             Plant -> Water
-            Spirit -> Spirit
             else -> null
         }
 
-    val effectlessAgainst: Type?
+    val lessEffectiveAgainst: Type?
         get() = when (this) {
             Water -> Plant
             Fire -> Water
             Plant -> Fire
-            Spirit -> Spirit
+            else -> null
+        }
+    val noEffectAgainst: Type?
+        get() = when (this) {
+            Spirit -> Normal
+            Normal -> Spirit
             else -> null
         }
 }

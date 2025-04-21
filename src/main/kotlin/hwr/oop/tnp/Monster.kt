@@ -7,7 +7,7 @@ class Monster(
     private val stats: BattleStats,
     private val type: Type,
     private val attacks: List<Attack>,
-    private var hp: Int = stats.hp
+
 ) {
 
     fun getHp(): Int {
@@ -26,7 +26,7 @@ class Monster(
         return this.type
     }
 
-    fun getAttack(): List<Attack> {
+    fun getAttacks(): List<Attack> {
         return this.attacks
     }
 
@@ -35,16 +35,11 @@ class Monster(
     }
 
     fun isKO(): Boolean {
-        if (hp == 0) {
-            return true
-        } else {
-            return false
-        }
+        return this.stats.hp == 0
     }
 
     fun takeDamage(amountOfDamage: Int) {
 
-        val newHp = max(this.hp - amountOfDamage, 0)
-        this.hp = newHp
+        this.stats.hp = max(this.stats.hp - amountOfDamage, 0)
     }
 }
