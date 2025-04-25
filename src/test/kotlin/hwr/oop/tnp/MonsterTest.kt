@@ -21,17 +21,13 @@ class MonsterTest : AnnotationSpec() {
     }
 
     @Test
-    fun `Monster with 200Hp has Hp 200`() {
-        assertThat(monster.getHp()).isEqualTo(200)
-    }
-
-    @Test
     fun `Monster has correct Stats `() {
-        assertThat(monster.getSpeed()).isEqualTo(20)
-        assertThat(monster.getAttack()).isEqualTo(20)
-        assertThat(monster.getDefense()).isEqualTo(20)
-        assertThat(monster.getSpecialAttack()).isEqualTo(40)
-        assertThat(monster.getSpecialDefense()).isEqualTo(40)
+        assertThat(monster.getHp()).isEqualTo(stats.hp)
+        assertThat(monster.getSpeed()).isEqualTo(stats.speed)
+        assertThat(monster.getAttack()).isEqualTo(stats.attack)
+        assertThat(monster.getDefense()).isEqualTo(stats.defense)
+        assertThat(monster.getSpecialAttack()).isEqualTo(stats.specialAttack)
+        assertThat(monster.getSpecialDefense()).isEqualTo(stats.specialDefense)
     }
 
     @Test
@@ -45,9 +41,18 @@ class MonsterTest : AnnotationSpec() {
     }
 
     @Test
-    fun `Monster takes 20 danmage`() {
-        monster.takeDamage(20)
-        assertThat(monster.getHp()).isEqualTo(200 - 20)
+    fun `Monster takes 20 damage`() {
+        val hp = monster.getHp()
+        val damage_amount = 20
+        monster.takeDamage(damage_amount)
+        assertThat(monster.getHp()).isEqualTo(hp - damage_amount)
+    }
+
+    @Test
+    fun `Monster cant get negative Hp by taking damage`() {
+        val hp = monster.getHp()
+        monster.takeDamage(hp - 20)
+        assertThat(monster.getHp()).isEqualTo(0)
     }
 
     @Test
@@ -57,7 +62,8 @@ class MonsterTest : AnnotationSpec() {
 
     @Test
     fun `check if Monster is KO`() {
-        monster.takeDamage(200)
+        val hp = monster.getHp()
+        monster.takeDamage(hp)
         assertThat(monster.isKO()).isTrue()
     }
 }
