@@ -7,20 +7,23 @@ class TypeTest : AnnotationSpec() {
 
     @Test
     fun `test type Water is effective against fire and less effective against Plant`() {
-        assertThat(Type.Water.effectiveAgainst).isEqualTo(Type.Fire)
-        assertThat(Type.Water.lessEffectiveAgainst).isEqualTo(Type.Plant)
+        val monsterType = Type.Water
+        assertThat(monsterType.effectiveAgainst).isEqualTo(Type.Fire)
+        assertThat(monsterType.lessEffectiveAgainst).isEqualTo(Type.Plant)
     }
 
     @Test
     fun `test type fire is effective against plant and less effective against Water`() {
-        assertThat(Type.Fire.effectiveAgainst).isEqualTo(Type.Plant)
-        assertThat(Type.Fire.lessEffectiveAgainst).isEqualTo(Type.Water)
+        val monsterType = Type.Fire
+        assertThat(monsterType.effectiveAgainst).isEqualTo(Type.Plant)
+        assertThat(monsterType.lessEffectiveAgainst).isEqualTo(Type.Water)
     }
 
     @Test
     fun `test type plant is effective against water and less effective against Fire`() {
-        assertThat(Type.Plant.effectiveAgainst).isEqualTo(Type.Water)
-        assertThat(Type.Plant.lessEffectiveAgainst).isEqualTo(Type.Fire)
+        val monsterType = Type.Plant
+        assertThat(monsterType.effectiveAgainst).isEqualTo(Type.Water)
+        assertThat(monsterType.lessEffectiveAgainst).isEqualTo(Type.Fire)
     }
 
     @Test
