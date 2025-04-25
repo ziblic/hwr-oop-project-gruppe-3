@@ -24,9 +24,14 @@ class MonsterTest : AnnotationSpec() {
         assertThat(monster.getHp()).isEqualTo(200)
     }
 
+
     @Test
     fun `Monster has correct Stats `() {
-        assertThat(monster.getBattleStats()).isEqualTo(stats)
+        assertThat(monster.getSpeed()).isEqualTo(20)
+        assertThat(monster.getAttack()).isEqualTo(20)
+        assertThat(monster.getDefense()).isEqualTo(20)
+        assertThat(monster.getSpecialAttack()).isEqualTo(40)
+        assertThat(monster.getSpecialDefense()).isEqualTo(40)
     }
     @Test
     fun `Monster with Type Wasser has Type Wasser`() {

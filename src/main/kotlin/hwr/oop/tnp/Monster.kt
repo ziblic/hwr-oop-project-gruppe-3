@@ -9,17 +9,31 @@ class Monster(
     private val attacks: List<Attack>,
 
 ) {
-
+    fun getName(): String {
+        return this.name
+    }
     fun getHp(): Int {
         return this.stats.hp
     }
 
-    fun getName(): String {
-        return this.name
+    fun getSpeed(): Int {
+        return this.stats.speed
     }
 
-    fun getBattleStats(): BattleStats {
-        return this.stats
+    fun getAttack(): Int {
+        return this.stats.attack
+    }
+
+    fun getDefense() : Int {
+        return this.stats.defense
+    }
+
+    fun getSpecialAttack() : Int {
+        return this.stats.specialAttack
+    }
+
+    fun getSpecialDefense() : Int {
+        return this.stats.specialDefense
     }
 
     fun getType(): Type {
