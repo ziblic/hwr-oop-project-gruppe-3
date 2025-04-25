@@ -6,12 +6,13 @@ import org.assertj.core.api.Assertions.assertThat
 class MonsterTest : AnnotationSpec() {
     private val stats = BattleStats(200, 20, 20, 20, 40, 40)
     private val monstertype = Type.Water
-    private val attacks = listOf(Attack(), Attack())
+    private val attacks = listOf(TODO("Attack class not implemented yet"))
 
     private val monster = Monster(
-        "Kevin", stats,
+        "Kevin",
+        stats,
         monstertype,
-        attacks = TODO(),
+        attacks = TODO("Attack class not implemented yet"),
     )
 
     @Test
@@ -32,14 +33,17 @@ class MonsterTest : AnnotationSpec() {
         assertThat(monster.getSpecialAttack()).isEqualTo(40)
         assertThat(monster.getSpecialDefense()).isEqualTo(40)
     }
+
     @Test
     fun `Monster with Type Wasser has Type Wasser`() {
         assertThat(monster.getType()).isEqualTo(monstertype)
     }
+
     @Test
     fun `Monster with attacks X has attacks X`() {
         assertThat(monster.getAttack()).isEqualTo(attacks)
     }
+
     @Test
     fun `Monster takes 20 danmage`() {
         monster.takeDamage(20)

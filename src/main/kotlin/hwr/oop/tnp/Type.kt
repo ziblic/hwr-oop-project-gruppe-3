@@ -22,6 +22,7 @@ enum class Type {
             Plant -> Fire
             else -> null
         }
+
     val noEffectAgainst: Type?
         get() = when (this) {
             Spirit -> Normal

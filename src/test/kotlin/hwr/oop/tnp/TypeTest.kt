@@ -5,42 +5,31 @@ import org.assertj.core.api.Assertions.assertThat
 
 class TypeTest : AnnotationSpec() {
 
-    private val water = Type.Water
     @Test
-    fun `test type Water is effective against fire`() {
-        assertThat(water.effectiveAgainst).isEqualTo(Type.Fire)
-    }
-    @Test
-    fun `test type Water is less effective against Plant`() {
-        assertThat(water.lessEffectiveAgainst).isEqualTo(Type.Plant)
+    fun `test type Water is effective against fire and less effective against Plant`() {
+        assertThat(Type.Water.effectiveAgainst).isEqualTo(Type.Fire)
+        assertThat(Type.Water.lessEffectiveAgainst).isEqualTo(Type.Plant)
     }
 
-    private val fire = Type.Fire
     @Test
-    fun `test type fire is effective against plant`() {
-        assertThat(fire.effectiveAgainst).isEqualTo(Type.Plant)
+    fun `test type fire is effective against plant and less effective against Water`() {
+        assertThat(Type.Fire.effectiveAgainst).isEqualTo(Type.Plant)
+        assertThat(Type.Fire.lessEffectiveAgainst).isEqualTo(Type.Water)
     }
+
     @Test
-    fun `test type fire is less effective against water`() {
-        assertThat(fire.lessEffectiveAgainst).isEqualTo(Type.Water)
+    fun `test type plant is effective against water and less effective against Fire`() {
+        assertThat(Type.Plant.effectiveAgainst).isEqualTo(Type.Water)
+        assertThat(Type.Plant.lessEffectiveAgainst).isEqualTo(Type.Fire)
     }
-    private val plant = Type.Plant
-    @Test
-    fun `test type plant is effective against water`() {
-        assertThat(plant.effectiveAgainst).isEqualTo(Type.Water)
-    }
-    @Test
-    fun `test type plant is less effective against fire`() {
-        assertThat(plant.lessEffectiveAgainst).isEqualTo(Type.Fire)
-    }
-    private val spirit = Type.Spirit
+
     @Test
     fun `test type spirit has no Effect against normal`() {
-        assertThat(spirit.noEffectAgainst).isEqualTo(Type.Normal)
+        assertThat(Type.Spirit.noEffectAgainst).isEqualTo(Type.Normal)
     }
-    private val normal = Type.Normal
+
     @Test
     fun `test type normal has no Effect against spirit`() {
-        assertThat(normal.noEffectAgainst).isEqualTo(Type.Spirit)
+        assertThat(Type.Normal.noEffectAgainst).isEqualTo(Type.Spirit)
     }
 }

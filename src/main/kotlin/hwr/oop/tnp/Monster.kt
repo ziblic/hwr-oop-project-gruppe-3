@@ -7,11 +7,11 @@ class Monster(
     private val stats: BattleStats,
     private val type: Type,
     private val attacks: List<Attack>,
-
 ) {
     fun getName(): String {
         return this.name
     }
+
     fun getHp(): Int {
         return this.stats.hp
     }
@@ -45,7 +45,7 @@ class Monster(
     }
 
     fun attack(other: Monster) {
-        TODO()
+        TODO("Needs to be implemented")
     }
 
     fun isKO(): Boolean {
@@ -53,7 +53,6 @@ class Monster(
     }
 
     fun takeDamage(amountOfDamage: Int) {
-
         this.stats.hp = max(this.stats.hp - amountOfDamage, 0)
     }
 }
