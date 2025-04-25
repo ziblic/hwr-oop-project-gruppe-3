@@ -24,15 +24,15 @@ class Monster(
         return this.stats.attack
     }
 
-    fun getDefense() : Int {
+    fun getDefense(): Int {
         return this.stats.defense
     }
 
-    fun getSpecialAttack() : Int {
+    fun getSpecialAttack(): Int {
         return this.stats.specialAttack
     }
 
-    fun getSpecialDefense() : Int {
+    fun getSpecialDefense(): Int {
         return this.stats.specialDefense
     }
 

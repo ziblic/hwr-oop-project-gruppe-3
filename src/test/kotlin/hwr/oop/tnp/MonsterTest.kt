@@ -24,7 +24,6 @@ class MonsterTest : AnnotationSpec() {
         assertThat(monster.getHp()).isEqualTo(200)
     }
 
-
     @Test
     fun `Monster has correct Stats `() {
         assertThat(monster.getSpeed()).isEqualTo(20)

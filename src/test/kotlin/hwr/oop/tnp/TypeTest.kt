@@ -43,5 +43,4 @@ class TypeTest : AnnotationSpec() {
     fun `test type normal has no Effect against spirit`() {
         assertThat(normal.noEffectAgainst).isEqualTo(Type.Spirit)
     }
-
 }
