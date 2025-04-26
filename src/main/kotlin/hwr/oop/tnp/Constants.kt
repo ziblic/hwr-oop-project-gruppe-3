@@ -38,7 +38,7 @@ const val addMonsterHelp =
 /_/   \_\__,_|\__,_| |_|  |_|\___/|_| |_|___/\__\___|_|    |_| |_|\___|_| .__/
                                                                         |_|
 
-Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <ATTACK_VALUE> <DEFENSE_VALUE> <SPECIALATTACK_VALUE> <SPECIALDEFENSE_VALUE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>]"""
+Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <ATTACK_VALUE> <DEFENSE_VALUE> <SPECIALATTACK_VALUE> <SPECIALDEFENSE_VALUE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER>"""
 
 const val newBattleHelp =
     """._   _                 ____        _   _   _        _   _      _

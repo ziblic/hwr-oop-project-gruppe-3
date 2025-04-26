@@ -50,13 +50,14 @@ class GameParser(private val args: Array<String>) {
     }
 
     private fun addMonsterProcedure(args: Array<String>) {
-        if (args.isEmpty() || (args.size >= 7 && args.size <= 10)) {
+        if (args.isEmpty() || (args.size >= 8 && args.size <= 11)) {
             println(addMonsterHelp)
             return
         }
 
         val monsterName = args[0]
-        val attacks = args.sliceArray(6..args.size - 1).toList()
+        val attacks = args.sliceArray(6..args.size - 2).toList()
+        val trainerName = args[args.size - 1]
 
         try {
             val hp = parseToInt(args[1])
@@ -66,7 +67,16 @@ class GameParser(private val args: Array<String>) {
             val specDefense = parseToInt(args[5])
 
             val game = Game()
-            game.addMonster(monsterName, hp, attack, defense, specAttack, specDefense, attacks)
+            game.addMonster(
+                monsterName,
+                hp,
+                attack,
+                defense,
+                specAttack,
+                specDefense,
+                attacks,
+                trainerName
+            )
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
             return
