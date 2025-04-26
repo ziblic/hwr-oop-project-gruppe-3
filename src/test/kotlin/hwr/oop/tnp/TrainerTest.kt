@@ -14,8 +14,8 @@ class TrainerTest : AnnotationSpec() {
     @Test
     fun `test trainer has monsters`() {
         val bs = BattleStats(100, 100, 100, 100, 100, 100)
-        val m1 = Monster("Peter", bs, Type(), emptyList<Attack>())
-        val m2 = Monster("Hans", bs, Type(), emptyList<Attack>())
+        val m1 = Monster("Peter", bs, Type.Water, emptyList<Attack>())
+        val m2 = Monster("Hans", bs, Type.Fire, emptyList<Attack>())
 
         val name = "Alex"
         val trainer = Trainer(name, mutableListOf(m1, m2))
