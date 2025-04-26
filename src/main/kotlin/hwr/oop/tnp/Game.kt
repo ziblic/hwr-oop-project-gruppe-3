@@ -1,8 +1,7 @@
 package hwr.oop.tnp
-import java.io.File
 import org.json.JSONArray
 import org.json.JSONObject
-
+import java.io.File
 
 class Game {
 
@@ -49,7 +48,6 @@ class Game {
 
         addMonsterToTrainer(trainerName, monsterName)
     }
-
 
     private fun addMonsterToTrainer(trainerName: String, monsterName: String) {
         val trainerFile = File("data/trainers/$trainerName.json")
@@ -126,11 +124,14 @@ class Game {
             .put("battleId", battleId)
             .put("status", "initiated")
             .put("rounds", JSONArray())
-            .put("trainers", JSONArray().put(
-                JSONObject().put("name", trainer1).put("monsters", trainer1Monsters)
-            ).put(
-                JSONObject().put("name", trainer2).put("monsters", trainer2Monsters)
-            ))
+            .put(
+                "trainers",
+                JSONArray().put(
+                    JSONObject().put("name", trainer1).put("monsters", trainer1Monsters)
+                ).put(
+                    JSONObject().put("name", trainer2).put("monsters", trainer2Monsters)
+                )
+            )
 
         val battleFile = File(battleDir, "$battleId.json")
         battleFile.writeText(battleJson.toString(4)) // pretty print

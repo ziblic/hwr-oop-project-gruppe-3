@@ -1,16 +1,12 @@
 package hwr.oop.tnp
 
-
-
 import io.kotest.core.spec.style.AnnotationSpec
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.assertThrows
-import java.io.File
-import org.json.JSONArray
 import org.json.JSONObject
+import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.PrintStream
-
 
 class GameTest : AnnotationSpec() {
 
@@ -160,7 +156,7 @@ class GameTest : AnnotationSpec() {
 
         // Cleanup
         monsterFile.delete()
-        trainerFile.delete()  // Ensure trainer does NOT exist
+        trainerFile.delete() // Ensure trainer does NOT exist
 
         // Attempt to add monster
         val exception = assertThrows<IllegalArgumentException> {
