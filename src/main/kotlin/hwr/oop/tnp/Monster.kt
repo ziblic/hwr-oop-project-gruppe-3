@@ -45,7 +45,8 @@ class Monster(
     }
 
     fun attack(other: Monster) {
-        TODO("Needs to be implemented")
+        // TODO: Add the advanced damage calculation here
+        this.stats.hp = this.stats.hp - other.stats.attack
     }
 
     fun isKO(): Boolean {
