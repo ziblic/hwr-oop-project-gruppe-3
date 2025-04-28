@@ -1,25 +1,29 @@
 package hwr.oop.tnp
 
-class GameParser(private val args: Array<String>) {
+import kotlin.io.println
+
+class GameParser(private val args: List<String>) {
+
+    private val game = Game()
 
     init {
-        this.parseArguments()
+        parseArguments()
     }
 
     fun parseArguments() {
-        if (this.args.isEmpty()) {
+        if (args.isEmpty()) {
             printHelp()
             return
         }
 
-        val command = this.args[0]
-        val arguments = this.args.sliceArray(1..this.args.size - 1)
+        val command = args[0]
+        val arguments = args.slice(1..args.size - 1)
         when (command) {
-            commands[0] -> this.createTrainerProcedure(arguments)
-            commands[1] -> this.addMonsterProcedure(arguments)
-            commands[2] -> this.newBattleProcedure(arguments)
-            commands[3] -> this.viewBattleProcedure(arguments)
-            commands[4] -> this.performAttackProcedure(arguments)
+            commands[0] -> prepareForCreateTrainer(arguments)
+            commands[1] -> parseForAddMonsterProcedure(arguments)
+            commands[2] -> parseForNewBattleProcedure(arguments)
+            commands[3] -> parseForViewBattleProcedure(arguments)
+            commands[4] -> parseForPerformAttackProcedure(arguments)
             commands[5] -> {
                 if (args.size > 1) {
                     printHelp(args[1])
@@ -39,24 +43,23 @@ class GameParser(private val args: Array<String>) {
         }
     }
 
-    private fun createTrainerProcedure(args: Array<String>) {
+    private fun prepareForCreateTrainer(args: List<String>) {
         if (args.isEmpty()) {
             println(newTrainerHelp)
             return
         }
 
-        val game = Game()
         game.createTrainer(args[0])
     }
 
-    private fun addMonsterProcedure(args: Array<String>) {
-        if (args.isEmpty() || (args.size >= 8 && args.size <= 11)) {
+    private fun parseForAddMonsterProcedure(args: List<String>) {
+        if (args.isEmpty() || !(args.size >= 8 && args.size <= 11)) {
             println(addMonsterHelp)
             return
         }
 
         val monsterName = args[0]
-        val attacks = args.sliceArray(6..args.size - 2).toList()
+        val attacks = args.slice(6..args.size - 2).toList()
         val trainerName = args[args.size - 1]
 
         try {
@@ -66,16 +69,15 @@ class GameParser(private val args: Array<String>) {
             val specAttack = parseToInt(args[4])
             val specDefense = parseToInt(args[5])
 
-            val game = Game()
             game.addMonster(
-                monsterName,
-                hp,
-                attack,
-                defense,
-                specAttack,
-                specDefense,
-                attacks,
-                trainerName
+                    monsterName,
+                    hp,
+                    attack,
+                    defense,
+                    specAttack,
+                    specDefense,
+                    attacks,
+                    trainerName
             )
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
@@ -83,35 +85,32 @@ class GameParser(private val args: Array<String>) {
         }
     }
 
-    private fun newBattleProcedure(args: Array<String>) {
+    private fun parseForNewBattleProcedure(args: List<String>) {
         if (args.isEmpty() || args.size != 2) {
             println(newBattleHelp)
             return
         }
 
-        val game = Game()
         game.initiateBattle(args[0], args[1])
     }
 
     // TODO: Rework when the view logic is implemented
-    private fun viewBattleProcedure(args: Array<String>) {
+    private fun parseForViewBattleProcedure(args: List<String>) {
         if (args.isEmpty()) {
             println(viewBattleHelp)
             return
         }
 
-        val game = Game()
         game.viewStatus()
     }
 
-    private fun performAttackProcedure(args: Array<String>) {
+    private fun parseForPerformAttackProcedure(args: List<String>) {
         if (args.isEmpty() || args.size != 3) {
             println(attackHelp)
             return
         }
 
         try {
-            val game = Game()
             game.performAttack(parseToInt(args[0]), args[1], args[2])
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
@@ -125,6 +124,6 @@ class GameParser(private val args: Array<String>) {
     }
 }
 
-fun main(args: Array<String>) {
+fun main(args: List<String>) {
     GameParser(args)
 }

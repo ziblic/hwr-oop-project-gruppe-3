@@ -1,19 +1,33 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
+import kotlin.collections.listOf
 import org.assertj.core.api.Assertions.assertThat
 
 class MonsterTest : AnnotationSpec() {
     private val stats = BattleStats(200, 20, 20, 20, 40, 40)
     private val monstertype = Type.Water
-    private val attacks = listOf(TODO("Attack class not implemented yet"))
+    private val attacks = listOf(Attack.Tackle, Attack.Fireball)
 
-    private val monster = Monster(
-        "Kevin",
-        stats,
-        monstertype,
-        attacks = TODO("Attack class not implemented yet"),
-    )
+    private val monster =
+            Monster(
+                    "Kevin",
+                    stats,
+                    monstertype,
+                    attacks = attacks,
+            )
+
+    @Test
+    fun `check if Monster is not KO`() {
+        val monster =
+                Monster(
+                        "Bob",
+                        BattleStats(200, 20, 20, 20, 40, 40),
+                        Type.Fire,
+                        attacks = listOf(Attack.Tackle, Attack.Fireball),
+                )
+        assertThat(monster.isKO()).isFalse()
+    }
 
     @Test
     fun `Monster Kevin has name Kevin`() {
@@ -37,11 +51,18 @@ class MonsterTest : AnnotationSpec() {
 
     @Test
     fun `Monster with attacks X has attacks X`() {
-        assertThat(monster.getAttack()).isEqualTo(attacks)
+        assertThat(monster.getAttacks()).isEqualTo(attacks)
     }
 
     @Test
     fun `Monster takes 20 damage`() {
+        val monster =
+                Monster(
+                        "Bob",
+                        BattleStats(200, 20, 20, 20, 40, 40),
+                        Type.Fire,
+                        attacks = listOf(Attack.Tackle, Attack.Fireball),
+                )
         val hp = monster.getHp()
         val damage_amount = 20
         monster.takeDamage(damage_amount)
@@ -51,13 +72,8 @@ class MonsterTest : AnnotationSpec() {
     @Test
     fun `Monster cant get negative Hp by taking damage`() {
         val hp = monster.getHp()
-        monster.takeDamage(hp - 20)
+        monster.takeDamage(hp + 20)
         assertThat(monster.getHp()).isEqualTo(0)
-    }
-
-    @Test
-    fun `check if Monster is not KO`() {
-        assertThat(monster.isKO()).isFalse()
     }
 
     @Test

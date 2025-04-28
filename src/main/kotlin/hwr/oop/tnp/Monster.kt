@@ -3,10 +3,10 @@ package hwr.oop.tnp
 import kotlin.math.max
 
 class Monster(
-    private val name: String,
-    private val stats: BattleStats,
-    private val type: Type,
-    private val attacks: List<Attack>,
+        private val name: String,
+        private val stats: BattleStats,
+        private val type: Type,
+        private val attacks: List<Attack>,
 ) {
     fun getName(): String {
         return this.name
@@ -45,7 +45,8 @@ class Monster(
     }
 
     fun attack(other: Monster) {
-        TODO("Needs to be implemented")
+        // TODO: Add the advanced damage calculation here
+        this.stats.hp = this.stats.hp - other.stats.attack
     }
 
     fun isKO(): Boolean {
