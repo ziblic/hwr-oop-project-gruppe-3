@@ -1,8 +1,8 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
-import kotlin.collections.listOf
 import org.assertj.core.api.Assertions.assertThat
+import kotlin.collections.listOf
 
 class MonsterTest : AnnotationSpec() {
     private val stats = BattleStats(200, 20, 20, 20, 40, 40)
@@ -10,22 +10,22 @@ class MonsterTest : AnnotationSpec() {
     private val attacks = listOf(Attack.Tackle, Attack.Fireball)
 
     private val monster =
-            Monster(
-                    "Kevin",
-                    stats,
-                    monstertype,
-                    attacks = attacks,
-            )
+        Monster(
+            "Kevin",
+            stats,
+            monstertype,
+            attacks = attacks,
+        )
 
     @Test
     fun `check if Monster is not KO`() {
         val monster =
-                Monster(
-                        "Bob",
-                        BattleStats(200, 20, 20, 20, 40, 40),
-                        Type.Fire,
-                        attacks = listOf(Attack.Tackle, Attack.Fireball),
-                )
+            Monster(
+                "Bob",
+                BattleStats(200, 20, 20, 20, 40, 40),
+                Type.Fire,
+                attacks = listOf(Attack.Tackle, Attack.Fireball),
+            )
         assertThat(monster.isKO()).isFalse()
     }
 
@@ -57,12 +57,12 @@ class MonsterTest : AnnotationSpec() {
     @Test
     fun `Monster takes 20 damage`() {
         val monster =
-                Monster(
-                        "Bob",
-                        BattleStats(200, 20, 20, 20, 40, 40),
-                        Type.Fire,
-                        attacks = listOf(Attack.Tackle, Attack.Fireball),
-                )
+            Monster(
+                "Bob",
+                BattleStats(200, 20, 20, 20, 40, 40),
+                Type.Fire,
+                attacks = listOf(Attack.Tackle, Attack.Fireball),
+            )
         val hp = monster.getHp()
         val damage_amount = 20
         monster.takeDamage(damage_amount)

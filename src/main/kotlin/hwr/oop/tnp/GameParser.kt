@@ -70,14 +70,14 @@ class GameParser(private val args: List<String>) {
             val specDefense = parseToInt(args[5])
 
             game.addMonster(
-                    monsterName,
-                    hp,
-                    attack,
-                    defense,
-                    specAttack,
-                    specDefense,
-                    attacks,
-                    trainerName
+                monsterName,
+                hp,
+                attack,
+                defense,
+                specAttack,
+                specDefense,
+                attacks,
+                trainerName
             )
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
