@@ -8,7 +8,7 @@ class TrainerTest : AnnotationSpec() {
     fun `test trainer has name`() {
         val name = "Alex"
         val trainer = Trainer(name)
-        assertThat(trainer.getName()).isEqualTo(name)
+        assertThat(trainer.name).isEqualTo(name)
     }
 
     @Test
