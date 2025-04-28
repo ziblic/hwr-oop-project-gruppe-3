@@ -15,5 +15,3 @@ class Trainer(
         monsters = monsters.plus(monster)
     }
 }
-
-class Monster
