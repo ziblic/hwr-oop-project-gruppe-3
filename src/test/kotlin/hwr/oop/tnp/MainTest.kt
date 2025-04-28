@@ -116,12 +116,12 @@ class MainTest : AnnotationSpec() {
     fun `Add new monster`() {
         val output =
             captureStandardOut {
-                main(arrayOf("add_monster", "Bob", "100", "20", "10", "5", "20"))
+                main(arrayOf("add_monster", "Bob", "100", "20", "10", "5", "20", "Tackle", "Trainer_Kevin"))
             }
                 .trim()
         assertThat(output)
             .isEqualTo(
-                captureStandardOut { Game().addMonster("Bob", 100, 20, 10, 5, 20) }.trim()
+                captureStandardOut { Game().addMonster("Bob", 100, 20, 10, 5, 20, "Tackle", "Trainer_Kevin") }.trim()
             )
     }
 
@@ -144,6 +144,8 @@ class MainTest : AnnotationSpec() {
                         "10",
                         "5",
                         "20",
+                        "Fireball",
+                        "Trainer_Kevin",
                         "too many args"
                     )
                 )
