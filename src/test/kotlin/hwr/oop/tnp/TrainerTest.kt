@@ -18,7 +18,7 @@ class TrainerTest : AnnotationSpec() {
         val m2 = Monster("Hans", bs, Type(), emptyList<Attack>())
 
         val name = "Alex"
-        val trainer = Trainer(name, mutableListOf(m1, m2))
+        val trainer = Trainer(name, listOf(m1, m2))
         val monsters = trainer.getMonsters()
 
         assertThat(monsters[0].getName()).isEqualTo(m1.getName())
