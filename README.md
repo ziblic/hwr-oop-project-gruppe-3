@@ -45,20 +45,21 @@ A simple Pokémon clone written in Kotlin with OOP and test-driven development i
 The most important features are listed in the [feature list](#feature-list)
 
 During our Pokémon clone project, we faced the challenge of designing a robust object-oriented architecture that encapsulated Pokémon attributes, moves, and interactions, ensuring scalability and expendability for future expansions.
-Balancing game mechanics involved complex algorithms and iterative testing to replicate fair battle dynamics and implement challenging AI opponents while maintaining engaging gameplay.
+Balancing game mechanics involved complex algorithms and iterative testing to replicate fair battle dynamics while maintaining engaging gameplay.
 Additionally, we prioritized intuitive user interface design through usability tests, enhancing player experience and capturing the essence of traditional Pokémon games.
 
 
 ## Feature List
 
-| Number |    Feature    | Tests |
-|--------|---------------|-------|
-| 1      | Add trainer   | /     |
-| 2      | Add monster   | /     |
-| 3      | New battle    | /     |
-| 4      | View battle   | /     |
-| 5      | Attacking     | /     |
-| 6      | Help messages | /     |
+| Number |    Feature   | Tests |
+|--------|--------------|-------|
+| 1      | BattleStats  | 6     |
+| 2      | GameLoader   | 0     |
+| 3      | GameParser   | 20    |
+| 4      | Game         | 0     |
+| 5      | Monster      | 8     |
+| 6      | Trainer      | 4     |
+| 7      | Type         | 5     |
 
 ## Additional Dependencies
 
