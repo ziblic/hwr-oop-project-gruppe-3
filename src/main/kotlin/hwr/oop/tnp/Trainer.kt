@@ -8,7 +8,7 @@ class Trainer(
         require(monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER) {"Too many monsters: $monsters"}
     }
 
-    fun getMonsters(): List<Monster> = monsters.toList()
+    fun getMonsters(): List<Monster> = monsters
 
     fun addMonster(monster: Monster) {
         require(monsters.size >= MAX_ALLOWED_MONSTERS_PER_TRAINER) {"Too many monsters"}
