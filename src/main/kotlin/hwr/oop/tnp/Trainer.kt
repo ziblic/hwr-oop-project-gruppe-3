@@ -1,10 +1,10 @@
 package hwr.oop.tnp
 
 class Trainer(private val name: String, monsters: MutableList<Monster> = mutableListOf()) {
-    private val monsters = if (monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER)
-        monsters.take(MAX_ALLOWED_MONSTERS_PER_TRAINER).toMutableList()
-    else
-        monsters
+    private val monsters =
+        if (monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER)
+            monsters.take(MAX_ALLOWED_MONSTERS_PER_TRAINER).toMutableList()
+        else monsters
 
     fun getName(): String {
         return this.name
