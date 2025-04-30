@@ -11,7 +11,7 @@ programming with Kotlin at HWR Berlin (summer term 2025).
 
 ## Local Development
 
-This project uses [Apache Maven][maven] as build tool.
+This project uses [Apache Maven](https://maven.apache.org/) as build tool.
 
 To build from your shell (without an additional local installation of Maven), ensure that `./mvnw`
 is executable:
@@ -42,14 +42,24 @@ chmod +x ./tnp
 
 A simple Pokémon clone written in Kotlin with OOP and test-driven development in mind.
 
-<!-- TODO: State most important features. -->
-<!-- TODO: State the most interesting problems you encountered during the project. -->
+The most important features are listed in the [feature list](#feature-list)
+
+During our Pokémon clone project, we faced the challenge of designing a robust object-oriented architecture that encapsulated Pokémon attributes, moves, and interactions, ensuring scalability and expendability for future expansions.
+Balancing game mechanics involved complex algorithms and iterative testing to replicate fair battle dynamics while maintaining engaging gameplay.
+Additionally, we prioritized intuitive user interface design through usability tests, enhancing player experience and capturing the essence of traditional Pokémon games.
+
 
 ## Feature List
 
-| Number | Feature | Tests |
-|--------|---------|-------|
-| 1      | /       | /     |
+| Number |    Feature   | Tests |
+|--------|--------------|-------|
+| 1      | BattleStats  | 6     |
+| 2      | GameLoader   | 0     |
+| 3      | GameParser   | 20    |
+| 4      | Game         | 0     |
+| 5      | Monster      | 8     |
+| 6      | Trainer      | 4     |
+| 7      | Type         | 5     |
 
 ## Additional Dependencies
 
