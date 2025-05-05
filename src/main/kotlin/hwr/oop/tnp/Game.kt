@@ -13,7 +13,10 @@ class Game {
 
         val trainerFile = File(folder, "$trainerName.json")
 
-        if (trainerFile.exists()) return
+        if (trainerFile.exists()){
+            println("You have already created a trainer with this name\n")
+            return
+        }
 
         val trainerJson = JSONObject()
             .put("name", trainerName)
@@ -29,9 +32,17 @@ class Game {
         defense: Int,
         specAttack: Int,
         specDefense: Int,
-        attackName: String, // For now, we assume one attack, added into a JSONArray
+        attackName: String, // For now, we assume there is on only one attack added into a JSONArray
         trainerName: String,
     ) {
+
+
+        val file = File("data/monsters/$monsterName.json")
+        // make sure that the already existing file with the monster class is not overwritten
+        // there is only the monster with their name in the whole game
+        if (file.exists())
+            return
+
         val monsterJson = JSONObject()
             .put("name", monsterName)
             .put("hp", hp)
@@ -41,8 +52,6 @@ class Game {
             .put("specialDefense", specDefense)
             .put("attacks", JSONArray().put(attackName)) // Attack array
             .put("trainer", trainerName)
-
-        val file = File("data/monsters/$monsterName.json")
         file.parentFile.mkdirs()
         file.writeText(monsterJson.toString(4)) // pretty print
 
@@ -87,6 +96,7 @@ class Game {
 
         val trainer1File = File(trainerDir, "$trainer1.json")
         val trainer2File = File(trainerDir, "$trainer2.json")
+
 
         if (!trainer1File.exists() || !trainer2File.exists()) {
             println("❌ One or both trainer files do not exist.")
@@ -139,7 +149,7 @@ class Game {
         println("✅ Battle '$battleId' successfully initiated between '$trainer1' and '$trainer2'")
     }
 
-    fun viewStatus(battleId: String) {
+    fun viewStatus(battleId: Int) {
         val battleFile = File("data/battles/$battleId.json")
         if (!battleFile.exists()) {
             println("❌ Battle with ID '$battleId' not found.")
