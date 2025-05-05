@@ -1,29 +1,29 @@
 package hwr.oop.tnp;
-enum class Attack(val type: Type, val damage: Int, val hitQuote: Int) {
-    SCHLAG(Type.NORMAL, 15, 1),
-    TROMMEL(Type.NORMAL, 25, 2),
-    NORMALRAMME(Type.NORMAL, 35, 1),
-    BODENHAMMER(Type.NORMAL, 45, 2),
+enum class Attack(val type: Type, val damage: Int, val hitQuote: Double) {
+    SCHLAG(Type.NORMAL, 15, 0.1),
+    TROMMEL(Type.NORMAL, 25, 0.2),
+    NORMALRAMME(Type.NORMAL, 35, 0.3),
+    BODENHAMMER(Type.NORMAL, 45, 0.2),
 
-    FLAMMKRANZ(Type.FIRE, 20, 1),
-    FUNKENSCHNUPPE(Type.FIRE, 10, 1),
-    LAVAFLUT(Type.FIRE, 40, 2),
-    FEUERSCHWUR(Type.FIRE, 30, 1),
+    FLAMMKRANZ(Type.FIRE, 20, 0.4),
+    FUNKENSCHNUPPE(Type.FIRE, 10, 0.2),
+    LAVAFLUT(Type.FIRE, 40, 0.3),
+    FEUERSCHWUR(Type.FIRE, 30, 0.1),
 
-    SPRITZER(Type.WATER, 20, 1),
-    WASSERFALL(Type.WATER, 35, 2),
-    TIEFSEEGRIFF(Type.WATER, 25, 1),
-    TSUNAMI(Type.WATER, 50, 2),
+    SPRITZER(Type.WATER, 20, 0.7),
+    WASSERFALL(Type.WATER, 35, 0.2),
+    TIEFSEEGRIFF(Type.WATER, 25, 0.1),
+    TSUNAMI(Type.WATER, 50, 0.4),
 
-    BLATTPISTOLE(Type.LEAF, 20, 1),
-    RAUBBLATT(Type.LEAF, 30, 2),
-    WURZELSCHUSS(Type.LEAF, 25, 1),
-    LAUBSTURM(Type.LEAF, 45, 2),
+    BLATTPISTOLE(Type.LEAF, 20, 0.2),
+    RAUBBLATT(Type.LEAF, 30, 0.1),
+    WURZELSCHUSS(Type.LEAF, 25, 0.5),
+    LAUBSTURM(Type.LEAF, 45, 0.2),
 
-    SPUKBALL(Type.GHOST, 20, 1),
-    SCHATTENKLAUE(Type.GHOST, 30, 2),
-    GEISTWELL(Type.GHOST, 25, 1),
-    NACHTSCHREI(Type.GHOST, 40, 2),
+    SPUKBALL(Type.GHOST, 20, 0.1),
+    SCHATTENKLAUE(Type.GHOST, 30, 0.8),
+    GEISTWELL(Type.GHOST, 25, 0.9),
+    NACHTSCHREI(Type.GHOST, 40, 0.4),
 
 }
 enum class Type(
@@ -49,6 +49,6 @@ fun attack(a: Attack, ma: Monster) {
     }
 }
 
-fun getAttack(): Array<Attack>{
+fun getAttacks(): Array<Attack>{
     return Attack.values();
 }
