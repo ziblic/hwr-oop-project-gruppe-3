@@ -7,7 +7,7 @@ enum class Type {
     Plant,
     Spirit;
 
-    val veryEffectiveAgainst: Type?
+    val effectiveAgainst: Type?
         get() =
             when (this) {
                 Water -> Fire
@@ -16,7 +16,7 @@ enum class Type {
                 else -> null
             }
 
-    val effectiveAgainst: Type?
+    val lessEffectiveAgainst: Type?
         get() =
             when (this) {
                 Water -> Plant
@@ -25,7 +25,7 @@ enum class Type {
                 else -> null
             }
 
-    val lessEffectiveAgainst: Type?
+    val noEffectAgainst: Type?
         get() =
             when (this) {
                 Spirit -> Normal

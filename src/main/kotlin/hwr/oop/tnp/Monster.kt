@@ -3,52 +3,32 @@ package hwr.oop.tnp
 import kotlin.math.max
 
 class Monster(
-    private val name: String,
-    private val stats: BattleStats,
-    private val type: Type,
-    private val attacks: List<Attack> = getAttacks(),
+    val name: String,
+    val stats: BattleStats,
+    val type: Type,
+    val attacks: List<Attack>,
 ) {
-    fun getName(): String {
-        return this.name
-    }
-
-    fun getHp(): Int {
-        return this.stats.hp
-    }
-
-    fun getSpeed(): Int {
-        return this.stats.speed
-    }
-
-    fun getDefense(): Int {
-        return this.stats.defense
-    }
-
-    fun getSpecialAttack(): Int {
-        return this.stats.specialAttack
-    }
-
-    fun getSpecialDefense(): Int {
-        return this.stats.specialDefense
-    }
-
-    fun getType(): Type {
-        return this.type
-    }
-
-    fun getAttacks(): List<Attack> {
-        return this.attacks
-    }
-
-    fun attack(a: Attack, m: Monster) {
-        if (a.type == m.getType().veryEffectiveAgainst) {
-            m.getHp() - ((a.damage * 2.0) + (a.damage * calcMultiplierHitQuote(a.hitQuote)))
+    fun attack(attackUsed: Attack, otherMonster: Monster) {
+        require(this.attacks.contains(attackUsed)) {
+            "The used attack is not part of the attacks of the monster"
         }
-        else if (a.type == m.getType().lessEffectiveAgainst) {
-            m.getHp() - ((a.damage * 0.5) + (a.damage * calcMultiplierHitQuote(a.hitQuote)))
-        }
-        else if (a.type == m.getType().effectiveAgainst)
-            m.getHp() - (a.damage + (a.damage * calcMultiplierHitQuote(a.hitQuote)))
+
+        val multiplier: Double =
+            when (otherMonster.type) {
+                attackUsed.type.effectiveAgainst -> 2.0
+                attackUsed.type.lessEffectiveAgainst -> 0.5
+                attackUsed.type.noEffectAgainst -> 0.0
+                else -> 1.0
+            }
+
+        val damageAmount: Int =
+            (
+                attackUsed.damage.toDouble() *
+                    multiplier *
+                    attackUsed.calcMultiplierHitQuote(attackUsed.hitQuote)
+                )
+                .toInt()
+        otherMonster.takeDamage(damageAmount)
     }
 
     fun isKO(): Boolean {
