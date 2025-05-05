@@ -6,7 +6,7 @@ class Monster(
     private val name: String,
     private val stats: BattleStats,
     private val type: Type,
-    private val attacks: List<Attack>,
+    private val attacks: List<Attack> = getAttacks(),
 ) {
     fun getName(): String {
         return this.name
@@ -18,10 +18,6 @@ class Monster(
 
     fun getSpeed(): Int {
         return this.stats.speed
-    }
-
-    fun getAttack(): Int {
-        return this.stats.attack
     }
 
     fun getDefense(): Int {
@@ -44,9 +40,15 @@ class Monster(
         return this.attacks
     }
 
-    fun attack(other: Monster) {
-        // TODO: Add the advanced damage calculation here
-        this.stats.hp = this.stats.hp - other.stats.attack
+    fun attack(a: Attack, m: Monster) {
+        if (a.type == m.getType().veryEffectiveAgainst) {
+            m.getHp() - ((a.damage * 2.0) + (a.damage * calcMultiplierHitQuote(a.hitQuote)))
+        }
+        else if (a.type == m.getType().lessEffectiveAgainst) {
+            m.getHp() - ((a.damage * 0.5) + (a.damage * calcMultiplierHitQuote(a.hitQuote)))
+        }
+        else if (a.type == m.getType().effectiveAgainst)
+            m.getHp() - (a.damage + (a.damage * calcMultiplierHitQuote(a.hitQuote)))
     }
 
     fun isKO(): Boolean {
