@@ -28,6 +28,25 @@ class GameParserTest : AnnotationSpec() {
     }
 
     @Test
+    fun `Run invalid command`() {
+        val output = captureStandardOut { main(listOf("some_unknown_command")) }.trim()
+        assertThat(output)
+            .isEqualTo("'some_unknown_command' is not a valid command. Use 'help' for usage.")
+    }
+
+    @Test
+    fun `Run without any command`() {
+        val output = captureStandardOut { main(emptyList()) }.trim()
+        assertThat(output).isEqualTo(defaultHelp)
+    }
+
+    @Test
+    fun `parseForPerformAttack throw Exception`() {
+        val output = captureStandardOut { main(listOf("on", "a", "Bob", "Tackle")) }.trim()
+        assertThat(output).isEqualTo("Some of the provided arguments could not be parsed to an Int")
+    }
+
+    @Test
     fun `Get help message from cli`() {
         val output = captureStandardOut { main(listOf("help")) }.trim()
         assertThat(output).isEqualTo(defaultHelp)
@@ -94,6 +113,26 @@ class GameParserTest : AnnotationSpec() {
                 )
             }
                 .trim()
+        val output_2 =
+            captureStandardOut {
+                main(
+                    listOf(
+                        "add_monster",
+                        "Bob",
+                        "100",
+                        "20",
+                        "10",
+                        "5",
+                        "20",
+                        "Tackle",
+                        "Fireball",
+                        "Waterbomb",
+                        "Some Attack",
+                        "Trainer_Kevin"
+                    )
+                )
+            }
+                .trim()
         assertThat(output)
             .isEqualTo(
                 captureStandardOut {
@@ -105,6 +144,27 @@ class GameParserTest : AnnotationSpec() {
                         5,
                         20,
                         listOf("Tackle"),
+                        "Trainer_Kevin"
+                    )
+                }
+                    .trim()
+            )
+        assertThat(output_2)
+            .isEqualTo(
+                captureStandardOut {
+                    Game().addMonster(
+                        "Bob",
+                        100,
+                        20,
+                        10,
+                        5,
+                        20,
+                        listOf(
+                            "Tackle",
+                            "Fireball",
+                            "Waterbomb",
+                            "Some Attack"
+                        ),
                         "Trainer_Kevin"
                     )
                 }
