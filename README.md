@@ -21,7 +21,7 @@ chmod +x ./mvnw
 ```
 
 I recommend not to dive into details about Maven at the beginning.
-Instead, you can use [just][just] to build the project.
+Instead, you can use [just](https://github.com/casey/just) to build the project.
 It reads the repositories `justfile` which maps simplified commands to corresponding sensible Maven
 calls.
 
