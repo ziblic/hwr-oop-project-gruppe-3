@@ -1,23 +1,16 @@
 package hwr.oop.tnp
 
-class Trainer(private val name: String, monsters: MutableList<Monster> = mutableListOf()) {
-    private val monsters =
-        if (monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER)
-            monsters.take(MAX_ALLOWED_MONSTERS_PER_TRAINER).toMutableList()
-        else monsters
-
-    fun getName(): String {
-        return this.name
-    }
-
-    fun getMonsters(): List<Monster> {
-        return this.monsters
-    }
-
-    fun addMonster(monster: Monster): Boolean {
-        if (monsters.size >= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
-            return false
+class Trainer(val name: String, private var monsters: List<Monster> = emptyList()) {
+    init {
+        require(monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+            "Too many monsters: $monsters"
         }
-        return monsters.add(monster)
+    }
+
+    fun getMonsters(): List<Monster> = monsters
+
+    fun addMonster(monster: Monster) {
+        require(monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) { "Too many monsters" }
+        monsters = monsters.plus(monster)
     }
 }
