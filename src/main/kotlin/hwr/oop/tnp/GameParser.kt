@@ -20,10 +20,10 @@ class GameParser(private val args: List<String>) {
         val arguments = args.slice(1..args.size - 1)
         when (command) {
             commands[0] -> prepareForCreateTrainer(arguments)
-            commands[1] -> parseForAddMonsterProcedure(arguments)
-            commands[2] -> parseForNewBattleProcedure(arguments)
-            commands[3] -> parseForViewBattleProcedure(arguments)
-            commands[4] -> parseForPerformAttackProcedure(arguments)
+            commands[1] -> parseForAddMonster(arguments)
+            commands[2] -> parseForNewBattle(arguments)
+            commands[3] -> parseForViewBattle(arguments)
+            commands[4] -> parseForPerformAttack(arguments)
             commands[5] -> {
                 if (args.size > 1) {
                     printHelp(args[1])
@@ -52,7 +52,7 @@ class GameParser(private val args: List<String>) {
         game.createTrainer(args[0])
     }
 
-    private fun parseForAddMonsterProcedure(args: List<String>) {
+    private fun parseForAddMonster(args: List<String>) {
         if (args.isEmpty() || !(args.size >= 8 && args.size <= 11)) {
             println(addMonsterHelp)
             return
@@ -70,14 +70,14 @@ class GameParser(private val args: List<String>) {
             val specDefense = parseToInt(args[5])
 
             game.addMonster(
-                monsterName,
-                hp,
-                attack,
-                defense,
-                specAttack,
-                specDefense,
-                attacks,
-                trainerName
+                    monsterName,
+                    hp,
+                    attack,
+                    defense,
+                    specAttack,
+                    specDefense,
+                    attacks,
+                    trainerName
             )
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
@@ -85,7 +85,7 @@ class GameParser(private val args: List<String>) {
         }
     }
 
-    private fun parseForNewBattleProcedure(args: List<String>) {
+    private fun parseForNewBattle(args: List<String>) {
         if (args.isEmpty() || args.size != 2) {
             println(newBattleHelp)
             return
@@ -95,7 +95,7 @@ class GameParser(private val args: List<String>) {
     }
 
     // TODO: Rework when the view logic is implemented
-    private fun parseForViewBattleProcedure(args: List<String>) {
+    private fun parseForViewBattle(args: List<String>) {
         if (args.isEmpty()) {
             println(viewBattleHelp)
             return
@@ -104,7 +104,7 @@ class GameParser(private val args: List<String>) {
         game.viewStatus()
     }
 
-    private fun parseForPerformAttackProcedure(args: List<String>) {
+    private fun parseForPerformAttack(args: List<String>) {
         if (args.isEmpty() || args.size != 3) {
             println(attackHelp)
             return
