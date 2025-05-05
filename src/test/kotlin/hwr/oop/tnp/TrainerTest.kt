@@ -2,6 +2,7 @@ package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.assertThrows
 
 class TrainerTest : AnnotationSpec() {
     @Test
@@ -45,5 +46,15 @@ class TrainerTest : AnnotationSpec() {
 
         assertThat(monsters.size).isEqualTo(1)
         assertThat(monsters[0].getName()).isEqualTo(m.getName())
+    }
+
+    @Test
+    fun `test init with too many monsters`() {
+        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
+
+        assertThrows<IllegalArgumentException> {
+            Trainer("Alex", listOf(m, m, m, m, m, m, m))
+        }
     }
 }
