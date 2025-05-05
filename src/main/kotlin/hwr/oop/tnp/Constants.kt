@@ -2,10 +2,7 @@ package hwr.oop.tnp
 
 const val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
 
-val commands: List<String> =
-    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
-
-val defaultHelp =
+const val defaultHelp =
     """___________  _____  ___     _______
 ("     _   ")(\"   \|"  \   |   __ "\
  )__/  \\__/ |.\\   \    |  (. |__) :)
@@ -23,7 +20,7 @@ Totally Not Pokémon Usage: ./tnp command [arguments]
       on              - Select a attack to perform
       help            - Shows this help message"""
 
-val newTrainerHelp =
+const val newTrainerHelp =
     """._____          _                   _   _      _
 |_   _| __ __ _(_)_ __   ___ _ __  | | | | ___| |_ __
   | || '__/ _` | | '_ \ / _ \ '__| | |_| |/ _ \ | '_ \
@@ -33,7 +30,7 @@ val newTrainerHelp =
 
 Usage: ./tnp new_trainer <TRAINERNAME>"""
 
-val addMonsterHelp =
+const val addMonsterHelp =
     """.   _       _     _   __  __                 _              _   _      _
    / \   __| | __| | |  \/  | ___  _ __  ___| |_ ___ _ __  | | | | ___| |_ __
   / _ \ / _` |/ _` | | |\/| |/ _ \| '_ \/ __| __/ _ \ '__| | |_| |/ _ \ | '_ \
@@ -41,9 +38,9 @@ val addMonsterHelp =
 /_/   \_\__,_|\__,_| |_|  |_|\___/|_| |_|___/\__\___|_|    |_| |_|\___|_| .__/
                                                                         |_|
 
-Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <ATTACK_VALUE> <DEFENSE_VALUE> <SPECIALATTACK_VALUE> <SPECIALDEFENSE_VALUE>"""
+Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <ATTACK_VALUE> <DEFENSE_VALUE> <SPECIALATTACK_VALUE> <SPECIALDEFENSE_VALUE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER>"""
 
-val newBattleHelp =
+const val newBattleHelp =
     """._   _                 ____        _   _   _        _   _      _
 | \ | | _____      __ | __ )  __ _| |_| |_| | ___  | | | | ___| |_ __
 |  \| |/ _ \ \ /\ / / |  _ \ / _` | __| __| |/ _ \ | |_| |/ _ \ | '_ \
@@ -54,7 +51,7 @@ val newBattleHelp =
 Usage: ./tnp new_battle <TRAINERNAME 1> <TRAINERNAME 2>"""
 
 // TODO: Add help message when implemented
-val viewBattleHelp =
+const val viewBattleHelp =
     """__     ___                 ____        _   _   _        _   _      _
 \ \   / (_) _____      __ | __ )  __ _| |_| |_| | ___  | | | | ___| |_ __
  \ \ / /| |/ _ \ \ /\ / / |  _ \ / _` | __| __| |/ _ \ | |_| |/ _ \ | '_ \
@@ -64,7 +61,7 @@ val viewBattleHelp =
 
 Usage: ./tnp view_battle <ARGUMENTS>"""
 
-val attackHelp =
+const val attackHelp =
     """.   _   _   _             _      _   _      _
    / \ | |_| |_ __ _  ___| | __ | | | | ___| |_ __
   / _ \| __| __/ _` |/ __| |/ / | |_| |/ _ \ | '_ \
@@ -73,3 +70,16 @@ val attackHelp =
                                              |_|
 
 Usage: ./tnp on <BATTLE_ID> <TRAINERNAME> <ATTACKNAME>"""
+
+val commands: List<String> =
+    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
+
+val commandsHelpMap: Map<String, String> =
+    mapOf(
+        commands[0] to newTrainerHelp,
+        commands[1] to addMonsterHelp,
+        commands[2] to newBattleHelp,
+        commands[3] to viewBattleHelp,
+        commands[4] to attackHelp,
+        commands[5] to defaultHelp,
+    )

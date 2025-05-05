@@ -1,6 +1,6 @@
 package hwr.oop.tnp
 
-class GameManager {
+class Game {
 
     private val gameLoader = GameLoader()
 
@@ -14,7 +14,9 @@ class GameManager {
         attack: Int,
         defense: Int,
         specAttack: Int,
-        specDefense: Int
+        specDefense: Int,
+        attacks: List<String>,
+        trainerName: String
     ) {
         println(
             """Created new Monster:
@@ -24,6 +26,8 @@ Attack:             $attack
 Defense:            $defense
 Special Attack:     $specAttack
 Special Defense:    $specDefense
+Attacks:            $attacks
+Trainer:            $trainerName
 """
         )
     }
