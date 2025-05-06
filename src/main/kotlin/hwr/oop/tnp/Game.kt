@@ -1,14 +1,14 @@
 package hwr.oop.tnp
 
-class Game {
+class Game : ParserInterface {
 
     private val gameLoader = GameLoader()
 
-    fun createTrainer(trainerName: String) {
+    override fun createTrainer(trainerName: String) {
         println("Created Trainer with name $trainerName")
     }
 
-    fun addMonster(
+    override fun addMonster(
         monsterName: String,
         hp: Int,
         attack: Int,
@@ -32,16 +32,16 @@ Trainer:            $trainerName
         )
     }
 
-    fun initiateBattle(trainer1: String, trainer2: String) {
+    override fun initiateBattle(trainer1: String, trainer2: String) {
         println("Executing battle...")
     }
 
-    fun viewStatus() {
+    override fun viewStatus() {
         println("Executing view...")
     }
 
     // TODO: Change Type to `selectedAttack: Attack`
-    fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {
+    override fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {
         println("Executing attack...")
     }
 
