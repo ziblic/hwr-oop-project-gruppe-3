@@ -4,7 +4,7 @@ import kotlin.io.println
 
 class GameParser(private val args: List<String>) {
 
-    private val game = Game()
+    private val game: ParserInterface = Game()
 
     init {
         parseArguments()
