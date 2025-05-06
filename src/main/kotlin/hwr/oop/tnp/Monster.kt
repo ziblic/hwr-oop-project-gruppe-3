@@ -19,6 +19,7 @@ class Monster(
     fun getSpeed(): Int {
         return this.stats.speed
     }
+    fun getAttack() = stats.attack
 
     fun getDefense(): Int {
         return this.stats.defense

@@ -100,8 +100,8 @@ class GameParser(private val args: List<String>) {
             println(viewBattleHelp)
             return
         }
-
-        game.viewStatus()
+        val battleID = parseToInt(args[0])
+        game.viewStatus(battleID)
     }
 
     private fun parseForPerformAttackProcedure(args: List<String>) {
