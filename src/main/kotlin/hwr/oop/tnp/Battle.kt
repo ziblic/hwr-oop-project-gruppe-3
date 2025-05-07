@@ -1,6 +1,5 @@
 package hwr.oop.tnp
 
-
 class Battle(
     private val trainerOne: Trainer,
     private val trainerTwo: Trainer
@@ -8,23 +7,20 @@ class Battle(
     private var currentTurn: Int = 0
     private var finished: Boolean = false
 
-
     fun isFinished(): Boolean = finished
 
     fun getCurrentTurn(): Int = currentTurn
-
 
     fun startBattle() {
         currentTurn = 1
         finished = false
     }
 
-
     private fun endBattle() {
         finished = true
     }
 
-    fun executeTurn(attack1:Attack,attack2:Attack) {
+    fun executeTurn(attack1: Attack, attack2: Attack) {
         if (finished) {
             throw IllegalStateException("Battle is already finished")
         }
@@ -34,26 +30,24 @@ class Battle(
         val m2 = trainerTwo.getMonsters().firstOrNull()
             ?: throw IllegalStateException("Trainer two has no monsters")
 
-        var first : Monster
-        var second : Monster
-        var firstAttack : Attack
-        var secondAttack :Attack
+        var first: Monster
+        var second: Monster
+        var firstAttack: Attack
+        var secondAttack: Attack
 
-            if (m1.getSpeed() >=m2.getSpeed()){
-                 first = m1
-                 second = m2
-                 firstAttack = attack1
-                 secondAttack = attack2
-                }else{
-                    first = m2
-                    second = m1
-                firstAttack = attack2
-                secondAttack = attack1
+        if (m1.getSpeed() >= m2.getSpeed()) {
+            first = m1
+            second = m2
+            firstAttack = attack1
+            secondAttack = attack2
+        } else {
+            first = m2
+            second = m1
+            firstAttack = attack2
+            secondAttack = attack1
+        }
 
-            }
-
-
-       first.attack(firstAttack,second)
+        first.attack(firstAttack, second)
         if (second.isKO()) {
             endBattle()
             return
@@ -78,7 +72,6 @@ class Battle(
             !m1.isKO() && m2.isKO() -> trainerOne
             m1.isKO() && !m2.isKO() -> trainerTwo
             else -> null
-
         }
     }
 }
