@@ -78,6 +78,7 @@ class Battle(
             !m1.isKO() && m2.isKO() -> trainerOne
             m1.isKO() && !m2.isKO() -> trainerTwo
             else -> null
+
         }
     }
 }
