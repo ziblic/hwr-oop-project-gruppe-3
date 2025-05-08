@@ -74,7 +74,7 @@ class TrainerTest : AnnotationSpec() {
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
         val t = Trainer("Alex")
         assertThatNoException().isThrownBy {
-            for(i in 1..MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+            for (i in 1..MAX_ALLOWED_MONSTERS_PER_TRAINER) {
                 t.addMonster(m)
             }
         }
