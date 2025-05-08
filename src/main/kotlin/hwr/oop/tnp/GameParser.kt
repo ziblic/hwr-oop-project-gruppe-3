@@ -124,6 +124,6 @@ class GameParser(private val args: List<String>) {
     }
 }
 
-fun main(args: List<String>) {
-    GameParser(args)
+fun main(args: Array<String>) {
+    GameParser(args.toList())
 }
