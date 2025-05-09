@@ -23,8 +23,8 @@ class TrainerTest : AnnotationSpec() {
         val trainer = Trainer(name, mutableListOf(m1, m2))
         val monsters = trainer.getMonsters()
 
-        assertThat(monsters[0].getName()).isEqualTo(m1.getName())
-        assertThat(monsters[1].getName()).isEqualTo(m2.getName())
+        assertThat(monsters[0].name).isEqualTo(m1.name)
+        assertThat(monsters[1].name).isEqualTo(m2.name)
         assertThat(monsters.size).isEqualTo(2)
     }
 
@@ -46,7 +46,7 @@ class TrainerTest : AnnotationSpec() {
         val monsters = trainer.getMonsters()
 
         assertThat(monsters.size).isEqualTo(1)
-        assertThat(monsters[0].getName()).isEqualTo(m.getName())
+        assertThat(monsters[0].name).isEqualTo(m.name)
     }
 
     @Test
