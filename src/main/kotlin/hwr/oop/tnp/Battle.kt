@@ -5,9 +5,8 @@ class Battle(
     private val trainerTwo: Trainer
 ) {
     private var currentTurn: Int = 0
-    private var finished: Boolean = false
-
-    fun isFinished(): Boolean = finished
+    var finished: Boolean = false
+        private set // Only this class can modify the value
 
     fun getCurrentTurn(): Int = currentTurn
 
