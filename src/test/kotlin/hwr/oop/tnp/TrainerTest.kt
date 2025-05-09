@@ -23,8 +23,8 @@ class TrainerTest : AnnotationSpec() {
         val trainer = Trainer(name, mutableListOf(m1, m2))
         val monsters = trainer.getMonsters()
 
-        assertThat(monsters[0].getName()).isEqualTo(m1.getName())
-        assertThat(monsters[1].getName()).isEqualTo(m2.getName())
+        assertThat(monsters[0].name).isEqualTo(m1.name)
+        assertThat(monsters[1].name).isEqualTo(m2.name)
         assertThat(monsters.size).isEqualTo(2)
     }
 
@@ -46,33 +46,25 @@ class TrainerTest : AnnotationSpec() {
         val monsters = trainer.getMonsters()
 
         assertThat(monsters.size).isEqualTo(1)
-        assertThat(monsters[0].getName()).isEqualTo(m.getName())
+        assertThat(monsters[0].name).isEqualTo(m.name)
     }
 
     @Test
-    fun `test init with more than max monsters fails`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
-        val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
-        assertThrows<IllegalArgumentException> {
-            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER + 1) { m })
-        }
-    }
-
-    @Test
-    fun `test init with less than max monsters works`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
-        val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
-        assertThatNoException().isThrownBy {
-            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER - 1) { m })
-        }
-    }
-
-    @Test
-    fun `test init with max monsters works`() {
+    fun `init with max monsters works, throws no expection`() {
         val bs = BattleStats(100, 100, 100, 100, 100, 100)
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
         assertThatNoException().isThrownBy {
             Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER) { m })
+        }
+    }
+
+    @Test
+    fun `test init with too many monsters throws exception`() {
+        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
+
+        assertThrows<IllegalArgumentException> {
+            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER + 1) { m })
         }
     }
 
@@ -82,19 +74,23 @@ class TrainerTest : AnnotationSpec() {
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
         val t = Trainer("Alex")
         assertThatNoException().isThrownBy {
+            for (i in 1..MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+                t.addMonster(m)
+            }
+        }
+        assertThat(t.getMonsters().size).isEqualTo(MAX_ALLOWED_MONSTERS_PER_TRAINER)
+    }
+
+    @Test
+    fun `cant add more than max monsters`() {
+        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
+        val t = Trainer("Alex")
+        assertThrows<IllegalArgumentException> {
             for (i in 0..MAX_ALLOWED_MONSTERS_PER_TRAINER) {
                 t.addMonster(m)
             }
         }
-    }
-
-    @Test
-    fun `test init with too many monsters`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
-        val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
-
-        assertThrows<IllegalArgumentException> {
-            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER + 1) { m })
-        }
+        assertThat(t.getMonsters().size).isEqualTo(MAX_ALLOWED_MONSTERS_PER_TRAINER)
     }
 }
