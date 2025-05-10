@@ -4,9 +4,9 @@ import java.io.FileNotFoundException
 
 class Game : ParserInterface {
 
-    private val gameLoader = GameLoader()
+    private val dataHandler : DataHandlerInterface = DataHandler()
 
-    override fun createTrainer(trainerName: String) = gameLoader.saveTrainer(trainerName)
+    override fun createTrainer(trainerName: String) = dataHandler.saveTrainer(trainerName)
 
     override fun addMonster(
         monsterName: String,
@@ -18,47 +18,43 @@ class Game : ParserInterface {
         attacks: List<String>, // For now, we assume there is on only one attack added into a JSONArray
         trainerName: String,
     ) {
-        gameLoader.saveMonster(
+        dataHandler.saveMonster(
             monsterName,
             hp,
-            attack,
-            defense,
-            specAttack,
-            specDefense,
             attacks,
             trainerName,
         )
     }
 
-    override fun initiateBattle(trainer1: String, trainer2: String) = gameLoader.createBattle(trainer1, trainer2)
+    override fun initiateBattle(trainer1: String, trainer2: String) = dataHandler.createBattle(trainer1, trainer2)
 
 
     override fun viewStatus(battleId: Int) {
-        try {
-            val battle = gameLoader.loadBattle(battleId)
-
-            println("📊 Status of Battle '$battleId':")
-            println("Status: ${battle.battleStatus.name}")
-
-            val trainers = listOf(battle.trainer1, battle.trainer2)
-
-            for (trainer in trainers) {
-                println("\nTrainer: ${trainer.name}")
-                for (monster in trainer.getMonsters()) {
-                    val monsterName = monster.getName()
-                    val hp = monster.getHp()
-                    val firstAttackName = monster.getAttacks().firstOrNull()?.name ?: "Unknown"
-
-                    println("🧟 Monster: $monsterName | HP: $hp | Attack: $firstAttackName")
-                }
-            }
-
-            // TODO: who still needs to attack, current attackers, etc.
-        } catch (e: FileNotFoundException) {
-            println("❌ Battle with ID '$battleId' not found.")
-        } catch (e: Exception) {
-            println("❌ Failed to load battle: ${e.message}")
-        }
+//        try {
+//            val battle = dataHandler.loadBattle(battleId)
+//
+//            println("📊 Status of Battle '$battleId':")
+//            println("Status: ${battle.battleStatus.name}")
+//
+//            val trainers = listOf(battle.trainer1, battle.trainer2)
+//
+//            for (trainer in trainers) {
+//                println("\nTrainer: ${trainer.name}")
+//                for (monster in trainer.getMonsters()) {
+//                    val monsterName = monster.getName()
+//                    val hp = monster.getHp()
+//                    val firstAttackName = monster.getAttacks().firstOrNull()?.name ?: "Unknown"
+//
+//                    println("🧟 Monster: $monsterName | HP: $hp | Attack: $firstAttackName")
+//                }
+//            }
+//
+//            // TODO: who still needs to attack, current attackers, etc.
+//        } catch (e: FileNotFoundException) {
+//            println("❌ Battle with ID '$battleId' not found.")
+//        } catch (e: Exception) {
+//            println("❌ Failed to load battle: ${e.message}")
+//        }
     }
 
 

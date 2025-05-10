@@ -5,124 +5,109 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
 
-class GameLoader {
+class DataHandler : DataHandlerInterface{
 
-    private val saveFile = File(System.getProperty("user.dir"), "save_file.json")
-    // TODO: Use JSON later
-    lateinit var saveData: Set<Int>
+    override fun saveTrainer(trainerName: String) = saveTrainer(Trainer(trainerName))
 
-    fun saveTrainer(trainerName: String) = saveTrainer(Trainer(trainerName))
-    fun saveTrainer(trainer: Trainer) {
-        val folder = File("data/trainers")
-        if (!folder.exists()) folder.mkdirs()
+    override fun saveTrainer(trainer: Trainer) {
+        val trainersFile = File("data/trainers.json")
+        val trainersJson = if (trainersFile.exists()) {
+            JSONObject(trainersFile.readText())
+        } else {
+            JSONObject()
+        }
 
-        val trainerFile = File(folder, "${trainer.name}.json")
-
-        if (trainerFile.exists()){
-            println("You have already created a trainer with this name\n")
+        if (trainersJson.has(trainer.name)) {
+            println("Trainer '${trainer.name}' already exists.")
             return
         }
-        // Theoretically, you could get a trainer with their monsters
-        // But in practice, you first just add the trainer and then monster, also by modifying the trainer's file
-        // Otherwise, just add an empty list
+
         val trainerJson = JSONObject()
             .put("name", trainer.name)
-            .put("monsters", trainer.getMonsters())
+            .put("monsters", JSONArray(trainer.getMonsters().map { it.name }))
 
-        trainerFile.writeText(trainerJson.toString(4)) // pretty-printed
+        trainersJson.put(trainer.name, trainerJson)
+        trainersFile.parentFile?.mkdirs()
+        trainersFile.writeText(trainersJson.toString(4))
     }
-    fun loadTrainer(trainerName: String) : Trainer? {
-        val folder = File("data/trainers")
-        val trainerFile = File(folder, "${trainerName}.json")
-        if (!trainerFile.exists()){
-            println("Loading the trainer with name ${trainerName} failed, there is no such a trainer saved\n")
+    override fun loadTrainer(trainerName: String): Trainer? {
+        val trainersFile = File("data/trainers.json")
+        if (!trainersFile.exists()) {
+            println("Trainer file does not exist.")
             return null
         }
 
-        // extract the trainer's data from the file (name and their monsters)
-        val trainerJson = JSONObject(trainerFile.readText())
-
-        val trainerName = trainerJson.getString("name")
-
-        // Get monster names (JSONArray → List<String>)
-        val monstersJsonArray = trainerJson.optJSONArray("monsters") ?: JSONArray()  // Safe fallback
-        val monsterNames: MutableList<String> = mutableListOf()
-        for (i in 0 until monstersJsonArray.length()) {
-            val name = monstersJsonArray.optString(i, null)
-            if (name != null) {
-                monsterNames.add(name)
-            }
+        val trainersJson = JSONObject(trainersFile.readText())
+        if (!trainersJson.has(trainerName)) {
+            println("No trainer with name '$trainerName' found.")
+            return null
         }
 
-        // load monsters after their names
-        val monsters: MutableList<Monster> = mutableListOf()
-        monsterNames.forEach { name ->
-            val monster = loadMonster(name)
-            if (monster != null) {
-                monsters.add(monster)
-            }
+        val trainerJson = trainersJson.getJSONObject(trainerName)
+        val monsterNamesArray = trainerJson.optJSONArray("monsters") ?: JSONArray()
+        val monsters = mutableListOf<Monster>()
+
+        for (i in 0 until monsterNamesArray.length()) {
+            val monsterName = monsterNamesArray.getString(i)
+            loadMonster(monsterName)?.let { monsters.add(it) }
         }
 
-        val trainer = Trainer(name = trainerName, monsters=monsters)
-
-        return trainer
+        return Trainer(name = trainerName, monsters = monsters)
     }
 
+    override fun saveMonster(monster: Monster, trainerName: String) {
+        val monstersFile = File("data/monsters.json")
+        val monstersJson = if (monstersFile.exists()) {
+            JSONObject(monstersFile.readText())
+        } else {
+            JSONObject()
+        }
 
-    fun saveMonster(monster: Monster, trainerName: String){
-        val monsterFile = File("data/monsters/${monster.getName()}.json")
-        val trainerFile = File("data/trainers/$trainerName.json")
-
-        if(monsterFile.exists()){
-            println("A monster with such the name ${monster.getName()} already exists\n")
+        if (monstersJson.has(monster.name)) {
+            println("Monster '${monster.name}' already exists.")
             return
         }
-        // Make sure the monster file doesn't already exist and the trainer does
-        if (!trainerFile.exists()){
-            println("No trainer with such the name ${trainerName} found\n You first need to add the trainer and the monster\n")
+
+        monstersJson.put(monster.name, monsterToJson(monster))
+        monstersFile.parentFile?.mkdirs()
+        monstersFile.writeText(monstersJson.toString(4))
+
+        val trainersFile = File("data/trainers.json")
+        if (!trainersFile.exists()) {
+            println("Trainer '$trainerName' not found.")
             return
         }
-        val monsterJson = monsterToJson(monster)
 
-        // Write to file
-        monsterFile.parentFile.mkdirs()
-        monsterFile.writeText(monsterJson.toString(4)) // pretty print
+        fun saveMonsterToTrainer(trainersFile: File, trainerName: String, monsterName: String) {
+            val trainersJson = JSONObject(trainersFile.readText())
+            if (!trainersJson.has(trainerName)) {
+                println("Trainer '$trainerName' not found.")
+                return
+            }
 
-
-        fun saveMonsterToTrainer(trainerName: String, monsterName: String) {
-            val trainerJson = JSONObject(trainerFile.readText())
+            val trainerJson = trainersJson.getJSONObject(trainerName)
             val monstersArray = trainerJson.optJSONArray("monsters") ?: JSONArray()
 
-            // Check for duplicates
-            for (i in 0 until monstersArray.length()) {
-                if (monstersArray.getString(i) == monsterName) {
-                    println("Monster '$monsterName' is already assigned to trainer '$trainerName'.")
-                    return
-                }
+            if ((0 until monstersArray.length()).any { monstersArray.getString(it) == monsterName }) {
+                println("Trainer already has monster '$monsterName'.")
+                return
             }
 
-            // Add the monster and update the file
             monstersArray.put(monsterName)
             trainerJson.put("monsters", monstersArray)
-
-            trainerFile.writeText(trainerJson.toString(4))
+            trainersJson.put(trainerName, trainerJson)
+            trainersFile.writeText(trainersJson.toString(4))
         }
 
-        saveMonsterToTrainer(trainerName, monster.getName())
+        saveMonsterToTrainer(trainersFile, trainerName, monster.name)
     }
-
-
-    fun saveMonster(
+    override fun saveMonster(
         monsterName: String,
         hp: Int,
-        attack: Int,
-        defense: Int,
-        specAttack: Int,
-        specDefense: Int,
         attacks: List<String>, // For now, we assume there is on only one attack added into a JSONArray
         trainerName: String,
     ){
-        // where do we take the monster's speed and type?
+        // where do we take the monster's type from?
 
 //        val monster = Monster(name=monsterName, stats=BattleStats(hp, 0, attack, defense, specAttack, specDefense), type = , attacks = )
 //        saveMonster(monster)
@@ -132,18 +117,23 @@ class GameLoader {
 
 
     }
-
-    fun loadMonster(monsterName: String) : Monster?{
-        val monsterFile = File("data/monsters/${monsterName}.json")
-        if (!monsterFile.exists()) {
-            println("No monster with such a name found")
+    override fun loadMonster(monsterName: String): Monster? {
+        val monstersFile = File("data/monsters.json")
+        if (!monstersFile.exists()) {
+            println("Monsters file does not exist.")
             return null
         }
-        val monsterJson = JSONObject(monsterFile.readText())
-        return monsterFromJson(monsterJson)
 
+        val monstersJson = JSONObject(monstersFile.readText())
+        if (!monstersJson.has(monsterName)) {
+            println("No monster with name '$monsterName' found.")
+            return null
+        }
+
+        return monsterFromJson(monstersJson.getJSONObject(monsterName))
     }
-    fun saveBattle(battle: Battle) {
+
+    override fun saveBattle(battle: Battle) {
         // the battle json file must contain the id of the battle, two trainers and their monsters with all their stats
         // the trainer file and the monsters' file must stay the same
         // but the data in the battle file will be changed later during the battle
@@ -186,8 +176,8 @@ class GameLoader {
 
     // you can only pass two trainers for saving battle data only when you first create a battle
     // then you need to pass the battle's ID to save the battle (check saveBattle and createBattle)
-    fun createBattle(trainer1: Trainer, trainer2: Trainer) = saveBattle(battle = Battle(trainer1, trainer2))
-    fun createBattle(trainerName1: String, trainerName2: String){
+    override fun createBattle(trainer1: Trainer, trainer2: Trainer) = saveBattle(battle = Battle(trainer1, trainer2))
+    override fun createBattle(trainerName1: String, trainerName2: String){
         val trainer1 = requireNotNull(loadTrainer(trainerName1)) {
             "Trainer '$trainerName1' not found."
         }
@@ -198,7 +188,7 @@ class GameLoader {
         createBattle(trainer1, trainer2)
 
     }
-    fun loadBattle(battleID: Int): Battle {
+    override fun loadBattle(battleID: Int): Battle {
         val battleFile = File("data/battles/$battleID.json")
         if (!battleFile.exists()) {
             throw FileNotFoundException("❌ Battle file with ID $battleID not found.")
@@ -239,33 +229,27 @@ class GameLoader {
     // these function are used twice
     // firstly when adding/loading a monster to the game as an entity
     // secondly when saving/loading a battle (and monsters in it)
-    fun monsterToJson(monster: Monster): JSONObject {
+    private fun monsterToJson(monster: Monster): JSONObject {
         val statsJson = JSONObject()
-            .put("hp", monster.getHp())
-            .put("speed", monster.getSpeed())
-            .put("attack", monster.getAttack())
-            .put("defense", monster.getDefense())
-            .put("specialAttack", monster.getSpecialAttack())
-            .put("specialDefense", monster.getSpecialDefense())
+            .put("hp", monster.stats.hp)
+            .put("speed", monster.stats.speed)
 
-        val attackArray = JSONArray(monster.getAttacks().map { it.name })
+        val attackArray = JSONArray(monster.attacks.map { it.name })
 
         return JSONObject()
-            .put("name", monster.getName())
-            .put("type", monster.getType().name)
+            .put("name", monster.name)
+            .put("type", monster.type.name)
             .put("stats", statsJson)
             .put("attacks", attackArray)
     }
 
 
-    fun monsterFromJson(monsterJson: JSONObject): Monster {
+
+    private fun monsterFromJson(monsterJson: JSONObject): Monster {
+        val statsJson = monsterJson.getJSONObject("stats")
         val stats = BattleStats(
-            hp = monsterJson.getInt("hp"),
-            speed = monsterJson.getInt("speed"),
-            attack = monsterJson.getInt("attack"),
-            defense = monsterJson.getInt("defense"),
-            specialAttack = monsterJson.getInt("specialAttack"),
-            specialDefense = monsterJson.getInt("specialDefense")
+            hp = statsJson.getInt("hp"),
+            speed = statsJson.getInt("speed")
         )
 
         val attacksJsonArray = monsterJson.optJSONArray("attacks") ?: JSONArray()

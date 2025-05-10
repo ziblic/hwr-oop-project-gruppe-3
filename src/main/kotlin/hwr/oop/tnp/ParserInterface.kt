@@ -13,6 +13,6 @@ interface ParserInterface {
         trainerName: String
     )
     fun initiateBattle(trainer1: String, trainer2: String)
-    fun viewStatus()
+    fun viewStatus(battleID: Int)
     fun performAttack(battleID: Int, trainerName: String, selectedAttack: String)
 }
