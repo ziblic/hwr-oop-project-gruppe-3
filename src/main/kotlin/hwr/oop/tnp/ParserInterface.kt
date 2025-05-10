@@ -5,10 +5,7 @@ interface ParserInterface {
     fun addMonster(
         monsterName: String,
         hp: Int,
-        attack: Int,
-        defense: Int,
-        specAttack: Int,
-        specDefense: Int,
+        speed: Int,
         attacks: List<String>,
         trainerName: String
     )
