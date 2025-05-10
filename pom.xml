@@ -109,7 +109,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>hwr.oop.GameParserKt</mainClass>
+              <mainClass>hwr.oop.tnp.GameParserKt</mainClass>
             </manifest>
           </archive>
         </configuration>

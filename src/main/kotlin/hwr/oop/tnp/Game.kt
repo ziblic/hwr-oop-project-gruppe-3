@@ -1,16 +1,14 @@
 package hwr.oop.tnp
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.File
+
 import java.io.FileNotFoundException
 
-class Game {
+class Game : ParserInterface {
 
     private val gameLoader = GameLoader()
 
-    fun createTrainer(trainerName: String) = gameLoader.saveTrainer(trainerName)
+    override fun createTrainer(trainerName: String) = gameLoader.saveTrainer(trainerName)
 
-    fun addMonster(
+    override fun addMonster(
         monsterName: String,
         hp: Int,
         attack: Int,
@@ -32,10 +30,10 @@ class Game {
         )
     }
 
-    fun initiateBattle(trainer1: String, trainer2: String) = gameLoader.createBattle(trainer1, trainer2)
+    override fun initiateBattle(trainer1: String, trainer2: String) = gameLoader.createBattle(trainer1, trainer2)
 
 
-    fun viewStatus(battleId: Int) {
+    override fun viewStatus(battleId: Int) {
         try {
             val battle = gameLoader.loadBattle(battleId)
 
@@ -65,7 +63,7 @@ class Game {
 
 
     // TODO: Change Type to `selectedAttack: Attack`
-    fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {
+    override fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {
         println("Executing attack...")
     }
 

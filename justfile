@@ -23,3 +23,6 @@ setup fork:
 sync fork:
 	git switch main
 	git pull --rebase upstream main
+
+pitest:
+  mvn pitest:mutationCoverage
