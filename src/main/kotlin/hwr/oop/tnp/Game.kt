@@ -36,8 +36,12 @@ Trainer:            $trainerName
         println("Executing battle...")
     }
 
-    override fun viewStatus() {
+    override fun viewStatus(battleId: Int) {
         println("Executing view...")
+    }
+
+    override fun showAllBattles() {
+        println("Showing all battles with ID to user...")
     }
 
     // TODO: Change Type to `selectedAttack: Attack`

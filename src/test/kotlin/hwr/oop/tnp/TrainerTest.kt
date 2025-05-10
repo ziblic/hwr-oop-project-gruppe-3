@@ -15,7 +15,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `test trainer has monsters`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val bs = BattleStats(100, 100)
         val m1 = Monster("Peter", bs, Type.Water, emptyList<Attack>())
         val m2 = Monster("Hans", bs, Type.Fire, emptyList<Attack>())
 
@@ -38,7 +38,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `test add monster to trainer`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val bs = BattleStats(100, 100)
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
 
         val trainer = Trainer("Alex")
@@ -51,7 +51,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `init with max monsters works, throws no expection`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val bs = BattleStats(100, 100)
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
         assertThatNoException().isThrownBy {
             Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER) { m })
@@ -60,7 +60,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `test init with too many monsters throws exception`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val bs = BattleStats(100, 100)
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
 
         assertThrows<IllegalArgumentException> {
@@ -70,7 +70,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `test add max monsters works`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val bs = BattleStats(100, 100)
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
         val t = Trainer("Alex")
         assertThatNoException().isThrownBy {
@@ -83,7 +83,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `cant add more than max monsters`() {
-        val bs = BattleStats(100, 100, 100, 100, 100, 100)
+        val bs = BattleStats(100, 100)
         val m = Monster("Peter", bs, Type.Water, emptyList<Attack>())
         val t = Trainer("Alex")
         assertThrows<IllegalArgumentException> {
