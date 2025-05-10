@@ -94,14 +94,23 @@ class GameParser(private val args: List<String>) {
         game.initiateBattle(args[0], args[1])
     }
 
-    // TODO: Rework when the view logic is implemented
     private fun parseForViewBattle(args: List<String>) {
-        if (args.isEmpty()) {
+        if (args.isEmpty() || args.size != 1) {
             println(viewBattleHelp)
             return
         }
-        val battleID = parseToInt(args[0])
-        game.viewStatus(battleID)
+
+        if (args[0].trim().lowercase() == "all") {
+            game.showAllBattles()
+            return
+        }
+
+        try {
+            game.viewStatus(parseToInt(args[0]))
+        } catch (e: Exception) {
+            println("Some of the provided arguments could not be parsed to an Int")
+            return
+        }
     }
 
     private fun parseForPerformAttack(args: List<String>) {

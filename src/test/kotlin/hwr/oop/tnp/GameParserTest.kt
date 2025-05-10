@@ -233,7 +233,19 @@ class GameParserTest : AnnotationSpec() {
     @Test
     fun `View battle status`() {
         val output = captureStandardOut { main(arrayOf("view_battle", "0")) }.trim()
-        assertThat(output).isEqualTo(captureStandardOut { Game().viewStatus() }.trim())
+        assertThat(output).isEqualTo(captureStandardOut { Game().viewStatus(0) }.trim())
+    }
+
+    @Test
+    fun `Throw exception on invalid battleId`() {
+        val output = captureStandardOut { main(arrayOf("view_battle", "nr1")) }.trim()
+        assertThat(output).isEqualTo("Some of the provided arguments could not be parsed to an Int")
+    }
+
+    @Test
+    fun `View all battles`() {
+        val output = captureStandardOut { main(arrayOf("view_battle", "  ALL  ")) }.trim()
+        assertThat(output).isEqualTo(captureStandardOut { Game().showAllBattles() }.trim())
     }
 
     @Test
