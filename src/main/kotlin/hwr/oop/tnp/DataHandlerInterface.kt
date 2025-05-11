@@ -9,12 +9,14 @@ interface DataHandlerInterface {
     fun saveTrainer(trainerName: String)
     fun saveTrainer(trainer: Trainer)
     fun loadTrainer(trainerName: String) : Trainer?
-
+    fun deleteTrainer(trainerName: String)
+    fun deleteTrainer(trainer: Trainer?)
 
     fun saveMonster(monster: Monster, trainerName: String)
     fun saveMonster(
         monsterName: String,
         hp: Int,
+        speed: Int,
         attacks: List<String>, // For now, we assume there is on only one attack added into a JSONArray
         trainerName: String,
     )
@@ -22,9 +24,13 @@ interface DataHandlerInterface {
 
 
     fun saveBattle(battle: Battle)
-    fun createBattle(trainer1: Trainer, trainer2: Trainer)
-    fun createBattle(trainerName1: String, trainerName2: String)
+    fun createBattle(trainer1: Trainer, trainer2: Trainer) : Int
+    fun createBattle(trainerName1: String, trainerName2: String) : Int
     fun loadBattle(battleID: Int): Battle
+
+
+
+    fun deleteMonster(monsterName: String)
 
 
 

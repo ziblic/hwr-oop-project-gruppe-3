@@ -140,9 +140,6 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         100,
                         20,
-                        10,
-                        5,
-                        20,
                         listOf("Tackle"),
                         "Trainer_Kevin"
                     )
@@ -155,9 +152,6 @@ class GameParserTest : AnnotationSpec() {
                     Game().addMonster(
                         "Bob",
                         100,
-                        20,
-                        10,
-                        5,
                         20,
                         listOf(
                             "Tackle",

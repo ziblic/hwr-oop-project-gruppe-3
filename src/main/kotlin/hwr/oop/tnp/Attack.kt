@@ -31,7 +31,7 @@ enum class Attack(val type: Type, val damage: Int, val hitQuote: Double) {
     SPIRIT_WAVE(Type.Spirit, 25, 0.9),
     NIGHT_SCREAM(Type.Spirit, 40, 0.4);
 
-    public fun calcMultiplierHitQuote(critChance: Double, random: Double = Math.random()): Double {
+    fun calcMultiplierHitQuote(critChance: Double, random: Double = Math.random()): Double {
         require(critChance in 0.0..1.0) { "critChance must be between 0.0 and 1.0" }
         if (random < critChance) return 1.5 else return 1.0
     }

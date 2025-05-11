@@ -11,16 +11,14 @@ class Game : ParserInterface {
     override fun addMonster(
         monsterName: String,
         hp: Int,
-        attack: Int,
-        defense: Int,
-        specAttack: Int,
-        specDefense: Int,
+        speed: Int,
         attacks: List<String>, // For now, we assume there is on only one attack added into a JSONArray
         trainerName: String,
     ) {
         dataHandler.saveMonster(
             monsterName,
             hp,
+            speed,
             attacks,
             trainerName,
         )
@@ -61,6 +59,10 @@ class Game : ParserInterface {
     // TODO: Change Type to `selectedAttack: Attack`
     override fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {
         println("Executing attack...")
+    }
+
+    override fun showAllBattles() {
+        TODO("Not yet implemented")
     }
 
 //    private fun manageLoading() {

@@ -1,7 +1,9 @@
 package hwr.oop.tnp
 
 enum class BattleStatus {
-    Initiated,
-    Active,
-    Finished;
+    INITIATED,
+    PENDING,
+    IN_PROGRESS,
+    ACTIVE,
+    FINISHED;
 }
