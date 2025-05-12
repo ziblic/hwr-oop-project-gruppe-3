@@ -1,14 +1,14 @@
 package hwr.oop.tnp
 //
-//import io.kotest.core.spec.style.AnnotationSpec
-//import org.assertj.core.api.Assertions.assertThat
-//import org.json.JSONObject
-//import org.junit.jupiter.api.assertThrows
-//import java.io.ByteArrayOutputStream
-//import java.io.File
-//import java.io.PrintStream
+// import io.kotest.core.spec.style.AnnotationSpec
+// import org.assertj.core.api.Assertions.assertThat
+// import org.json.JSONObject
+// import org.junit.jupiter.api.assertThrows
+// import java.io.ByteArrayOutputStream
+// import java.io.File
+// import java.io.PrintStream
 //
-//class GameTest : AnnotationSpec() {
+// class GameTest : AnnotationSpec() {
 //
 //    private val trainer1 = "Ash"
 //    private val trainer2 = "Misty"
@@ -222,4 +222,4 @@ package hwr.oop.tnp
 //        assertThat(output).contains("Trainer: Misty")
 //        assertThat(output).contains("🧟 Monster: Staryu | HP: 80 | Attack: Water Gun")
 //    }
-//}
+// }

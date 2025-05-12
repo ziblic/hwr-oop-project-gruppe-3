@@ -37,3 +37,4 @@ build/
 ### Custom ###
 .stylua.toml
 kls_database.db
+data/

@@ -1,24 +1,27 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.createTempDirectory
 
 class TrainerDataHandlerTest : AnnotationSpec() {
-    private lateinit var tempDir: File
+    private lateinit var tempDir: Path
     private lateinit var trainersFile: File
     private lateinit var handler: TrainerDataHandler
 
     @BeforeEach
     fun setup() {
-        tempDir = createTempDir()
-        trainersFile = File(tempDir, "trainers.json")
+        tempDir = createTempDirectory(Paths.get(System.getProperty("user.dir")), "tmp")
+        trainersFile = File(tempDir.toFile(), "trainers.json")
         handler = TrainerDataHandler(trainersFile)
     }
 
     @AfterEach
     fun cleanup() {
-        tempDir.deleteRecursively()
+        tempDir.toFile().deleteRecursively()
     }
 
     @Test
@@ -48,7 +51,7 @@ class TrainerDataHandlerTest : AnnotationSpec() {
         val monsterName = "Squirtle"
         val bs = BattleStats(100, 100)
         val monster = Monster(monsterName, bs, Type.Water, emptyList())
-        MonsterDataHandler(File(tempDir, "monsters.json")).saveMonster(monster)
+        MonsterDataHandler(File(tempDir.toFile(), "monsters.json")).saveMonster(monster)
 
         val trainer = Trainer("Misty")
         handler.saveTrainer(trainer)
@@ -71,7 +74,7 @@ class TrainerDataHandlerTest : AnnotationSpec() {
     fun `deleteMonsterInTrainers removes reference`() {
         val bs = BattleStats(100, 100)
         val monster = Monster("Charmander", bs, Type.Fire, emptyList())
-        val monsterHandler = MonsterDataHandler(File(tempDir, "monsters.json"))
+        val monsterHandler = MonsterDataHandler(File(tempDir.toFile(), "monsters.json"))
         monsterHandler.saveMonster(monster)
 
         val trainer = Trainer("Red", mutableListOf(monster))

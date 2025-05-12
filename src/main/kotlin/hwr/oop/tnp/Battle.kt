@@ -10,6 +10,4 @@ class Battle(
             return (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
         }
     }
-
-
 }

@@ -2,12 +2,8 @@ package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
 import org.assertj.core.api.Assertions.assertThat
-import org.json.JSONArray
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
-import kotlin.io.path.createTempDirectory
 
 class MonsterJsonConverterTest : AnnotationSpec() {
 
@@ -62,5 +58,4 @@ class MonsterJsonConverterTest : AnnotationSpec() {
         val originalAttackNames = monster.attacks.map { it.name }
         assertThat(attackNames).containsExactlyElementsOf(originalAttackNames)
     }
-
 }

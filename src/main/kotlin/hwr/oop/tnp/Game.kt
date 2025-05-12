@@ -1,10 +1,8 @@
 package hwr.oop.tnp
 
-import java.io.FileNotFoundException
-
 class Game : ParserInterface {
 
-    private val dataHandler : DataHandlerInterface = DataHandler()
+    private val dataHandler: DataHandlerInterface = DataHandler()
 
     override fun createTrainer(trainerName: String) = dataHandler.saveTrainer(trainerName)
 
@@ -25,7 +23,6 @@ class Game : ParserInterface {
     }
 
     override fun initiateBattle(trainer1: String, trainer2: String) = dataHandler.createBattle(trainer1, trainer2)
-
 
     override fun viewStatus(battleId: Int) {
 //        try {
@@ -54,7 +51,6 @@ class Game : ParserInterface {
 //            println("❌ Failed to load battle: ${e.message}")
 //        }
     }
-
 
     // TODO: Change Type to `selectedAttack: Attack`
     override fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {

@@ -9,7 +9,7 @@ class TrainerDataHandler(private val trainersFile: File = File("data/trainers.js
     private val monsterDataHandler = MonsterDataHandler()
 
     fun saveTrainer(trainerName: String) = saveTrainer(Trainer(trainerName))
-    fun saveTrainer(trainer: Trainer){
+    fun saveTrainer(trainer: Trainer) {
         val trainersJson = if (trainersFile.exists()) {
             JSONObject(trainersFile.readText())
         } else {
@@ -29,7 +29,7 @@ class TrainerDataHandler(private val trainersFile: File = File("data/trainers.js
         trainersFile.parentFile?.mkdirs()
         trainersFile.writeText(trainersJson.toString(4))
     }
-    fun loadTrainer(trainerName: String) : Trainer?{
+    fun loadTrainer(trainerName: String): Trainer? {
         if (!trainersFile.exists()) {
             println("Trainer file does not exist.")
             return null
@@ -73,7 +73,7 @@ class TrainerDataHandler(private val trainersFile: File = File("data/trainers.js
         trainersJson.put(trainerName, trainerJson)
         trainersFile.writeText(trainersJson.toString(4))
     }
-    fun deleteTrainer(trainer: Trainer?){
+    fun deleteTrainer(trainer: Trainer?) {
         if (!trainersFile.exists()) {
             println("No trainers to delete.")
             return
@@ -89,7 +89,7 @@ class TrainerDataHandler(private val trainersFile: File = File("data/trainers.js
         println("Trainer '${trainer?.name}' and their monsters deleted.")
     }
 
-    fun deleteMonsterInTrainers(monsterName: String){
+    fun deleteMonsterInTrainers(monsterName: String) {
         if (!trainersFile.exists()) return
 
         val trainersJson = JSONObject(trainersFile.readText())

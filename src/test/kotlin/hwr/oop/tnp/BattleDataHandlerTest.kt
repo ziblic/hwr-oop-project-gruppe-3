@@ -1,13 +1,17 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
 import java.io.File
 import java.io.FileNotFoundException
+import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.createTempDirectory
 
 class BattleDataHandlerTest : AnnotationSpec() {
 
-    private lateinit var tempDir: File
+    private lateinit var tempDir: Path
     private lateinit var battleDir: File
     private lateinit var handler: BattleDataHandler
 
@@ -16,32 +20,40 @@ class BattleDataHandlerTest : AnnotationSpec() {
 
     @BeforeEach
     fun setup() {
-        tempDir = createTempDir()
-        battleDir = File(tempDir, "battles")
+        tempDir = createTempDirectory(Paths.get(System.getProperty("user.dir")), "tmp")
+        battleDir = File(tempDir.toFile(), "battles")
         handler = BattleDataHandler(battleDir)
 
-        trainer1 = Trainer("Ash", listOf(
-            Monster(
-                name = "Pikachu",
-                stats = BattleStats(hp = 100, speed = 80),
-                type = Type.Normal,
-                attacks = listOf(Attack.NORMAL_SLAM, Attack.GROUND_HAMMER)
+        trainer1 =
+            Trainer(
+                "Ash",
+                listOf(
+                    Monster(
+                        name = "Pikachu",
+                        stats = BattleStats(hp = 100, speed = 80),
+                        type = Type.Normal,
+                        attacks = listOf(Attack.NORMAL_SLAM, Attack.GROUND_HAMMER)
+                    )
+                )
             )
-        ))
 
-        trainer2 = Trainer("Misty", listOf(
-            Monster(
-                name = "Staryu",
-                stats = BattleStats(hp = 90, speed = 70),
-                type = Type.Water,
-                attacks = listOf(Attack.TSUNAMI, Attack.SPLASH)
+        trainer2 =
+            Trainer(
+                "Misty",
+                listOf(
+                    Monster(
+                        name = "Staryu",
+                        stats = BattleStats(hp = 90, speed = 70),
+                        type = Type.Water,
+                        attacks = listOf(Attack.TSUNAMI, Attack.SPLASH)
+                    )
+                )
             )
-        ))
     }
 
     @AfterEach
     fun cleanup() {
-        tempDir.deleteRecursively()
+        tempDir.toFile().deleteRecursively()
     }
 
     @Test
@@ -65,21 +77,22 @@ class BattleDataHandlerTest : AnnotationSpec() {
 
         assertThat(loaded.trainer1.name).isEqualTo("Ash")
         assertThat(loaded.trainer1.getMonsters()).hasSize(1)
-        assertThat(loaded.trainer1.getMonsters()[0].attacks).containsExactly(Attack.NORMAL_SLAM, Attack.GROUND_HAMMER)
+        assertThat(loaded.trainer1.getMonsters()[0].attacks)
+            .containsExactly(Attack.NORMAL_SLAM, Attack.GROUND_HAMMER)
 
         assertThat(loaded.trainer2.name).isEqualTo("Misty")
         assertThat(loaded.trainer2.getMonsters()).hasSize(1)
-        assertThat(loaded.trainer2.getMonsters()[0].attacks).containsExactly(Attack.TSUNAMI, Attack.SPLASH)
+        assertThat(loaded.trainer2.getMonsters()[0].attacks)
+            .containsExactly(Attack.TSUNAMI, Attack.SPLASH)
     }
 
     @Test
     fun `loadBattle should throw FileNotFoundException for nonexistent battle`() {
         val invalidId = 999999
-        val exception = catchThrowable {
-            handler.loadBattle(invalidId)
-        }
+        val exception = catchThrowable { handler.loadBattle(invalidId) }
 
-        assertThat(exception).isInstanceOf(FileNotFoundException::class.java)
+        assertThat(exception)
+            .isInstanceOf(FileNotFoundException::class.java)
             .hasMessageContaining("Battle file with ID $invalidId not found")
     }
 }

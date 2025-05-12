@@ -124,6 +124,3 @@ class DataHandlerTest : AnnotationSpec() {
         assertThat(ex.message).contains("Trainer 'Ghost' not found")
     }
 }
-
-
-

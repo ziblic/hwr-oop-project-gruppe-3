@@ -1,6 +1,5 @@
 package hwr.oop.tnp
 
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
@@ -53,9 +52,5 @@ class MonsterDataHandler(private val monstersFile: File = File("data/monsters.js
         monstersJson.remove(monster?.name)
         monstersFile.writeText(monstersJson.toString(4))
         println("Monster '${monster?.name}' deleted from monsters.json.")
-
-
     }
-
-
 }

@@ -1,34 +1,36 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.createTempDirectory
 
 class MonsterDataHandlerTest : AnnotationSpec() {
 
-    private lateinit var tempDir: File
+    private lateinit var tempDir: Path
     private lateinit var monstersFile: File
     private lateinit var handler: MonsterDataHandler
 
-    private val testMonster = Monster(
-        name = "Testmon",
-        stats = BattleStats(hp = 100, speed = 30),
-        type = Type.Normal,
-        attacks = listOf(
-            Attack.DRUM
+    private val testMonster =
+        Monster(
+            name = "Testmon",
+            stats = BattleStats(hp = 100, speed = 30),
+            type = Type.Normal,
+            attacks = listOf(Attack.DRUM)
         )
-    )
 
     @BeforeEach
     fun setup() {
-        tempDir = createTempDir()
-        monstersFile = File(tempDir, "monsters.json")
+        tempDir = createTempDirectory(Paths.get(System.getProperty("user.dir")), "tmp")
+        monstersFile = File(tempDir.toFile(), "monsters.json")
         handler = MonsterDataHandler(monstersFile)
     }
 
     @AfterEach
     fun cleanup() {
-        tempDir.deleteRecursively()
+        tempDir.toFile().deleteRecursively()
     }
 
     @Test
@@ -56,7 +58,7 @@ class MonsterDataHandlerTest : AnnotationSpec() {
 
     @Test
     fun `loadMonster should return null if file does not exist`() {
-        val freshHandler = MonsterDataHandler(File(tempDir, "nonexistent.json"))
+        val freshHandler = MonsterDataHandler(File(tempDir.toFile(), "nonexistent.json"))
         val loaded = freshHandler.loadMonster("Ghostmon")
         assertThat(loaded).isNull()
     }
