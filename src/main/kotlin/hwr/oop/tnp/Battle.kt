@@ -1,76 +1,69 @@
 package hwr.oop.tnp
 
+
 class Battle(
     private val trainerOne: Trainer,
-    private val trainerTwo: Trainer
+    private val trainerTwo: Trainer,
+    private val battleId : Int = generateId(),
+    private var currentTrainer : Trainer = setBeginningTrainer(trainerOne, trainerTwo)
 ) {
-    private var currentTurn: Int = 0
+    companion object {
+        private fun generateId(): Int {
+            return(System.currentTimeMillis() % Int.MAX_VALUE).toInt()
+        }
+
+        private fun setBeginningTrainer(trainerOne: Trainer, trainerTwo: Trainer) : Trainer {
+            val m1 = trainerOne.nextMonster()
+                ?: throw IllegalStateException("Trainer one has no alive monsters")
+            val m2 = trainerTwo.nextMonster()
+                ?: throw IllegalStateException("Trainer two has no alive monsters")
+
+            if (m1.stats.speed >= m2.stats.speed) {
+                return trainerOne
+            } else {
+                return trainerTwo
+            }
+        }
+    }
+
+    fun isFinished(): Boolean = finished
+    private var currentRound: Int = 0
     var finished: Boolean = false
         private set // Only this class can modify the value
-
-    fun getCurrentTurn(): Int = currentTurn
-
-    fun startBattle() {
-        currentTurn = 1
-        finished = false
-    }
 
     private fun endBattle() {
         finished = true
     }
 
-    fun executeTurn(attack1: Attack, attack2: Attack) {
+    private fun startRound() {
+        if (determineWinner() != null) {
+            endBattle()
+            return
+        }
+        currentRound++
+    }
+
+    private fun getOpponent(): Trainer {
+        return if (currentTrainer == trainerOne) trainerTwo else trainerOne
+    }
+
+    fun takeTurn(attack: Attack) {
+        startRound()
         if (finished) {
             throw IllegalStateException("Battle is already finished")
         }
+        val monster = currentTrainer.nextMonster()
+        val opponent = getOpponent()
+        val oppMonster = opponent.nextMonster()
 
-        val m1 = trainerOne.getMonsters().firstOrNull()
-            ?: throw IllegalStateException("Trainer one has no monsters")
-        val m2 = trainerTwo.getMonsters().firstOrNull()
-            ?: throw IllegalStateException("Trainer two has no monsters")
-
-        var first: Monster
-        var second: Monster
-        var firstAttack: Attack
-        var secondAttack: Attack
-
-        if (m1.getSpeed() >= m2.getSpeed()) {
-            first = m1
-            second = m2
-            firstAttack = attack1
-            secondAttack = attack2
-        } else {
-            first = m2
-            second = m1
-            firstAttack = attack2
-            secondAttack = attack1
-        }
-
-        first.attack(firstAttack, second)
-        if (second.isKO()) {
-            endBattle()
-            return
-        }
-
-        second.attack(secondAttack, first)
-        if (first.isKO()) {
-            endBattle()
-            return
-        }
-
-        currentTurn++
+        monster!!.attack(attack, oppMonster!!)
+        currentTrainer = opponent
     }
 
     fun determineWinner(): Trainer? {
-        if (!finished) return null
-
-        val m1 = trainerOne.getMonsters().firstOrNull() ?: return null
-        val m2 = trainerTwo.getMonsters().firstOrNull() ?: return null
-
-        return when {
-            !m1.isKO() && m2.isKO() -> trainerOne
-            m1.isKO() && !m2.isKO() -> trainerTwo
-            else -> null
-        }
+        if (trainerOne.isDefeated()) return trainerTwo
+        if (trainerTwo.isDefeated()) return trainerOne
+        return null
     }
 }
+
