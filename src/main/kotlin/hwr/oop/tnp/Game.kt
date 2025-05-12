@@ -22,34 +22,20 @@ class Game : ParserInterface {
         )
     }
 
-    override fun initiateBattle(trainer1: String, trainer2: String) = dataHandler.createBattle(trainer1, trainer2)
+    override fun initiateBattle(trainer1: String, trainer2: String) : Int {
+        try {
+            return dataHandler.createBattle(trainer1, trainer2)
+        }
+        catch (e: Exception ){
+            println(e.message)
+            return 0
+        }
+        
+
+    }
 
     override fun viewStatus(battleId: Int) {
-//        try {
-//            val battle = dataHandler.loadBattle(battleId)
-//
-//            println("📊 Status of Battle '$battleId':")
-//            println("Status: ${battle.battleStatus.name}")
-//
-//            val trainers = listOf(battle.trainer1, battle.trainer2)
-//
-//            for (trainer in trainers) {
-//                println("\nTrainer: ${trainer.name}")
-//                for (monster in trainer.getMonsters()) {
-//                    val monsterName = monster.getName()
-//                    val hp = monster.getHp()
-//                    val firstAttackName = monster.getAttacks().firstOrNull()?.name ?: "Unknown"
-//
-//                    println("🧟 Monster: $monsterName | HP: $hp | Attack: $firstAttackName")
-//                }
-//            }
-//
-//            // TODO: who still needs to attack, current attackers, etc.
-//        } catch (e: FileNotFoundException) {
-//            println("❌ Battle with ID '$battleId' not found.")
-//        } catch (e: Exception) {
-//            println("❌ Failed to load battle: ${e.message}")
-//        }
+
     }
 
     // TODO: Change Type to `selectedAttack: Attack`
@@ -58,14 +44,8 @@ class Game : ParserInterface {
     }
 
     override fun showAllBattles() {
-        TODO("Not yet implemented")
+        // TO-DO: load all battles and print them
+        println("Showing all battles")
     }
 
-//    private fun manageLoading() {
-//        gameLoader.loadGame()
-//    }
-//
-//    private fun manageSaving() {
-//        gameLoader.saveGame()
-//    }
 }

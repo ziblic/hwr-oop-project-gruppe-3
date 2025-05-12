@@ -17,15 +17,16 @@ class Monster(
             when (otherMonster.type) {
                 attackUsed.type.effectiveAgainst -> 2.0
                 attackUsed.type.lessEffectiveAgainst -> 0.5
+                attackUsed.type.noEffectAgainst -> 0.0
                 else -> 1.0
             }
 
         val damageAmount: Int =
             (
-                attackUsed.damage.toDouble() *
-                    multiplier *
-                    attackUsed.calcMultiplierHitQuote(attackUsed.hitQuote)
-                )
+                    attackUsed.damage.toDouble() *
+                            multiplier *
+                            attackUsed.calcMultiplierHitQuote(attackUsed.hitQuote)
+                    )
                 .toInt()
         otherMonster.takeDamage(damageAmount)
     }

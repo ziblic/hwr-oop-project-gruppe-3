@@ -25,13 +25,13 @@ class TypeTest : AnnotationSpec() {
         assertThat(monsterType.lessEffectiveAgainst).isEqualTo(Type.Fire)
     }
 
-//    @Test
-//    fun `Test type Spirit has no effect against Normal`() {
-//        assertThat(Type.Spirit.noEffectAgainst).isEqualTo(Type.Normal)
-//    }
-//
-//    @Test
-//    fun `Test type Normal has no effect against Spirit`() {
-//        assertThat(Type.Normal.noEffectAgainst).isEqualTo(Type.Spirit)
-//    }
+    @Test
+    fun `Test type Spirit has no effect against Normal`() {
+        assertThat(Type.Spirit.noEffectAgainst).isEqualTo(Type.Normal)
+    }
+
+    @Test
+    fun `Test type Normal has no effect against Spirit`() {
+        assertThat(Type.Normal.noEffectAgainst).isEqualTo(Type.Spirit)
+    }
 }

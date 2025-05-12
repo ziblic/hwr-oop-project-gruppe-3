@@ -15,9 +15,6 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         "abc",
                         "abc",
-                        "abc",
-                        "abc",
-                        "abc",
                         "Tackle",
                         "Trainer_Kevin"
                     )
@@ -104,10 +101,7 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         "100",
                         "20",
-                        "10",
-                        "5",
-                        "20",
-                        "Tackle",
+                        "WATERFALL",
                         "Trainer_Kevin"
                     )
                 )
@@ -121,13 +115,10 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         "100",
                         "20",
-                        "10",
-                        "5",
-                        "20",
-                        "Tackle",
-                        "Fireball",
-                        "Waterbomb",
-                        "Some Attack",
+                        "WATERFALL",
+                        "TSUNAMI",
+                        "DEEP_SEA_GRIP",
+                        "SPLASH",
                         "Trainer_Kevin"
                     )
                 )
@@ -140,7 +131,7 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         100,
                         20,
-                        listOf("Tackle"),
+                        listOf("WATERFALL"),
                         "Trainer_Kevin"
                     )
                 }
@@ -154,10 +145,10 @@ class GameParserTest : AnnotationSpec() {
                         100,
                         20,
                         listOf(
-                            "Tackle",
-                            "Fireball",
-                            "Waterbomb",
-                            "Some Attack"
+                            "WATERFALL",
+                            "TSUNAMI",
+                            "DEEP_SEA_GRIP",
+                            "SPLASH"
                         ),
                         "Trainer_Kevin"
                     )
@@ -182,9 +173,6 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         "100",
                         "20",
-                        "10",
-                        "5",
-                        "20",
                         "Fireball",
                         "Tackle",
                         "Waterbomb",
@@ -196,13 +184,20 @@ class GameParserTest : AnnotationSpec() {
             }
                 .trim()
         val output2 =
-            captureStandardOut { main(arrayOf("add_monster", "Bob", "100", "20", "10")) }.trim()
+            captureStandardOut { main(arrayOf("add_monster", "Bob", "100", "20", "Tackle")) }
+                .trim()
         assertThat(output1).isEqualTo(addMonsterHelp)
         assertThat(output2).isEqualTo(addMonsterHelp)
     }
 
     @Test
     fun `Start new battle`() {
+
+        // given
+
+        // when
+
+        // then
         val output = captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa")) }.trim()
         assertThat(output)
             .isEqualTo(captureStandardOut { Game().initiateBattle("Bob", "Lisa") }.trim())
