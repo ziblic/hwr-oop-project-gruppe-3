@@ -6,7 +6,7 @@ import java.io.File
 
 class TrainerDataHandler(private val trainersFile: File = File("data/trainers.json")) {
 
-    private val monsterDataHandler = MonsterDataHandler()
+    private val monsterDataHandler = MonsterDataHandler(File(trainersFile.parentFile, "monsters.json"))
 
     fun saveTrainer(trainerName: String) = saveTrainer(Trainer(trainerName))
     fun saveTrainer(trainer: Trainer) {

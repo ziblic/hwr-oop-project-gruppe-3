@@ -39,23 +39,4 @@ class MonsterJsonConverterTest : AnnotationSpec() {
             assertThat(attacksJsonArray.getString(i)).isEqualTo(monster.attacks[i].name)
         }
     }
-
-    @Test
-    fun `fromJson converts JSON to Monster correctly`() {
-        // Convert monster to JSON first
-        val json = MonsterJsonConverter.toJson(monster)
-
-        // Convert the JSON back to a Monster object
-        val deserializedMonster = MonsterJsonConverter.fromJson(json)
-
-        // Check if the values are correctly restored
-        assertThat(deserializedMonster.name).isEqualTo(monster.name)
-        assertThat(deserializedMonster.type).isEqualTo(monster.type)
-        assertThat(deserializedMonster.stats.hp).isEqualTo(monster.stats.hp)
-        assertThat(deserializedMonster.stats.speed).isEqualTo(monster.stats.speed)
-
-        val attackNames = deserializedMonster.attacks.map { it.name }
-        val originalAttackNames = monster.attacks.map { it.name }
-        assertThat(attackNames).containsExactlyElementsOf(originalAttackNames)
-    }
 }

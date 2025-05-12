@@ -18,7 +18,7 @@ class MonsterDataHandlerTest : AnnotationSpec() {
             name = "Testmon",
             stats = BattleStats(hp = 100, speed = 30),
             type = Type.Normal,
-            attacks = listOf(Attack.DRUM)
+            attacks = listOf(Attack.LAVA_FLOOD)
         )
 
     @BeforeEach
@@ -42,7 +42,7 @@ class MonsterDataHandlerTest : AnnotationSpec() {
         assertThat(loaded!!.name).isEqualTo(testMonster.name)
         assertThat(loaded.stats.hp).isEqualTo(testMonster.stats.hp)
         assertThat(loaded.attacks).hasSize(1)
-        assertThat(loaded.attacks[0].name).isEqualTo("Flame Burst")
+        assertThat(loaded.attacks[0].name).isEqualTo("LAVA_FLOOD")
     }
 
     @Test

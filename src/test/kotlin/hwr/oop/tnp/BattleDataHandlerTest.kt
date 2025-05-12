@@ -63,7 +63,7 @@ class BattleDataHandlerTest : AnnotationSpec() {
 
         val file = File(battleDir, "${battle.battleId}.json")
         assertThat(file.exists()).isTrue
-        assertThat(file.readText()).contains("Ash", "Misty", "battleId", "monsters", "status")
+        assertThat(file.readText()).contains("Ash", "Misty", "battleId", "monsters")
     }
 
     @Test

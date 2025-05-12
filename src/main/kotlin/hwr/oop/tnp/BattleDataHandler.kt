@@ -42,6 +42,15 @@ class BattleDataHandler(private val battleDir: File = File("data/battles")) {
             )
 
         val battleFile = File(battleDir, "${battle.battleId}.json")
+
+        // Ensure the parent directory exists
+        battleFile.parentFile.mkdirs()
+
+        // Create the file if it does not exist
+        if (!battleFile.exists()) {
+            battleFile.createNewFile()
+        }
+
         battleFile.writeText(battleJson.toString(4)) // pretty print
 
         println("✅ Battle '${battle.battleId}' successfully saved between '${battle.trainer1.name}' and '${battle.trainer2.name}'")
