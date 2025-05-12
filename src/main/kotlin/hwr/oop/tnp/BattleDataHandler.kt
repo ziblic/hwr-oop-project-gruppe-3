@@ -28,7 +28,6 @@ class BattleDataHandler(private val battleDir: File = File("data/battles")) {
         // Final battle JSON object
         val battleJson = JSONObject()
             .put("battleId", battle.battleId)
-            .put("status", battle.battleStatus.name)
             .put("rounds", JSONArray())
             .put("trainer1", JSONObject()
                 .put("name", battle.trainer1.name)
@@ -73,13 +72,11 @@ class BattleDataHandler(private val battleDir: File = File("data/battles")) {
         val trainer1 = Trainer(trainer1Json.getString("name"), trainer1Monsters)
         val trainer2 = Trainer(trainer2Json.getString("name"), trainer2Monsters)
 
-        val battleStatus = BattleStatus.valueOf(battleJson.getString("status"))
 
         return Battle(
             battleId = battleId,
             trainer1 = trainer1,
-            trainer2 = trainer2,
-            battleStatus = battleStatus
+            trainer2 = trainer2
         )
     }
 

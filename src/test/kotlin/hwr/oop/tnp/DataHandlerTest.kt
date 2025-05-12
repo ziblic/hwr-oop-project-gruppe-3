@@ -121,7 +121,9 @@ class DataHandlerTest : AnnotationSpec() {
         val ex = assertThrows<IllegalArgumentException> {
             dataHandler.createBattle("Ghost", "Phantom")
         }
-
         assertThat(ex.message).contains("Trainer 'Ghost' not found")
     }
 }
+
+
+

@@ -46,7 +46,7 @@ class BattleDataHandlerTest : AnnotationSpec() {
 
     @Test
     fun `saveBattle should write a valid JSON file to disk`() {
-        val battle = Battle(trainer1 = trainer1, trainer2 = trainer2, battleStatus = BattleStatus.PENDING)
+        val battle = Battle(trainer1 = trainer1, trainer2 = trainer2)
         handler.saveBattle(battle)
 
         val file = File(battleDir, "${battle.battleId}.json")
@@ -56,13 +56,12 @@ class BattleDataHandlerTest : AnnotationSpec() {
 
     @Test
     fun `loadBattle should correctly read battle from file`() {
-        val battle = Battle(trainer1 = trainer1, trainer2 = trainer2, battleStatus = BattleStatus.IN_PROGRESS)
+        val battle = Battle(trainer1 = trainer1, trainer2 = trainer2)
         handler.saveBattle(battle)
 
         val loaded = handler.loadBattle(battle.battleId)
 
         assertThat(loaded.battleId).isEqualTo(battle.battleId)
-        assertThat(loaded.battleStatus).isEqualTo(BattleStatus.IN_PROGRESS)
 
         assertThat(loaded.trainer1.name).isEqualTo("Ash")
         assertThat(loaded.trainer1.getMonsters()).hasSize(1)

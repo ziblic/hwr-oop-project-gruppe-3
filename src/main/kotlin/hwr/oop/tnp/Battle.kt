@@ -3,8 +3,7 @@ package hwr.oop.tnp
 class Battle(
     val trainer1: Trainer,
     val trainer2: Trainer,
-    val battleId: Int = generateId(),
-    val battleStatus: BattleStatus = BattleStatus.INITIATED
+    val battleId: Int = generateId()
 ) {
     companion object {
         private fun generateId(): Int {

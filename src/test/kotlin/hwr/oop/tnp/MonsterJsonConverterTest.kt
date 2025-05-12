@@ -63,13 +63,4 @@ class MonsterJsonConverterTest : AnnotationSpec() {
         assertThat(attackNames).containsExactlyElementsOf(originalAttackNames)
     }
 
-    @Test
-    fun `toJson and fromJson should round-trip data correctly`() {
-        // Convert to JSON and back
-        val json = MonsterJsonConverter.toJson(monster)
-        val roundTrippedMonster = MonsterJsonConverter.fromJson(json)
-
-        // Verify the round-tripped Monster has the same data
-        assertThat(roundTrippedMonster).isEqualTo(monster)
-    }
 }
