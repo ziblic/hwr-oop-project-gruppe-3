@@ -54,6 +54,10 @@ class TrainerDataHandler(private val trainersFile: File = File("data/trainers.js
     }
     fun addMonsterToTrainer(trainerName: String, monsterName: String) {
 
+        if (!trainersFile.exists()) {
+            println("Trainer file does not exist.")
+            return
+        }
         val trainersJson = JSONObject(trainersFile.readText())
         if (!trainersJson.has(trainerName)) {
             println("Trainer '$trainerName' not found.")
@@ -90,7 +94,8 @@ class TrainerDataHandler(private val trainersFile: File = File("data/trainers.js
     }
 
     fun deleteMonsterInTrainers(monsterName: String) {
-        if (!trainersFile.exists()) return
+        if (!trainersFile.exists())
+            return
 
         val trainersJson = JSONObject(trainersFile.readText())
 

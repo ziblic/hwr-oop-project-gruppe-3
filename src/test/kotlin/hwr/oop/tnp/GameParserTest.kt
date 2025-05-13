@@ -107,6 +107,7 @@ class GameParserTest : AnnotationSpec() {
                 )
             }
                 .trim()
+
         val output_2 =
             captureStandardOut {
                 main(
@@ -124,6 +125,7 @@ class GameParserTest : AnnotationSpec() {
                 )
             }
                 .trim()
+
         assertThat(output)
             .isEqualTo(
                 captureStandardOut {

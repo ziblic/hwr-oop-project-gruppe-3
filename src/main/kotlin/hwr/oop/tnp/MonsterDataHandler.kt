@@ -35,7 +35,12 @@ class MonsterDataHandler(private val monstersFile: File = File("data/monsters.js
         return MonsterJsonConverter.fromJson(monstersJson.getJSONObject(monsterName))
     }
 
-    fun deleteMonster(monsterName: String) = deleteMonster(loadMonster(monsterName))
+    fun deleteMonster(monsterName: String) {
+        val monster  = requireNotNull(loadMonster(monsterName)){
+            "Monster ${monsterName} to be deleted not found"
+        }
+        deleteMonster(loadMonster(monsterName))
+    }
 
     fun deleteMonster(monster: Monster?) {
         if (!monstersFile.exists()) {

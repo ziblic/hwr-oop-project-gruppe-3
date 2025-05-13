@@ -22,16 +22,40 @@ class Game : ParserInterface {
         )
     }
 
-    override fun initiateBattle(trainer1: String, trainer2: String): Int {
+
+
+    override fun initiateBattle(trainer1: String, trainer2: String) : Int {
         try {
             return dataHandler.createBattle(trainer1, trainer2)
-        } catch (e: Exception) {
-            println(e.message)
+        }
+        catch (e: IllegalArgumentException ){
+            println("Caught exception: ${e.message}")
             return 0
         }
     }
 
+    override fun deleteMonster(monsterName: String){
+        try {
+            dataHandler.deleteMonster(monsterName)
+        }
+        catch (e: IllegalArgumentException){
+            println("Caught exception: ${e.message}")
+        }
+
+    }
+    override fun deleteTrainer(trainerName: String){
+
+        try {
+            dataHandler.deleteTrainer(trainerName)
+        }
+        catch (e: IllegalArgumentException){
+            println("Caught exception: ${e.message}")
+        }
+
+    }
+
     override fun viewStatus(battleId: Int) {
+
     }
 
     // TODO: Change Type to `selectedAttack: Attack`
@@ -43,4 +67,5 @@ class Game : ParserInterface {
         // TO-DO: load all battles and print them
         println("Showing all battles")
     }
+
 }

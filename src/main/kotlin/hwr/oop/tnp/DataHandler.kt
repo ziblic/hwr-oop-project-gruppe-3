@@ -61,7 +61,7 @@ class DataHandler(private val basePath: String = "data") : DataHandlerInterface 
 
     override fun loadBattle(battleId: Int): Battle = battleDataHandler.loadBattle(battleId)
 
-    override fun deleteTrainer(trainer: Trainer?) {
+    override fun deleteTrainer(trainer: Trainer) {
         if (trainer == null) {
             println("No trainer provided.")
             return
@@ -72,10 +72,15 @@ class DataHandler(private val basePath: String = "data") : DataHandlerInterface 
         }
         trainerDataHandler.deleteTrainer(trainer)
     }
-    override fun deleteTrainer(trainerName: String) = deleteTrainer(trainerDataHandler.loadTrainer(trainerName))
+    override fun deleteTrainer(trainerName: String){
+        val trainer = requireNotNull(trainerDataHandler.loadTrainer(trainerName)){
+            "Trainer '$trainerName' to be deleted not found."
+        }
+        deleteTrainer(trainer)
+    }
 
     override fun deleteMonster(monsterName: String) {
-        trainerDataHandler.deleteMonsterInTrainers(monsterName)
         monsterDataHandler.deleteMonster(monsterName)
+        trainerDataHandler.deleteMonsterInTrainers(monsterName)
     }
 }

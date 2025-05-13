@@ -1,6 +1,7 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.extensions.system.captureStandardOut
 import org.assertj.core.api.Assertions.assertThat
 import java.io.File
 import java.nio.file.Path
@@ -25,55 +26,96 @@ class TrainerDataHandlerTest : AnnotationSpec() {
     }
 
     @Test
-    fun `save and load trainer`() {
+    fun `saveTrainer when file doesn't exist`() {
+        // Simulate the case where the trainers file does not exist
+        val trainersFile = File(tempDir.toFile(), "trainers.json")
+        trainersFile.delete() // Ensure it doesn't exist
+
+        val trainer = Trainer("Ash")
+
+        // Capture the output
+        val output = captureStandardOut { handler.saveTrainer(trainer) }.trim()
+
+        // Verify that the appropriate message is printed
+        assertThat(output).isEqualTo("Trainer file does not exist.")
+    }
+
+
+
+    @Test
+    fun `saving and loading a trainer should preserve trainer name and empty monster list`() {
         val trainer = Trainer("Ash")
         handler.saveTrainer(trainer)
 
         val loaded = handler.loadTrainer("Ash")
-        assertThat(loaded).isNotNull
+
+        assertThat(loaded)
+            .withFailMessage("Trainer 'Ash' was not loaded correctly")
+            .isNotNull
+
         assertThat(loaded!!.name).isEqualTo("Ash")
-        assertThat(loaded.getMonsters()).isEmpty()
+        assertThat(loaded.getMonsters())
+            .withFailMessage("Trainer 'Ash' should have an empty monster list")
+            .isEmpty()
     }
 
     @Test
-    fun `saveTrainer does not overwrite existing trainer`() {
+    fun `saving a trainer twice should not overwrite the existing trainer entry`() {
         val trainer = Trainer("Brock")
         handler.saveTrainer(trainer)
-        handler.saveTrainer(trainer) // should not overwrite
+
+        // second save
+        val output = captureStandardOut {  handler.saveTrainer(trainer) }.trim()
+
 
         val content = trainersFile.readText()
-        val trainerCount = content.split("Brock").size - 1
-        assertThat(trainerCount).isEqualTo(2) // One key, one value
+        val trainerKeyCount = "\"Brock\"".toRegex().findAll(content).count()
+
+        assertThat(output).isEqualTo("Trainer '${trainer.name}' already exists.")
+        assertThat(trainerKeyCount)
+            .withFailMessage("Trainer 'Brock' appears $trainerKeyCount times instead of 1 key and 1 value")
+            .isEqualTo(2) // one key, one value
     }
 
     @Test
-    fun `add monster to trainer`() {
+    fun `adding a monster to a trainer should persist correctly`() {
         val monsterName = "Squirtle"
-        val bs = BattleStats(100, 100)
-        val monster = Monster(monsterName, bs, Type.Water, emptyList())
-        MonsterDataHandler(File(tempDir.toFile(), "monsters.json")).saveMonster(monster)
+        val battleStats = BattleStats(100, 100)
+        val monster = Monster(monsterName, battleStats, Type.Water, emptyList())
+        val monsterHandler = MonsterDataHandler(File(tempDir.toFile(), "monsters.json"))
+        monsterHandler.saveMonster(monster)
 
         val trainer = Trainer("Misty")
         handler.saveTrainer(trainer)
         handler.addMonsterToTrainer("Misty", monsterName)
 
-        val updated = handler.loadTrainer("Misty")
-        assertThat(updated!!.getMonsters().map { it.name }).contains(monsterName)
+        val updatedTrainer = handler.loadTrainer("Misty")
+
+        assertThat(updatedTrainer)
+            .withFailMessage("Trainer 'Misty' was not found after adding a monster")
+            .isNotNull
+
+        assertThat(updatedTrainer!!.getMonsters().map { it.name })
+            .withFailMessage("Trainer 'Misty' should have monster '$monsterName'")
+            .contains(monsterName)
     }
 
     @Test
-    fun `delete trainer removes entry`() {
+    fun `deleting a trainer should remove it from storage`() {
         val trainer = Trainer("Gary")
         handler.saveTrainer(trainer)
 
         handler.deleteTrainer(trainer)
-        assertThat(handler.loadTrainer("Gary")).isNull()
+
+        val loaded = handler.loadTrainer("Gary")
+        assertThat(loaded)
+            .withFailMessage("Trainer 'Gary' should be deleted but was found")
+            .isNull()
     }
 
     @Test
-    fun `deleteMonsterInTrainers removes reference`() {
-        val bs = BattleStats(100, 100)
-        val monster = Monster("Charmander", bs, Type.Fire, emptyList())
+    fun `deleting a monster from all trainers should remove its reference`() {
+        val monster = Monster("Charmander", BattleStats(100, 100), Type.Fire, emptyList())
         val monsterHandler = MonsterDataHandler(File(tempDir.toFile(), "monsters.json"))
         monsterHandler.saveMonster(monster)
 
@@ -81,8 +123,14 @@ class TrainerDataHandlerTest : AnnotationSpec() {
         handler.saveTrainer(trainer)
 
         handler.deleteMonsterInTrainers("Charmander")
-        val updated = handler.loadTrainer("Red")
+        val updatedTrainer = handler.loadTrainer("Red")
 
-        assertThat(updated!!.getMonsters()).isEmpty()
+        assertThat(updatedTrainer)
+            .withFailMessage("Trainer 'Red' not found after deleting monster")
+            .isNotNull
+
+        assertThat(updatedTrainer!!.getMonsters())
+            .withFailMessage("Trainer 'Red' should have no monsters after deletion")
+            .isEmpty()
     }
 }

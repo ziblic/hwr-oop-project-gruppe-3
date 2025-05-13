@@ -5,7 +5,7 @@ interface DataHandlerInterface {
     fun saveTrainer(trainer: Trainer)
     fun loadTrainer(trainerName: String): Trainer?
     fun deleteTrainer(trainerName: String)
-    fun deleteTrainer(trainer: Trainer?)
+    fun deleteTrainer(trainer: Trainer)
 
     fun saveMonster(monster: Monster, trainerName: String)
     fun saveMonster(
