@@ -22,20 +22,16 @@ class Game : ParserInterface {
         )
     }
 
-    override fun initiateBattle(trainer1: String, trainer2: String) : Int {
+    override fun initiateBattle(trainer1: String, trainer2: String): Int {
         try {
             return dataHandler.createBattle(trainer1, trainer2)
-        }
-        catch (e: Exception ){
+        } catch (e: Exception) {
             println(e.message)
             return 0
         }
-        
-
     }
 
     override fun viewStatus(battleId: Int) {
-
     }
 
     // TODO: Change Type to `selectedAttack: Attack`
@@ -47,5 +43,4 @@ class Game : ParserInterface {
         // TO-DO: load all battles and print them
         println("Showing all battles")
     }
-
 }

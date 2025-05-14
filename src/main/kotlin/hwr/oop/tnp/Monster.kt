@@ -23,10 +23,10 @@ class Monster(
 
         val damageAmount: Int =
             (
-                    attackUsed.damage.toDouble() *
-                            multiplier *
-                            attackUsed.calcMultiplierHitQuote(attackUsed.hitQuote)
-                    )
+                attackUsed.damage.toDouble() *
+                    multiplier *
+                    attackUsed.calcMultiplierHitQuote(attackUsed.hitQuote)
+                )
                 .toInt()
         otherMonster.takeDamage(damageAmount)
     }

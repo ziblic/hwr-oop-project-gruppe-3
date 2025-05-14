@@ -7,7 +7,6 @@ class DataHandler(private val basePath: String = "data") : DataHandlerInterface 
     private val monstersFile: File = File("$basePath/monsters.json")
     private val battleDir = File("$basePath/battles").apply { mkdirs() }
 
-
     private val trainerDataHandler = TrainerDataHandler(trainersFile)
     private val monsterDataHandler = MonsterDataHandler(monstersFile)
     private val battleDataHandler = BattleDataHandler(battleDir)
