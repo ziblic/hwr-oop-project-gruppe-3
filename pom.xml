@@ -134,6 +134,10 @@
         <artifactId>pitest-maven</artifactId>
         <version>${pitest.version}</version>
         <configuration>
+          <avoidCallsTo>
+            <avoidCallsTo>kotlin.jvm.internal</avoidCallsTo>
+            <avoidCallsTo>kotlinx.coroutines</avoidCallsTo>
+          </avoidCallsTo>
           <targetClasses>
             <param>hwr.oop.*</param>
           </targetClasses>

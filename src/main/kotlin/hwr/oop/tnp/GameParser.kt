@@ -53,32 +53,20 @@ class GameParser(private val args: List<String>) {
     }
 
     private fun parseForAddMonster(args: List<String>) {
-        if (args.isEmpty() || !(args.size >= 8 && args.size <= 11)) {
+        if (args.isEmpty() || !(args.size >= 5 && args.size <= 8)) {
             println(addMonsterHelp)
             return
         }
 
         val monsterName = args[0]
-        val attacks = args.slice(6..args.size - 2).toList()
+        val attacks = args.slice(3..args.size - 2).toList()
         val trainerName = args[args.size - 1]
 
         try {
             val hp = parseToInt(args[1])
-            val attack = parseToInt(args[2])
-            val defense = parseToInt(args[3])
-            val specAttack = parseToInt(args[4])
-            val specDefense = parseToInt(args[5])
+            val speed = parseToInt(args[2])
 
-            game.addMonster(
-                monsterName,
-                hp,
-                attack,
-                defense,
-                specAttack,
-                specDefense,
-                attacks,
-                trainerName
-            )
+            game.addMonster(monsterName, hp, speed, attacks, trainerName)
         } catch (e: Exception) {
             println("Some of the provided arguments could not be parsed to an Int")
             return
@@ -94,14 +82,23 @@ class GameParser(private val args: List<String>) {
         game.initiateBattle(args[0], args[1])
     }
 
-    // TODO: Rework when the view logic is implemented
     private fun parseForViewBattle(args: List<String>) {
-        if (args.isEmpty()) {
+        if (args.isEmpty() || args.size != 1) {
             println(viewBattleHelp)
             return
         }
 
-        game.viewStatus()
+        if (args[0].trim().lowercase() == "all") {
+            game.showAllBattles()
+            return
+        }
+
+        try {
+            game.viewStatus(parseToInt(args[0]))
+        } catch (e: Exception) {
+            println("Some of the provided arguments could not be parsed to an Int")
+            return
+        }
     }
 
     private fun parseForPerformAttack(args: List<String>) {

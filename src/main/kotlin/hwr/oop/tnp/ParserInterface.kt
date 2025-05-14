@@ -5,14 +5,12 @@ interface ParserInterface {
     fun addMonster(
         monsterName: String,
         hp: Int,
-        attack: Int,
-        defense: Int,
-        specAttack: Int,
-        specDefense: Int,
+        speed: Int,
         attacks: List<String>,
         trainerName: String
     )
     fun initiateBattle(trainer1: String, trainer2: String)
-    fun viewStatus()
+    fun viewStatus(battleId: Int)
+    fun showAllBattles()
     fun performAttack(battleID: Int, trainerName: String, selectedAttack: String)
 }

@@ -38,7 +38,7 @@ const val addMonsterHelp =
 /_/   \_\__,_|\__,_| |_|  |_|\___/|_| |_|___/\__\___|_|    |_| |_|\___|_| .__/
                                                                         |_|
 
-Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <ATTACK_VALUE> <DEFENSE_VALUE> <SPECIALATTACK_VALUE> <SPECIALDEFENSE_VALUE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER>"""
+Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER>"""
 
 const val newBattleHelp =
     """._   _                 ____        _   _   _        _   _      _
@@ -50,7 +50,6 @@ const val newBattleHelp =
 
 Usage: ./tnp new_battle <TRAINERNAME 1> <TRAINERNAME 2>"""
 
-// TODO: Add help message when implemented
 const val viewBattleHelp =
     """__     ___                 ____        _   _   _        _   _      _
 \ \   / (_) _____      __ | __ )  __ _| |_| |_| | ___  | | | | ___| |_ __
@@ -59,7 +58,14 @@ const val viewBattleHelp =
    \_/  |_|\___| \_/\_/   |____/ \__,_|\__|\__|_|\___| |_| |_|\___|_| .__/
                                                                     |_|
 
-Usage: ./tnp view_battle <ARGUMENTS>"""
+Usage: ./tnp view_battle <BATTLE_ID> | ALL
+
+Examples:
+1. View a specific battle with ID 123:
+   - `./tnp view_battle 123`
+
+2. View all battles:
+   - `./tnp view_battle ALL`"""
 
 const val attackHelp =
     """.   _   _   _             _      _   _      _
