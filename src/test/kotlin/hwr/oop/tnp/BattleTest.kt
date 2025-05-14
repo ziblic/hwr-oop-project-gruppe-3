@@ -5,6 +5,19 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
 
 class BattleTest : AnnotationSpec() {
+    @Test
+    fun `battle has BattleID`() {
+        val m1 = Monster(
+            "M1",
+            BattleStats(hp = 100, speed = 20),
+            Type.Normal,
+            attacks = listOf(Attack.PUNCH)
+        )
+        val t1 = Trainer("T1", listOf(m1))
+        val t2 = Trainer("T2", listOf(m1))
+        val battle = Battle(t1, t2, 100)
+        assertThat(battle.getBattleId()).isEqualTo(100)
+    }
 
     @Test
     fun `creating a battle, which is not finished and the current round is 0`() {
