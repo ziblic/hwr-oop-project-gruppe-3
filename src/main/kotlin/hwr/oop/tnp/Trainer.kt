@@ -13,4 +13,8 @@ class Trainer(val name: String, private var monsters: List<Monster> = emptyList(
         require(monsters.size < MAX_ALLOWED_MONSTERS_PER_TRAINER) { "Too many monsters" }
         monsters = monsters.plus(monster)
     }
+
+    fun nextMonster(): Monster? = monsters.firstOrNull { !it.isKO() }
+
+    fun isDefeated(): Boolean = monsters.all { it.isKO() }
 }
