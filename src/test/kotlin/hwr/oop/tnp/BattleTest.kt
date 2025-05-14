@@ -127,7 +127,6 @@ class BattleTest : AnnotationSpec() {
         assertThrows<IllegalStateException> {
             Battle(Trainer("T1", emptyList()), Trainer("T2", listOf(m1)), 17)
         }
-
     }
 
     @Test
@@ -219,7 +218,3 @@ class BattleTest : AnnotationSpec() {
         assertThat(battle.finished).isTrue()
     }
 }
-
-
-
-

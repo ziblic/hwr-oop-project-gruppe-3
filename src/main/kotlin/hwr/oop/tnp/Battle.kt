@@ -1,14 +1,13 @@
 package hwr.oop.tnp
 
-
 class Battle(
     private val trainerOne: Trainer,
     private val trainerTwo: Trainer,
-    private val battleId : Int,
-    private var currentTrainer : Trainer = setBeginningTrainer(trainerOne, trainerTwo)
+    private val battleId: Int,
+    private var currentTrainer: Trainer = setBeginningTrainer(trainerOne, trainerTwo)
 ) {
     companion object {
-        private fun setBeginningTrainer(trainerOne: Trainer, trainerTwo: Trainer) : Trainer {
+        private fun setBeginningTrainer(trainerOne: Trainer, trainerTwo: Trainer): Trainer {
             val m1 = trainerOne.nextMonster()
                 ?: throw IllegalStateException("Trainer one has no alive monsters")
             val m2 = trainerTwo.nextMonster()
@@ -21,7 +20,7 @@ class Battle(
             }
         }
     }
-    fun getBattleId() : Int = battleId
+    fun getBattleId(): Int = battleId
     var currentRound: Int = 0
         private set
     var finished: Boolean = false
@@ -62,4 +61,3 @@ class Battle(
         return null
     }
 }
-
