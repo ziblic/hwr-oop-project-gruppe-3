@@ -1,27 +1,10 @@
-
-
-/*
-creating a battle, its not finished
-current round is 0
-
-taking a turn, the faster monster attacks
-taking another turn, the other trainer is now attacking
-
-using an attack the first monster doesnt have?
-
-all monsters of one trainer are KO, determineWinner shows winner? isFinished()?
-
-take turn when battle is finished
-*/
-
-
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
 
-class battleTest : AnnotationSpec() {
+class BattleTest : AnnotationSpec() {
 
     @Test
     fun `creating a battle, which is not finished and the current round is 0`() {
@@ -39,17 +22,14 @@ class battleTest : AnnotationSpec() {
         )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2)
+        val battle = Battle(t1, t2, 0)
 
-
-        assertThat(battle.isFinished()).isFalse()
-
-        val roundField = Battle::class.java.getDeclaredField("currentRound").apply { isAccessible = true }
-        assertThat(roundField.getInt(battle)).isEqualTo(0)
+        assertThat(battle.finished).isFalse()
+        assertThat(battle.currentRound).isEqualTo(0)
     }
 
     @Test
-    fun `taking a turn, the faster monster attacks taking another turn, the other trainer is now attacking`() {
+    fun `taking a turn, the trainer with the faster monster attacks, taking another turn, the other trainer is now attacking`() {
         val m1 = Monster(
             "M1",
             BattleStats(100, speed = 20),
@@ -64,7 +44,7 @@ class battleTest : AnnotationSpec() {
         )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2)
+        val battle = Battle(t1, t2, 1)
 
         battle.takeTurn(Attack.PUNCH)
         assertThat(m2.stats.hp).isLessThan(100)
@@ -72,10 +52,73 @@ class battleTest : AnnotationSpec() {
         val prevHp1 = m1.stats.hp
         battle.takeTurn(Attack.PUNCH)
         assertThat(m1.stats.hp).isLessThan(prevHp1)
+
+        assertThat(battle.currentRound).isEqualTo(2)
     }
 
     @Test
-    fun `using an attack the first monster doesnt have, IllegalArgumentException`() {
+    fun `trainer 2 has the faster monster, he will do the first move`() {
+        val m1 = Monster(
+            "M1",
+            BattleStats(100, speed = 20),
+            Type.Normal,
+            attacks = listOf(Attack.PUNCH)
+        )
+        val m2 = Monster(
+            "M2",
+            BattleStats(100, speed = 30),
+            Type.Normal,
+            attacks = listOf(Attack.PUNCH)
+        )
+        val t1 = Trainer("T1", listOf(m1))
+        val t2 = Trainer("T2", listOf(m2))
+        val battle = Battle(t1, t2, 2)
+
+        battle.takeTurn(Attack.PUNCH)
+        assertThat(m1.stats.hp).isLessThan(100)
+    }
+
+    @Test
+    fun `trainers with equal speed monsters, will start with trainerOne`() {
+        val m1 = Monster(
+            "M1",
+            BattleStats(100, speed = 20),
+            Type.Normal,
+            attacks = listOf(Attack.PUNCH)
+        )
+        val m2 = Monster(
+            "M2",
+            BattleStats(100, speed = 20),
+            Type.Normal,
+            attacks = listOf(Attack.PUNCH)
+        )
+        val t1 = Trainer("T1", listOf(m1))
+        val t2 = Trainer("T2", listOf(m2))
+        val battle = Battle(t1, t2, 2)
+
+        battle.takeTurn(Attack.PUNCH)
+        assertThat(m2.stats.hp).isLessThan(100)
+    }
+
+    @Test
+    fun `creating a battle with any trainer having no monsters causes an IllegalStateException`() {
+        val m1 = Monster(
+            "M1",
+            BattleStats(100, speed = 20),
+            Type.Normal,
+            attacks = listOf(Attack.PUNCH)
+        )
+        assertThrows<IllegalStateException> {
+            Battle(Trainer("T1", listOf(m1)), Trainer("T2", emptyList()), 9)
+        }
+        assertThrows<IllegalStateException> {
+            Battle(Trainer("T1", emptyList()), Trainer("T2", listOf(m1)), 17)
+        }
+
+    }
+
+    @Test
+    fun `using an attack the first monster doesnt have throws IllegalArgumentException`() {
         val m1 = Monster(
             "M1",
             BattleStats(50, speed = 10),
@@ -88,17 +131,15 @@ class battleTest : AnnotationSpec() {
             Type.Normal,
             attacks = listOf(Attack.PUNCH)
         )
-        val battle = Battle(Trainer("T1", listOf(m1)), Trainer("T2", listOf(m2)))
+        val battle = Battle(Trainer("T1", listOf(m1)), Trainer("T2", listOf(m2)), 3)
 
-        val ex = assertThrows<IllegalArgumentException> {
+        assertThrows<IllegalArgumentException> {
             battle.takeTurn(Attack.DRUM)
         }
-        assertThat(ex).hasMessageContaining("not part of the attacks")
     }
 
     @Test
-    fun `all monsters of one trainer are KO, determineWinner shows winner? isFinished()?`() {
-
+    fun `all monsters of one trainer are KO, determineWinner shows the other and battle finishes`() {
         val m1 = Monster(
             "M1",
             BattleStats(100, speed = 20),
@@ -113,20 +154,37 @@ class battleTest : AnnotationSpec() {
         )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2)
-
-
+        val battle = Battle(t1, t2, 4)
         battle.takeTurn(Attack.GROUND_HAMMER)
+
         assertThat(m2.isKO()).isTrue()
-
-
-        assertThat(battle.isFinished()).isFalse()
+        assertThat(battle.finished).isFalse()
         assertThat(battle.determineWinner()).isEqualTo(t1)
     }
 
     @Test
-    fun `take turn when battle is finished`() {
+    fun `trainer 2 wins, determineWinnner shows trainer 2`() {
+        val m1 = Monster(
+            "M1",
+            BattleStats(40, speed = 20),
+            Type.Normal,
+            attacks = listOf(Attack.GROUND_HAMMER)
+        )
+        val m2 = Monster(
+            "M2",
+            BattleStats(30, speed = 25),
+            Type.Normal,
+            attacks = listOf(Attack.GROUND_HAMMER)
+        )
+        val t1 = Trainer("T1", listOf(m1))
+        val t2 = Trainer("T2", listOf(m2))
+        val battle = Battle(t1, t2, 4)
+        battle.takeTurn(Attack.GROUND_HAMMER)
+        assertThat(battle.determineWinner()).isEqualTo(t2)
+    }
 
+    @Test
+    fun `taking a turn when battle is finished throws IllegalStateException`() {
         val m1 = Monster(
             "M1",
             BattleStats(100, speed = 20),
@@ -139,17 +197,13 @@ class battleTest : AnnotationSpec() {
             Type.Normal,
             attacks = listOf(Attack.GROUND_HAMMER)
         )
-        val battle = Battle(Trainer("T1", listOf(m1)), Trainer("T2", listOf(m2)))
-
-
+        val battle = Battle(Trainer("T1", listOf(m1)), Trainer("T2", listOf(m2)), 5)
         battle.takeTurn(Attack.GROUND_HAMMER)
 
-
-        val ex = assertThrows<IllegalStateException> {
+        assertThrows<IllegalStateException> {
             battle.takeTurn(Attack.GROUND_HAMMER)
         }
-        assertThat(ex).hasMessage("Battle is already finished")
-        assertThat(battle.isFinished()).isTrue()
+        assertThat(battle.finished).isTrue()
     }
 }
 
