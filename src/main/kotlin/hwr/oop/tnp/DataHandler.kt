@@ -1,6 +1,7 @@
 package hwr.oop.tnp
 
 import java.io.File
+import java.io.FileNotFoundException
 
 class DataHandler(private val basePath: String = "data") : DataHandlerInterface {
     private val trainersFile: File = File("$basePath/trainers.json")
@@ -40,28 +41,30 @@ class DataHandler(private val basePath: String = "data") : DataHandlerInterface 
 
     // you can only pass two trainers for saving battle data only when you first create a battle
     // then you need to pass the battle's ID to save the battle (check saveBattle and createBattle)
-    override fun createBattle(trainerName1: String, trainerName2: String): Int {
-        val trainer1 = requireNotNull(loadTrainer(trainerName1)) {
-            "Trainer '$trainerName1' not found."
+    override fun createBattle(trainer1Name: String, trainer2Name: String): Battle? {
+        val trainer1 = requireNotNull(loadTrainer(trainer1Name)) {
+            "Trainer '$trainer1Name' not found."
         }
-        val trainer2 = requireNotNull(loadTrainer(trainerName2)) {
-            "Trainer '$trainerName2' not found."
+        val trainer2 = requireNotNull(loadTrainer(trainer2Name)) {
+            "Trainer '$trainer2Name' not found."
         }
 
-        return createBattle(trainer1, trainer2)
+        return battleDataHandler.createBattle(trainer1, trainer2)
     }
 
-    override fun createBattle(trainer1: Trainer, trainer2: Trainer): Int {
-        val battle = Battle(trainer1, trainer2)
-        saveBattle(battle)
-        return battle.battleId
+    override fun createBattle(trainer1: Trainer, trainer2: Trainer): Battle? {
+        return battleDataHandler.createBattle(trainer1, trainer2)
     }
 
     override fun saveBattle(battle: Battle) = battleDataHandler.saveBattle(battle)
 
-    override fun loadBattle(battleId: Int): Battle = battleDataHandler.loadBattle(battleId)
+    override fun loadBattle(battleId: Int): Battle{
 
-    override fun deleteTrainer(trainer: Trainer) {
+        return battleDataHandler.loadBattle(battleId)
+    }
+
+
+    override fun deleteTrainer(trainer: Trainer?) {
         if (trainer == null) {
             println("No trainer provided.")
             return
@@ -72,6 +75,7 @@ class DataHandler(private val basePath: String = "data") : DataHandlerInterface 
         }
         trainerDataHandler.deleteTrainer(trainer)
     }
+
     override fun deleteTrainer(trainerName: String){
         val trainer = requireNotNull(trainerDataHandler.loadTrainer(trainerName)){
             "Trainer '$trainerName' to be deleted not found."
@@ -83,4 +87,5 @@ class DataHandler(private val basePath: String = "data") : DataHandlerInterface 
         monsterDataHandler.deleteMonster(monsterName)
         trainerDataHandler.deleteMonsterInTrainers(monsterName)
     }
+
 }

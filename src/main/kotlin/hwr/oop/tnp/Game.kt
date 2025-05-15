@@ -24,13 +24,17 @@ class Game : ParserInterface {
 
 
 
-    override fun initiateBattle(trainer1: String, trainer2: String) : Int {
+    override fun initiateBattle(trainer1: String, trainer2: String) : Int? {
         try {
-            return dataHandler.createBattle(trainer1, trainer2)
+            return dataHandler.createBattle(trainer1, trainer2)?.getBattleId()
         }
         catch (e: IllegalArgumentException ){
             println("Caught exception: ${e.message}")
-            return 0
+            return null
+        }
+        catch (e: NullPointerException){
+            println("Caught exception: ${e.message}")
+            return null
         }
     }
 

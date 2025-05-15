@@ -1,6 +1,7 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.extensions.system.captureStandardOut
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
 import java.io.File
@@ -67,19 +68,22 @@ class DataHandlerTest : AnnotationSpec() {
     }
 
     @Test
-    fun `create and load battle`() {
+    fun `create and load battle with trainers having no monsters`() {
         val t1 = Trainer("Red")
         val t2 = Trainer("Blue")
 
         dataHandler.saveTrainer(t1)
         dataHandler.saveTrainer(t2)
 
-        val battleId = dataHandler.createBattle(t1, t2)
-        val loadedBattle = dataHandler.loadBattle(battleId)
 
-        assertThat(loadedBattle.battleId).isEqualTo(battleId)
-        assertThat(loadedBattle.trainer1.name).isEqualTo("Red")
-        assertThat(loadedBattle.trainer2.name).isEqualTo("Blue")
+        val battle = dataHandler.createBattle(t1, t2)
+        val output = captureStandardOut {dataHandler.createBattle(t1, t2) }.trim()
+
+        assertThat(battle).isNull()
+        assertThat(output).contains("Battle that contains trainers with no monsters could not be created")
+
+
+
     }
 
     @Test

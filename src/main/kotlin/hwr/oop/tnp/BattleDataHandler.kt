@@ -5,43 +5,82 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
 
-class BattleDataHandler(private val battleDir: File = File("data/battles")) {
+class BattleDataHandler(
+    private val battleDir: File = File("data/battles"),
+    private val counterFile: File = File("data/battle_counter.txt")
+     ) {
+
+    init {
+        // Ensure counter file exists and initialize if needed
+        if (!counterFile.exists()) {
+            counterFile.parentFile.mkdirs()
+            counterFile.writeText("0")
+        }
+    }
+
+    /**
+     * Generates the next battle ID and updates the counter file.
+     */
+     fun getNextBattleId(): Int {
+        if (!counterFile.exists()) {
+            counterFile.parentFile.mkdirs()
+            counterFile.writeText("0")
+        }
+        val current = counterFile.readText().toIntOrNull() ?: 0
+        val next = current + 1
+        counterFile.writeText(next.toString())
+        return next
+    }
+
+    fun createBattle(trainer1: Trainer, trainer2: Trainer): Battle? {
+        return try {
+            val battle = Battle(trainer1, trainer2, getNextBattleId())
+            saveBattle(battle)
+            return battle
+        }
+        catch (e: IllegalStateException){
+            println("Battle that contains trainers with no monsters could not be created: ${e.message}")
+            null
+        }
+
+    }
+
 
     fun saveBattle(battle: Battle) {
         // the battle json file must contain the id of the battle, two trainers and their monsters with all their stats
         // the trainer file and the monsters' file must stay the same
         // but the data in the battle file will be changed later during the battle
 
-        // Convert each monster of trainer1 to JSON
-        val trainer1MonstersJson = JSONArray()
-        for (monster in battle.trainer1.getMonsters()) {
-            trainer1MonstersJson.put(MonsterJsonConverter.toJson(monster))
+        // Convert each monster of trainerOne to JSON
+        val trainerOneMonstersJson = JSONArray()
+        for (monster in battle.trainerOne.getMonsters()) {
+            trainerOneMonstersJson.put(MonsterJsonConverter.toJson(monster))
         }
 
-        // Convert each monster of trainer2 to JSON
-        val trainer2MonstersJson = JSONArray()
-        for (monster in battle.trainer2.getMonsters()) {
-            trainer2MonstersJson.put(MonsterJsonConverter.toJson(monster))
+        // Convert each monster of trainerTwo to JSON
+        val trainerTwoMonstersJson = JSONArray()
+        for (monster in battle.trainerTwo.getMonsters()) {
+            trainerTwoMonstersJson.put(MonsterJsonConverter.toJson(monster))
         }
 
         // Final battle JSON object
         val battleJson = JSONObject()
-            .put("battleId", battle.battleId)
+            .put("battleId", battle.getBattleId())
             .put("rounds", JSONArray())
             .put(
-                "trainer1",
+                "trainerOne",
                 JSONObject()
-                    .put("name", battle.trainer1.name)
-                    .put("monsters", trainer1MonstersJson)
+                    .put("name", battle.trainerOne.name)
+                    .put("monsters", trainerOneMonstersJson)
             )
             .put(
-                "trainer2",
+                "trainerTwo",
                 JSONObject()
-                    .put("name", battle.trainer2.name)
-                    .put("monsters", trainer2MonstersJson)
+                    .put("name", battle.trainerTwo.name)
+                    .put("monsters", trainerTwoMonstersJson)
             )
 
-        val battleFile = File(battleDir, "${battle.battleId}.json")
+        val battleFile = File(battleDir, "${battle.getBattleId()}.json")
 
         // Ensure the parent directory exists
         battleFile.parentFile.mkdirs()
@@ -53,7 +92,7 @@ class BattleDataHandler(private val battleDir: File = File("data/battles")) {
 
         battleFile.writeText(battleJson.toString(4)) // pretty print
 
-        println("✅ Battle '${battle.battleId}' successfully saved between '${battle.trainer1.name}' and '${battle.trainer2.name}'")
+        println("✅ Battle '${battle.getBattleId()}' successfully saved between '${battle.trainerOne.name}' and '${battle.trainerTwo.name}'")
     }
 
     fun loadBattle(battleId: Int): Battle {
@@ -64,28 +103,30 @@ class BattleDataHandler(private val battleDir: File = File("data/battles")) {
 
         val battleJson = JSONObject(battleFile.readText())
 
-        val trainer1Json = battleJson.getJSONObject("trainer1")
-        val trainer2Json = battleJson.getJSONObject("trainer2")
+        val trainerOneJson = battleJson.getJSONObject("trainerOne")
+        val trainerTwoJson = battleJson.getJSONObject("trainerTwo")
 
-        val trainer1Monsters = mutableListOf<Monster>()
-        for (i in 0 until trainer1Json.getJSONArray("monsters").length()) {
-            val monsterJson = trainer1Json.getJSONArray("monsters").getJSONObject(i)
-            trainer1Monsters.add(MonsterJsonConverter.fromJson(monsterJson))
+        val trainerOneMonsters = mutableListOf<Monster>()
+        for (i in 0 until trainerOneJson.getJSONArray("monsters").length()) {
+            val monsterJson = trainerOneJson.getJSONArray("monsters").getJSONObject(i)
+            trainerOneMonsters.add(MonsterJsonConverter.fromJson(monsterJson))
         }
 
-        val trainer2Monsters = mutableListOf<Monster>()
-        for (i in 0 until trainer2Json.getJSONArray("monsters").length()) {
-            val monsterJson = trainer2Json.getJSONArray("monsters").getJSONObject(i)
-            trainer2Monsters.add(MonsterJsonConverter.fromJson(monsterJson))
+        val trainerTwoMonsters = mutableListOf<Monster>()
+        for (i in 0 until trainerTwoJson.getJSONArray("monsters").length()) {
+            val monsterJson = trainerTwoJson.getJSONArray("monsters").getJSONObject(i)
+            trainerTwoMonsters.add(MonsterJsonConverter.fromJson(monsterJson))
         }
 
-        val trainer1 = Trainer(trainer1Json.getString("name"), trainer1Monsters)
-        val trainer2 = Trainer(trainer2Json.getString("name"), trainer2Monsters)
+        val trainerOne = Trainer(trainerOneJson.getString("name"), trainerOneMonsters)
+        val trainerTwo = Trainer(trainerTwoJson.getString("name"), trainerTwoMonsters)
 
         return Battle(
             battleId = battleId,
-            trainer1 = trainer1,
-            trainer2 = trainer2
+            trainerOne = trainerOne,
+            trainerTwo = trainerTwo
         )
     }
+
+
 }

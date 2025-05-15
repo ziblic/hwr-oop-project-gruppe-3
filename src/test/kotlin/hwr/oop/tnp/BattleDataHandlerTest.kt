@@ -14,17 +14,20 @@ class BattleDataHandlerTest : AnnotationSpec() {
     private lateinit var tempDir: Path
     private lateinit var battleDir: File
     private lateinit var handler: BattleDataHandler
+    private lateinit var counterFile: File
 
-    private lateinit var trainer1: Trainer
-    private lateinit var trainer2: Trainer
+    private lateinit var trainerOne: Trainer
+    private lateinit var trainerTwo: Trainer
 
     @BeforeEach
     fun setup() {
         tempDir = createTempDirectory(Paths.get(System.getProperty("user.dir")), "tmp")
         battleDir = File(tempDir.toFile(), "battles")
-        handler = BattleDataHandler(battleDir)
+        counterFile = File(tempDir.toFile(), "battle_counter.txt")
+        handler = BattleDataHandler(battleDir, counterFile)
 
-        trainer1 =
+
+        trainerOne =
             Trainer(
                 "Ash",
                 listOf(
@@ -37,7 +40,7 @@ class BattleDataHandlerTest : AnnotationSpec() {
                 )
             )
 
-        trainer2 =
+        trainerTwo =
             Trainer(
                 "Misty",
                 listOf(
@@ -58,41 +61,96 @@ class BattleDataHandlerTest : AnnotationSpec() {
 
     @Test
     fun `saveBattle should write a valid JSON file to disk`() {
-        val battle = Battle(trainer1 = trainer1, trainer2 = trainer2)
-        handler.saveBattle(battle)
-
-        val file = File(battleDir, "${battle.battleId}.json")
+        val battle = handler.createBattle(trainerOne, trainerTwo)
+        battle!!
+        val file = File(battleDir, "${battle.getBattleId()}.json")
         assertThat(file.exists()).isTrue
         assertThat(file.readText()).contains("Ash", "Misty", "battleId", "monsters")
+        assertThat(battle).isNotNull
     }
 
     @Test
     fun `loadBattle should correctly read battle from file`() {
-        val battle = Battle(trainer1 = trainer1, trainer2 = trainer2)
-        handler.saveBattle(battle)
 
-        val loaded = handler.loadBattle(battle.battleId)
+        val battle = handler.createBattle(trainerOne, trainerTwo)
 
-        assertThat(loaded.battleId).isEqualTo(battle.battleId)
+        assertThat(battle).isNotNull()
 
-        assertThat(loaded.trainer1.name).isEqualTo("Ash")
-        assertThat(loaded.trainer1.getMonsters()).hasSize(1)
-        assertThat(loaded.trainer1.getMonsters()[0].attacks)
+        battle!!
+
+
+        val loaded = handler.loadBattle(battle.getBattleId())
+
+        assertThat(loaded.getBattleId()).isEqualTo(battle.getBattleId())
+
+        assertThat(loaded.trainerOne.name).isEqualTo(trainerOne.name)
+        assertThat(loaded.trainerOne.getMonsters()).hasSize(1)
+        assertThat(loaded.trainerOne.getMonsters()[0].attacks)
             .containsExactly(Attack.NORMAL_SLAM, Attack.GROUND_HAMMER)
 
-        assertThat(loaded.trainer2.name).isEqualTo("Misty")
-        assertThat(loaded.trainer2.getMonsters()).hasSize(1)
-        assertThat(loaded.trainer2.getMonsters()[0].attacks)
+        assertThat(loaded.trainerTwo.name).isEqualTo(trainerTwo.name)
+        assertThat(loaded.trainerTwo.getMonsters()).hasSize(1)
+        assertThat(loaded.trainerTwo.getMonsters()[0].attacks)
             .containsExactly(Attack.TSUNAMI, Attack.SPLASH)
     }
 
     @Test
     fun `loadBattle should throw FileNotFoundException for nonexistent battle`() {
-        val invalidId = 999999
+        val invalidId = Int.MAX_VALUE
         val exception = catchThrowable { handler.loadBattle(invalidId) }
 
         assertThat(exception)
             .isInstanceOf(FileNotFoundException::class.java)
             .hasMessageContaining("Battle file with ID $invalidId not found")
     }
+
+
+    // --------------------------
+    // Additional Tests for Counter
+    // --------------------------
+
+    @Test
+    fun `getNextBattleId should return 1 on first call`() {
+        counterFile.delete()
+        val nextId = handler.getNextBattleId()
+        assertThat(counterFile.exists()).isTrue()
+        assertThat(nextId).isEqualTo(1)
+    }
+
+    @Test
+    fun `getNextBattleId should increment and persist correctly`() {
+        val id1 = handler.getNextBattleId()
+        val id2 = handler.getNextBattleId()
+        val id3 = handler.getNextBattleId()
+
+        assertThat(id1).isEqualTo(1)
+        assertThat(id2).isEqualTo(2)
+        assertThat(id3).isEqualTo(3)
+
+        val saved = counterFile.readText().trim()
+        assertThat(saved).isEqualTo("3")
+    }
+
+    @Test
+    fun `counter file should be created automatically if missing`() {
+        counterFile.delete() // simulate missing file
+
+        val newHandler = BattleDataHandler(battleDir, counterFile)
+        val id = newHandler.getNextBattleId()
+
+        assertThat(id).isEqualTo(1)
+        assertThat(counterFile.exists()).isTrue
+        assertThat(counterFile.readText().trim()).isEqualTo("1")
+    }
+
+    @Test
+    fun `getNextBattleId should recover from invalid counter content`() {
+        counterFile.writeText("not-a-number")
+
+        val id = handler.getNextBattleId()
+
+        assertThat(id).isEqualTo(1)
+        assertThat(counterFile.readText().trim()).isEqualTo("1")
+    }
+
 }

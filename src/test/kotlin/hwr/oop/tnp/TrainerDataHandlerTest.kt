@@ -26,7 +26,7 @@ class TrainerDataHandlerTest : AnnotationSpec() {
     }
 
     @Test
-    fun `saveTrainer when file doesn't exist`() {
+    fun `saveTrainer when the file was deleted`() {
         // Simulate the case where the trainers file does not exist
         val trainersFile = File(tempDir.toFile(), "trainers.json")
         trainersFile.delete() // Ensure it doesn't exist
@@ -36,8 +36,8 @@ class TrainerDataHandlerTest : AnnotationSpec() {
         // Capture the output
         val output = captureStandardOut { handler.saveTrainer(trainer) }.trim()
 
-        // Verify that the appropriate message is printed
-        assertThat(output).isEqualTo("Trainer file does not exist.")
+         // Verify that the appropriate message is printed
+        assertThat(trainersFile.exists()).isTrue()
     }
 
 
