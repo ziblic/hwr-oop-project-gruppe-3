@@ -2,8 +2,13 @@ package hwr.oop.tnp
 
 import java.io.File
 import java.io.FileNotFoundException
+import java.nio.file.Path
+import java.nio.file.Paths
 
 class DataHandler(private val basePath: String = "data") : DataHandlerInterface {
+
+    val rootPath: Path = Paths.get(basePath)
+
     private val trainersFile: File = File("$basePath/trainers.json")
     private val monstersFile: File = File("$basePath/monsters.json")
     private val battleDir = File("$basePath/battles").apply { mkdirs() }

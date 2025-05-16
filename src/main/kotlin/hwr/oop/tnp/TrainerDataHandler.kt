@@ -118,4 +118,6 @@ class TrainerDataHandler(private val trainersFile: File = File("data/trainers.js
         trainersFile.writeText(trainersJson.toString(4))
         println("References to '$monsterName' removed from all trainers.")
     }
+
+
 }

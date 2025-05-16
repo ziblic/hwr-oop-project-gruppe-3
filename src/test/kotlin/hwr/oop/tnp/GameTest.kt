@@ -1,225 +1,165 @@
 package hwr.oop.tnp
-//
-// import io.kotest.core.spec.style.AnnotationSpec
-// import org.assertj.core.api.Assertions.assertThat
-// import org.json.JSONObject
-// import org.junit.jupiter.api.assertThrows
-// import java.io.ByteArrayOutputStream
-// import java.io.File
-// import java.io.PrintStream
-//
-// class GameTest : AnnotationSpec() {
-//
-//    private val trainer1 = "Ash"
-//    private val trainer2 = "Misty"
-//    private val monster1 = "Pikachu"
-//    private val monster2 = "Staryu"
-//    private val battleId = "battle-1714057289212"
-//
-//    private lateinit var trainer1File: File
-//    private lateinit var trainer2File: File
-//    private lateinit var monster1File: File
-//    private lateinit var monster2File: File
-//    private lateinit var battleFile: File
-//
-//    @BeforeEach
-//    fun setup() {
-//        // Set up file paths
-//        trainer1File = File("data/trainers/$trainer1.json")
-//        trainer2File = File("data/trainers/$trainer2.json")
-//        monster1File = File("data/monsters/$monster1.json")
-//        monster2File = File("data/monsters/$monster2.json")
-//        battleFile = File("data/battles/$battleId.json")
-//
-//        // Cleanup old files before each test
-//        trainer1File.delete()
-//        trainer2File.delete()
-//        monster1File.delete()
-//        monster2File.delete()
-//        battleFile.delete()
-//
-//        // Create fake trainer JSON data
-//        val trainer1Json = """
-//            {
-//                "name": "$trainer1",
-//                "monsters": ["$monster1"]
-//            }
-//        """.trimIndent()
-//        val trainer2Json = """
-//            {
-//                "name": "$trainer2",
-//                "monsters": ["$monster2"]
-//            }
-//        """.trimIndent()
-//
-//        // Create trainer files
-//        trainer1File.writeText(trainer1Json)
-//        trainer2File.writeText(trainer2Json)
-//
-//        // Create fake monster JSON data
-//        val pikachuJson = """
-//            {
-//                "name": "$monster1",
-//                "hp": 100,
-//                "attack": 50,
-//                "defense": 30,
-//                "specialAttack": 40,
-//                "specialDefense": 35,
-//                "attackName": "Thunderbolt"
-//            }
-//        """.trimIndent()
-//        val staryuJson = """
-//            {
-//                "name": "$monster2",
-//                "hp": 80,
-//                "attack": 45,
-//                "defense": 50,
-//                "specialAttack": 55,
-//                "specialDefense": 40,
-//                "attackName": "Water Gun"
-//            }
-//        """.trimIndent()
-//
-//        // Create monster files
-//        monster1File.writeText(pikachuJson)
-//        monster2File.writeText(staryuJson)
-//    }
-//
-//    @Test
-//    fun `createTrainer creates correct trainer JSON`() {
-//        val trainerName = "Ash"
-//        val trainerFile = File("data/trainers/$trainerName.json")
-//
-//        // clean up before test
-//        trainerFile.delete()
-//
-//        Game().createTrainer(trainerName)
-//
-//        assertThat(trainerFile.exists()).isTrue()
-//
-//        val expectedJson = """
-//            {
-//                "name": "$trainerName",
-//                "monsters": []
-//            }
-//        """.trimIndent()
-//
-//        assertThat(trainerFile.readText().trim()).isEqualTo(expectedJson)
-//    }
-//
-//    @Test
-//    fun `addMonster creates correct monster JSON and updates trainer`() {
-//        val trainerName = "Misty"
-//        val monsterName = "Staryu"
-//        val monsterFile = File("data/monsters/$monsterName.json")
-//        val trainerFile = File("data/trainers/$trainerName.json")
-//
-//        // Cleanup
-//        monsterFile.delete()
-//        trainerFile.delete()
-//        Game().createTrainer(trainerName)
-//
-//        Game().addMonster(monsterName, 100, 40, listOf("WaterGun"), trainerName)
-//
-//        // Assert monster file
-//        assertThat(monsterFile.exists()).isTrue()
-//        val expectedMonsterJson = """
-//            {
-//                "name": "$monsterName",
-//                "hp": 100,
-//                "attack": 40,
-//                "defense": 30,
-//                "specialAttack": 60,
-//                "specialDefense": 50,
-//                "attackName": "WaterGun",
-//                "trainer": "$trainerName"
-//            }
-//        """.trimIndent()
-//        assertThat(monsterFile.readText().trim()).isEqualTo(expectedMonsterJson)
-//
-//        // Assert trainer file updated
-//        val expectedTrainerJson = """
-//            {
-//                "name": "$trainerName",
-//                "monsters": ["$monsterName"]
-//            }
-//        """.trimIndent()
-//        assertThat(trainerFile.readText().trim()).isEqualTo(expectedTrainerJson)
-//    }
-//
-//    @Test
-//    fun `addMonster fails when trainer does not exist`() {
-//        val trainerName = "Brock"
-//        val monsterName = "Onix"
-//        val monsterFile = File("data/monsters/$monsterName.json")
-//        val trainerFile = File("data/trainers/$trainerName.json")
-//
-//        // Cleanup
-//        monsterFile.delete()
-//        trainerFile.delete() // Ensure trainer does NOT exist
-//
-//        // Attempt to add monster
-//        val exception = assertThrows<IllegalArgumentException> {
-//            Game().addMonster(monsterName, 120, 55, 45, 20, 35, "RockThrow", trainerName)
-//        }
-//
-//        assertThat(exception.message).contains("Trainer $trainerName does not exist")
-//        assertThat(monsterFile.exists()).isFalse()
-//    }
-//
-//    @Test
-//    fun `initiateBattle saves the battle file correctly`() {
-//        // Initialize the battle
-//        val battle = Game()
-//        battle.initiateBattle(trainer1, trainer2)
-//
-//        // Verify the battle file exists
-//        assertThat(battleFile.exists()).isTrue()
-//
-//        // Read the battle JSON
-//        val battleJson = JSONObject(battleFile.readText())
-//
-//        // Check battle structure
-//        assertThat(battleJson.optString("status")).isEqualTo("initiated")
-//        assertThat(battleJson.optJSONArray("trainers")).isNotNull
-//
-//        val trainers = battleJson.optJSONArray("trainers")
-//        assertThat(trainers?.length()).isEqualTo(2)
-//
-//        // Verify trainer data
-//        val trainer1Data = trainers?.getJSONObject(0)
-//        assertThat(trainer1Data?.getString("name")).isEqualTo(trainer1)
-//
-//        val trainer2Data = trainers?.getJSONObject(1)
-//        assertThat(trainer2Data?.getString("name")).isEqualTo(trainer2)
-//
-//        // Verify that the trainers have monsters
-//        val trainer1Monsters = trainer1Data?.optJSONArray("monsters")
-//        assertThat(trainer1Monsters?.length()).isEqualTo(1)
-//        assertThat(trainer1Monsters?.getJSONObject(0)?.getString("name")).isEqualTo("Pikachu")
-//
-//        val trainer2Monsters = trainer2Data?.optJSONArray("monsters")
-//        assertThat(trainer2Monsters?.length()).isEqualTo(1)
-//        assertThat(trainer2Monsters?.getJSONObject(0)?.getString("name")).isEqualTo("Staryu")
-//    }
-//
-//    @Test
-//    fun `viewStatus displays the correct battle status and trainer data`() {
-//        // Test viewStatus output by capturing console output
-//        val outputStream = ByteArrayOutputStream()
-//        System.setOut(PrintStream(outputStream))
-//
-//        val game = Game()
-//        game.viewStatus(battleId)
-//
-//        // Assertions to verify the printed output
-//        val output = outputStream.toString()
-//
-//        assertThat(output).contains("📊 Status of Battle '$battleId':")
-//        assertThat(output).contains("Status: initiated")
-//        assertThat(output).contains("Trainer: Ash")
-//        assertThat(output).contains("🧟 Monster: Pikachu | HP: 100 | Attack: Thunderbolt")
-//        assertThat(output).contains("Trainer: Misty")
-//        assertThat(output).contains("🧟 Monster: Staryu | HP: 80 | Attack: Water Gun")
-//    }
-// }
+
+import io.kotest.core.spec.style.AnnotationSpec
+import org.assertj.core.api.Assertions.assertThat
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
+import java.lang.reflect.Field
+import java.nio.file.Files
+
+class GameTest : AnnotationSpec() {
+
+    private lateinit var game: Game
+    private lateinit var stdOutContent: ByteArrayOutputStream
+
+    private fun getDataHandler(game: Game): DataHandler {
+        val field: Field = game.javaClass.getDeclaredField("dataHandler")
+        field.isAccessible = true
+        return field.get(game) as DataHandler
+    }
+
+    @BeforeEach
+    fun setup() {
+        game = Game()
+        stdOutContent = ByteArrayOutputStream()
+        System.setOut(PrintStream(stdOutContent))
+
+        val dh = getDataHandler(game)
+        if (Files.exists(dh.rootPath)) {
+            Files.walk(dh.rootPath)
+                .sorted(Comparator.reverseOrder())
+                .forEach { it.toFile().delete() }
+        }
+    }
+
+    @Test
+    fun `createTrainer saves trainer successfully`() {
+        val trainerName = "Ash"
+        game.createTrainer(trainerName)
+
+        val trainer = getDataHandler(game).loadTrainer(trainerName)
+        requireNotNull(trainer)
+        assertThat(trainer.name).isEqualTo(trainerName)
+    }
+
+    @Test
+    fun `addMonster saves monster and assigns to trainer`() {
+        val trainerName = "Brock"
+        game.createTrainer(trainerName)
+
+        val monsterName = "Onix"
+        val hp = 100
+        val speed = 20
+        val attacks = listOf("PUNCH", "DRUM")
+
+        game.addMonster(monsterName, hp, speed, attacks, trainerName)
+
+        val dataHandler = getDataHandler(game)
+
+        val monster = dataHandler.loadMonster(monsterName)
+        requireNotNull(monster)
+        assertThat(monster.name).isEqualTo(monsterName)
+        assertThat(monster.stats.hp).isEqualTo(hp)
+        assertThat(monster.stats.speed).isEqualTo(speed)
+        assertThat(monster.attacks.map { it.name }).isEqualTo(attacks)
+
+        val trainer = dataHandler.loadTrainer(trainerName)
+        requireNotNull(trainer)
+        assertThat(trainer.getMonsters().map { it.name }).contains(monsterName)
+    }
+
+    @Test
+    fun `initiateBattle returns null when trainer not found`() {
+        val nonExisting = "Ghost"
+        val existing = "Ash"
+        game.createTrainer(existing)
+
+        val battleId1 = game.initiateBattle(nonExisting, existing)
+        assertThat(battleId1).isNull()
+
+        val battleId2 = game.initiateBattle(existing, nonExisting)
+        assertThat(battleId2).isNull()
+    }
+
+    @Test
+    fun `initiateBattle catches IllegalArgumentException and prints message`() {
+        // Cause IllegalArgumentException by passing empty strings (depends on your dataHandler)
+        game.initiateBattle("", "")
+        val output = stdOutContent.toString()
+        assertThat(output).contains("Caught exception")
+    }
+
+    @Test
+    fun `initiateBattle catches NullPointerException and prints message`() {
+        // Another invalid call to trigger NPE or similar
+        game.initiateBattle("NonExistent1", "NonExistent2")
+        val output = stdOutContent.toString()
+        assertThat(output).contains("Caught exception")
+    }
+
+    @Test
+    fun `deleteMonster removes monster and updates trainer`() {
+        val trainerName = "Misty"
+        game.createTrainer(trainerName)
+
+        val monsterName = "Staryu"
+        game.addMonster(monsterName, 60, 45, listOf("SPLASH"), trainerName)
+
+        val dataHandler = getDataHandler(game)
+        val loadedMonster = dataHandler.loadMonster(monsterName)
+        requireNotNull(loadedMonster)
+
+        game.deleteMonster(monsterName)
+
+        assertThat(dataHandler.loadMonster(monsterName)).isNull()
+        val trainer = dataHandler.loadTrainer(trainerName)
+        requireNotNull(trainer)
+        assertThat(trainer.getMonsters().map { it.name }).doesNotContain(monsterName)
+    }
+
+    @Test
+    fun `deleteMonster catches IllegalArgumentException and prints message`() {
+        game.deleteMonster("") // Pass invalid monster name
+        val output = stdOutContent.toString()
+        assertThat(output).contains("Caught exception")
+    }
+
+    @Test
+    fun `deleteTrainer removes trainer and all their monsters`() {
+        val trainerName = "Erika"
+        game.createTrainer(trainerName)
+
+        val monsterName = "Tangela"
+        game.addMonster(monsterName, 90, 20, listOf("LEAF_GUN"), trainerName)
+
+        val dataHandler = getDataHandler(game)
+        requireNotNull(dataHandler.loadTrainer(trainerName))
+        requireNotNull(dataHandler.loadMonster(monsterName))
+
+        game.deleteTrainer(trainerName)
+
+        assertThat(dataHandler.loadTrainer(trainerName)).isNull()
+        assertThat(dataHandler.loadMonster(monsterName)).isNull()
+    }
+
+    @Test
+    fun `deleteTrainer catches IllegalArgumentException and prints message`() {
+        game.deleteTrainer("") // invalid name
+        val output = stdOutContent.toString()
+        assertThat(output).contains("Caught exception")
+    }
+
+    @Test
+    fun `performAttack prints executing attack message`() {
+        game.performAttack(1, "Ash", "ThunderShock")
+        val output = stdOutContent.toString()
+        assertThat(output).contains("Executing attack...")
+    }
+
+    @Test
+    fun `showAllBattles prints showing all battles`() {
+        game.showAllBattles()
+        val output = stdOutContent.toString()
+        assertThat(output).contains("Showing all battles")
+    }
+}

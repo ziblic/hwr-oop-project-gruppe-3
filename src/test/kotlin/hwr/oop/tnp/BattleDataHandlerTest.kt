@@ -1,8 +1,10 @@
 package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.extensions.system.captureStandardOut
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
@@ -11,6 +13,7 @@ import kotlin.io.path.createTempDirectory
 
 class BattleDataHandlerTest : AnnotationSpec() {
 
+    @TempDir
     private lateinit var tempDir: Path
     private lateinit var battleDir: File
     private lateinit var handler: BattleDataHandler
@@ -133,15 +136,21 @@ class BattleDataHandlerTest : AnnotationSpec() {
 
     @Test
     fun `counter file should be created automatically if missing`() {
-        counterFile.delete() // simulate missing file
-
-        val newHandler = BattleDataHandler(battleDir, counterFile)
-        val id = newHandler.getNextBattleId()
+        // Ensure the file does not exist
+        if (counterFile.exists()) {
+            counterFile.delete()
+        }
+        assertThat(counterFile.exists()).isFalse
+        // Act
+        val localHandler = BattleDataHandler(battleDir, counterFile)
+        val id = localHandler.getNextBattleId()
 
         assertThat(id).isEqualTo(1)
         assertThat(counterFile.exists()).isTrue
         assertThat(counterFile.readText().trim()).isEqualTo("1")
     }
+
+
 
     @Test
     fun `getNextBattleId should recover from invalid counter content`() {
@@ -152,5 +161,50 @@ class BattleDataHandlerTest : AnnotationSpec() {
         assertThat(id).isEqualTo(1)
         assertThat(counterFile.readText().trim()).isEqualTo("1")
     }
+
+
+    @Test
+    fun `saveBattle should create the file if it does not exist`() {
+        val localHandler = BattleDataHandler(battleDir, counterFile)
+        val battle = Battle(trainerOne, trainerTwo, 99)
+        val battleFile = File(battleDir, "99.json")
+
+        // Delete the file forcibly
+
+        // the program won't delete the file so you can't check the condition when the file doesn't exist!
+        var deleted = battleFile.delete()
+
+//        assertThat(deleted).isTrue()
+        assertThat(battleFile.exists()).isFalse()  // must be false here!
+
+        // Extra wait or retry to avoid race conditions (if needed)
+        repeat(3) {
+            if (!battleFile.exists()) return@repeat
+            Thread.sleep(10)
+        }
+        assertThat(battleFile.exists()).isFalse() // confirm again
+
+        localHandler.saveBattle(battle)
+
+        assertThat(battleFile.exists()).isTrue()
+        assertThat(battleFile.readText()).contains("Ash", "Misty")
+    }
+
+
+
+    @Test
+    fun `saveBattle should print success message`() {
+        val battle = Battle(trainerOne, trainerTwo, 42)
+
+        val output = captureStandardOut {
+            handler.saveBattle(battle)
+        }.trim()
+
+        assertThat(output).contains("✅ Battle '${battle.getBattleId()}' successfully saved between '${trainerOne.name}' and '${trainerTwo.name}'")
+    }
+
+
+
+
 
 }
