@@ -2,52 +2,75 @@ package hwr.oop.tnp
 
 class Game : ParserInterface {
 
-    private val gameLoader = GameLoader()
+    private val dataHandler: DataHandlerInterface = DataHandler()
 
-    override fun createTrainer(trainerName: String) {
-        println("Created Trainer with name $trainerName")
-    }
+    override fun createTrainer(trainerName: String) = dataHandler.saveTrainer(trainerName)
 
     override fun addMonster(
         monsterName: String,
         hp: Int,
         speed: Int,
-        attacks: List<String>,
-        trainerName: String
+        attacks: List<String>, // For now, we assume there is on only one attack added into a JSONArray
+        trainerName: String,
     ) {
-        println(
-            """Created new Monster:
-Name:               $monsterName
-HP:                 $hp
-Speed:              $speed
-Attacks:            $attacks
-Trainer:            $trainerName
-"""
+        dataHandler.saveMonster(
+            monsterName,
+            hp,
+            speed,
+            attacks,
+            trainerName,
         )
     }
 
-    override fun initiateBattle(trainer1: String, trainer2: String) {
-        println("Executing battle...")
+
+
+    override fun initiateBattle(trainer1: String, trainer2: String) : Int? {
+        try {
+            return dataHandler.createBattle(trainer1, trainer2)?.getBattleId()
+        }
+        catch (e: IllegalArgumentException ){
+            println("Caught exception: ${e.message}")
+            return null
+        }
+        catch (e: NullPointerException){
+            println("Caught exception: ${e.message}")
+            return null
+        }
+    }
+
+    override fun deleteMonster(monsterName: String){
+        try {
+            dataHandler.deleteMonster(monsterName)
+        }
+        catch (e: IllegalArgumentException){
+            println("Caught exception: ${e.message}")
+        }
+
+    }
+    override fun deleteTrainer(trainerName: String){
+
+        try {
+            dataHandler.deleteTrainer(trainerName)
+        }
+        catch (e: IllegalArgumentException){
+            println("Caught exception: ${e.message}")
+        }
+
     }
 
     override fun viewStatus(battleId: Int) {
-        println("Executing view...")
+
     }
 
-    override fun showAllBattles() {
-        println("Showing all battles with ID to user...")
-    }
 
     // TODO: Change Type to `selectedAttack: Attack`
     override fun performAttack(battleID: Int, trainerName: String, selectedAttack: String) {
         println("Executing attack...")
     }
 
-    private fun manageLoading() {
-        gameLoader.loadGame()
+    override fun showAllBattles() {
+        // TO-DO: load all battles and print them
+        println("Showing all battles")
     }
 
-    private fun manageSaving() {
-        gameLoader.saveGame()
-    }
 }

@@ -101,12 +101,13 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         "100",
                         "20",
-                        "Tackle",
+                        "WATERFALL",
                         "Trainer_Kevin"
                     )
                 )
             }
                 .trim()
+
         val output_2 =
             captureStandardOut {
                 main(
@@ -115,15 +116,16 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         "100",
                         "20",
-                        "Tackle",
-                        "Fireball",
-                        "Waterbomb",
-                        "Some Attack",
+                        "WATERFALL",
+                        "TSUNAMI",
+                        "DEEP_SEA_GRIP",
+                        "SPLASH",
                         "Trainer_Kevin"
                     )
                 )
             }
                 .trim()
+
         assertThat(output)
             .isEqualTo(
                 captureStandardOut {
@@ -131,7 +133,7 @@ class GameParserTest : AnnotationSpec() {
                         "Bob",
                         100,
                         20,
-                        listOf("Tackle"),
+                        listOf("WATERFALL"),
                         "Trainer_Kevin"
                     )
                 }
@@ -145,10 +147,10 @@ class GameParserTest : AnnotationSpec() {
                         100,
                         20,
                         listOf(
-                            "Tackle",
-                            "Fireball",
-                            "Waterbomb",
-                            "Some Attack"
+                            "WATERFALL",
+                            "TSUNAMI",
+                            "DEEP_SEA_GRIP",
+                            "SPLASH"
                         ),
                         "Trainer_Kevin"
                     )
@@ -192,6 +194,12 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `Start new battle`() {
+
+        // given
+
+        // when
+
+        // then
         val output = captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa")) }.trim()
         assertThat(output)
             .isEqualTo(captureStandardOut { Game().initiateBattle("Bob", "Lisa") }.trim())
