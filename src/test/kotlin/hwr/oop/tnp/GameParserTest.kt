@@ -2,33 +2,72 @@ package hwr.oop.tnp
 
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
+import io.kotest.extensions.system.withEnvironment
 import org.assertj.core.api.Assertions.assertThat
 
 class GameParserTest : AnnotationSpec() {
+
     @Test
-    fun `test parseToInt with invalid input`() {
-        val output =
-            captureStandardOut {
-                main(
-                    arrayOf(
-                        "add_monster",
-                        "Bob",
-                        "abc",
-                        "abc",
-                        "Tackle",
-                        "Trainer_Kevin"
+    fun `test parseToXXXXX with invalid input`() {
+        withEnvironment("TESTING", "true") {
+            val output =
+                captureStandardOut {
+                    main(
+                        arrayOf(
+                            "add_monster",
+                            "Bob",
+                            "abc",
+                            "abc",
+                            "Fire",
+                            "PUNCH",
+                            "Trainer_Kevin"
+                        )
                     )
-                )
-            }
-                .trim()
-        assertThat(output).isEqualTo("Some of the provided arguments could not be parsed to an Int")
+                }
+                    .trim()
+            assertThat(output).isEqualTo(COULD_NOT_PARSE_ERROR)
+            val output2 =
+                captureStandardOut {
+                    main(
+                        arrayOf(
+                            "add_monster",
+                            "Bob",
+                            "100",
+                            "20",
+                            "Hello",
+                            "PUNCH",
+                            "Trainer_Kevin"
+                        )
+                    )
+                }
+                    .trim()
+            assertThat(output2).isEqualTo(COULD_NOT_PARSE_ERROR)
+            val output3 =
+                captureStandardOut {
+                    main(
+                        arrayOf(
+                            "add_monster",
+                            "Bob",
+                            "100",
+                            "20",
+                            "Fire",
+                            "Tackle_3",
+                            "Trainer_Kevin"
+                        )
+                    )
+                }
+                    .trim()
+            assertThat(output3).isEqualTo(COULD_NOT_PARSE_ERROR)
+        }
     }
 
     @Test
     fun `Run invalid command`() {
         val output = captureStandardOut { main(arrayOf("some_unknown_command")) }.trim()
         assertThat(output)
-            .isEqualTo("'some_unknown_command' is not a valid command. Use 'help' for usage.")
+            .isEqualTo(
+                "'some_unknown_command' is not a valid command. Use 'help' for usage."
+            )
     }
 
     @Test
@@ -39,8 +78,8 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `parseForPerformAttack throw Exception`() {
-        val output = captureStandardOut { main(arrayOf("on", "a", "Bob", "Tackle")) }.trim()
-        assertThat(output).isEqualTo("Some of the provided arguments could not be parsed to an Int")
+        val output = captureStandardOut { main(arrayOf("on", "a", "Bob", "PUNCH")) }.trim()
+        assertThat(output).isEqualTo(COULD_NOT_PARSE_TO_INT_ERROR)
     }
 
     @Test
@@ -81,8 +120,14 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `Create new trainer`() {
-        val output = captureStandardOut { main(arrayOf("new_trainer", "Bob")) }.trim()
-        assertThat(output).isEqualTo(captureStandardOut { Game().createTrainer("Bob") }.trim())
+        withEnvironment("TESTING", "true") {
+            val output =
+                captureStandardOut { main(arrayOf("new_trainer", "Bob")) }.trim()
+            assertThat(output)
+                .isEqualTo(
+                    captureStandardOut { Game().createTrainer("Bob") }.trim()
+                )
+        }
     }
 
     @Test
@@ -93,68 +138,74 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `Add new monster`() {
-        val output =
-            captureStandardOut {
-                main(
-                    arrayOf(
-                        "add_monster",
-                        "Bob",
-                        "100",
-                        "20",
-                        "Tackle",
-                        "Trainer_Kevin"
-                    )
-                )
-            }
-                .trim()
-        val output_2 =
-            captureStandardOut {
-                main(
-                    arrayOf(
-                        "add_monster",
-                        "Bob",
-                        "100",
-                        "20",
-                        "Tackle",
-                        "Fireball",
-                        "Waterbomb",
-                        "Some Attack",
-                        "Trainer_Kevin"
-                    )
-                )
-            }
-                .trim()
-        assertThat(output)
-            .isEqualTo(
+        withEnvironment("TESTING", "true") {
+            val output =
                 captureStandardOut {
-                    Game().addMonster(
-                        "Bob",
-                        100,
-                        20,
-                        listOf("Tackle"),
-                        "Trainer_Kevin"
+                    main(
+                        arrayOf(
+                            "add_monster",
+                            "Bob",
+                            "100",
+                            "20",
+                            "FIRE",
+                            "PUNCH",
+                            "Trainer_Kevin"
+                        )
                     )
                 }
                     .trim()
-            )
-        assertThat(output_2)
-            .isEqualTo(
+            val output_2 =
                 captureStandardOut {
-                    Game().addMonster(
-                        "Bob",
-                        100,
-                        20,
-                        listOf(
-                            "Tackle",
-                            "Fireball",
-                            "Waterbomb",
-                            "Some Attack"
-                        ),
-                        "Trainer_Kevin"
+                    main(
+                        arrayOf(
+                            "add_monster",
+                            "Bob",
+                            "100",
+                            "20",
+                            "Fire",
+                            "PUNCH",
+                            "FIRE_Vow",
+                            "Splash",
+                            "Foliage_storm",
+                            "Trainer_Kevin"
+                        )
                     )
                 }
                     .trim()
-            )
+            assertThat(output)
+                .isEqualTo(
+                    captureStandardOut {
+                        Game().addMonster(
+                            "Bob",
+                            100,
+                            20,
+                            Type.FIRE,
+                            listOf(Attack.PUNCH),
+                            "Trainer_Kevin"
+                        )
+                    }
+                        .trim()
+                )
+            assertThat(output_2)
+                .isEqualTo(
+                    captureStandardOut {
+                        Game().addMonster(
+                            "Bob",
+                            100,
+                            20,
+                            Type.FIRE,
+                            listOf(
+                                Attack.PUNCH,
+                                Attack.FIRE_VOW,
+                                Attack.SPLASH,
+                                Attack.FOLIAGE_STORM
+                            ),
+                            "Trainer_Kevin"
+                        )
+                    }
+                        .trim()
+                )
+        }
     }
 
     @Test
@@ -165,36 +216,57 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `Add new monster with not enough or to many arguments`() {
-        val output1 =
-            captureStandardOut {
-                main(
-                    arrayOf(
-                        "add_monster",
-                        "Bob",
-                        "100",
-                        "20",
-                        "Fireball",
-                        "Tackle",
-                        "Waterbomb",
-                        "Backfire",
-                        "Trainer_Kevin",
-                        "too many args"
+        withEnvironment("TESTING", "true") {
+            val output1 =
+                captureStandardOut {
+                    main(
+                        arrayOf(
+                            "add_monster",
+                            "Bob",
+                            "100",
+                            "20",
+                            "FIRE",
+                            "Flame_Wreath",
+                            "PUNCH",
+                            "Splash",
+                            "Leaf_gun",
+                            "Trainer_Kevin",
+                            "too many args"
+                        )
                     )
-                )
-            }
-                .trim()
-        val output2 =
-            captureStandardOut { main(arrayOf("add_monster", "Bob", "100", "20", "Tackle")) }
-                .trim()
-        assertThat(output1).isEqualTo(addMonsterHelp)
-        assertThat(output2).isEqualTo(addMonsterHelp)
+                }
+                    .trim()
+            val output2 =
+                captureStandardOut {
+                    main(
+                        arrayOf(
+                            "add_monster",
+                            "Bob",
+                            "100",
+                            "20",
+                            "FIRE",
+                            "PUNCH"
+                        )
+                    )
+                }
+                    .trim()
+            assertThat(output1).isEqualTo(addMonsterHelp)
+            assertThat(output2).isEqualTo(addMonsterHelp)
+        }
     }
 
     @Test
     fun `Start new battle`() {
-        val output = captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa")) }.trim()
-        assertThat(output)
-            .isEqualTo(captureStandardOut { Game().initiateBattle("Bob", "Lisa") }.trim())
+        withEnvironment("TESTING", "true") {
+            val output =
+                captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa")) }
+                    .trim()
+            assertThat(output)
+                .isEqualTo(
+                    captureStandardOut { Game().initiateBattle("Bob", "Lisa") }
+                        .trim()
+                )
+        }
     }
 
     @Test
@@ -206,7 +278,9 @@ class GameParserTest : AnnotationSpec() {
     @Test
     fun `Start new battle with not enough or to many arguments`() {
         val output1 =
-            captureStandardOut { main(arrayOf("new_battle", "Bob", "Lisa", "to many args")) }
+            captureStandardOut {
+                main(arrayOf("new_battle", "Bob", "Lisa", "to many args"))
+            }
                 .trim()
         val output2 = captureStandardOut { main(arrayOf("new_battle", "Bob")) }.trim()
         assertThat(output1).isEqualTo(newBattleHelp)
@@ -215,20 +289,29 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `View battle status`() {
-        val output = captureStandardOut { main(arrayOf("view_battle", "0")) }.trim()
-        assertThat(output).isEqualTo(captureStandardOut { Game().viewStatus(0) }.trim())
+        withEnvironment("TESTING", "true") {
+            val output = captureStandardOut { main(arrayOf("view_battle", "0")) }.trim()
+            assertThat(output)
+                .isEqualTo(captureStandardOut { Game().viewStatus(0) }.trim())
+        }
     }
 
     @Test
     fun `Throw exception on invalid battleId`() {
         val output = captureStandardOut { main(arrayOf("view_battle", "nr1")) }.trim()
-        assertThat(output).isEqualTo("Some of the provided arguments could not be parsed to an Int")
+        assertThat(output)
+            .isEqualTo("Some of the provided arguments could not be parsed to an Int")
     }
 
     @Test
     fun `View all battles`() {
-        val output = captureStandardOut { main(arrayOf("view_battle", "  ALL  ")) }.trim()
-        assertThat(output).isEqualTo(captureStandardOut { Game().showAllBattles() }.trim())
+        withEnvironment("TESTING", "true") {
+            val output =
+                captureStandardOut { main(arrayOf("view_battle", "  ALL  ")) }
+                    .trim()
+            assertThat(output)
+                .isEqualTo(captureStandardOut { Game().showAllBattles() }.trim())
+        }
     }
 
     @Test
@@ -239,9 +322,18 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `Attack enemy`() {
-        val output = captureStandardOut { main(arrayOf("on", "0", "Bob", "Tackle")) }.trim()
-        assertThat(output)
-            .isEqualTo(captureStandardOut { Game().performAttack(0, "Bob", "Tackle") }.trim())
+        withEnvironment("TESTING", "true") {
+            val output =
+                captureStandardOut { main(arrayOf("on", "1", "Bob", "PUNCH")) }
+                    .trim()
+            assertThat(output)
+                .isEqualTo(
+                    captureStandardOut {
+                        Game().performAttack(1, "Bob", Attack.PUNCH)
+                    }
+                        .trim()
+                )
+        }
     }
 
     @Test
@@ -253,7 +345,9 @@ class GameParserTest : AnnotationSpec() {
     @Test
     fun `Attack enemy with not enough or to many arguments`() {
         val output1 =
-            captureStandardOut { main(arrayOf("on", "0", "Lisa", "Tackle", "to many args")) }
+            captureStandardOut {
+                main(arrayOf("on", "0", "Lisa", "PUNCH", "to many args"))
+            }
                 .trim()
         val output2 = captureStandardOut { main(arrayOf("on", "0", "Lisa")) }.trim()
         assertThat(output1).isEqualTo(attackHelp)

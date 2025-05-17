@@ -34,7 +34,9 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.PUNCH
         val critChance = -0.1
         val exception =
-            assertThrows<IllegalArgumentException> { attack.calcMultiplierHitQuote(critChance) }
+            assertThrows<IllegalArgumentException> {
+                attack.calcMultiplierHitQuote(critChance)
+            }
         assertEquals("critChance must be between 0.0 and 1.0", exception.message)
     }
 
@@ -43,14 +45,16 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.PUNCH
         val critChance = 1.1
         val exception =
-            assertThrows<IllegalArgumentException> { attack.calcMultiplierHitQuote(critChance) }
+            assertThrows<IllegalArgumentException> {
+                attack.calcMultiplierHitQuote(critChance)
+            }
         assertEquals("critChance must be between 0.0 and 1.0", exception.message)
     }
     @Test
     fun `check getters for PUNCH attack`() {
         val attack = Attack.PUNCH
 
-        assertEquals(Type.Normal, attack.type, "Type getter should return Normal for PUNCH")
+        assertEquals(Type.NORMAL, attack.type, "Type getter should return NORMAL for PUNCH")
         assertEquals(15, attack.damage, "Damage getter should return 15 for PUNCH")
         assertEquals(0.1, attack.hitQuote, "HitQuote getter should return 0.1 for PUNCH")
     }
@@ -59,16 +63,24 @@ class AttackTest : AnnotationSpec() {
     fun `check getters for FLAME_WREATH attack`() {
         val attack = Attack.FLAME_WREATH
 
-        assertEquals(Type.Fire, attack.type, "Type getter should return Fire for FLAME_WREATH")
+        assertEquals(
+            Type.FIRE,
+            attack.type,
+            "Type getter should return FIRE for FLAME_WREATH"
+        )
         assertEquals(20, attack.damage, "Damage getter should return 20 for FLAME_WREATH")
-        assertEquals(0.4, attack.hitQuote, "HitQuote getter should return 0.4 for FLAME_WREATH")
+        assertEquals(
+            0.4,
+            attack.hitQuote,
+            "HitQuote getter should return 0.4 for FLAME_WREATH"
+        )
     }
 
     @Test
     fun `check getters for SPLASH attack`() {
         val attack = Attack.SPLASH
 
-        assertEquals(Type.Water, attack.type, "Type getter should return Water for SPLASH")
+        assertEquals(Type.WATER, attack.type, "Type getter should return WATER for SPLASH")
         assertEquals(20, attack.damage, "Damage getter should return 20 for SPLASH")
         assertEquals(0.7, attack.hitQuote, "HitQuote getter should return 0.7 for SPLASH")
     }
@@ -77,7 +89,11 @@ class AttackTest : AnnotationSpec() {
     fun `check getters for LEAF_GUN attack`() {
         val attack = Attack.LEAF_GUN
 
-        assertEquals(Type.Plant, attack.type, "Type getter should return Plant for LEAF_GUN")
+        assertEquals(
+            Type.PLANT,
+            attack.type,
+            "Type getter should return PLANT for LEAF_GUN"
+        )
         assertEquals(20, attack.damage, "Damage getter should return 20 for LEAF_GUN")
         assertEquals(0.2, attack.hitQuote, "HitQuote getter should return 0.2 for LEAF_GUN")
     }
@@ -86,9 +102,17 @@ class AttackTest : AnnotationSpec() {
     fun `check getters for SPOOKY_BALL attack`() {
         val attack = Attack.SPOOKY_BALL
 
-        assertEquals(Type.Spirit, attack.type, "Type getter should return Spirit for SPOOKY_BALL")
+        assertEquals(
+            Type.SPIRIT,
+            attack.type,
+            "Type getter should return SPIRIT for SPOOKY_BALL"
+        )
         assertEquals(20, attack.damage, "Damage getter should return 20 for SPOOKY_BALL")
-        assertEquals(0.1, attack.hitQuote, "HitQuote getter should return 0.1 for SPOOKY_BALL")
+        assertEquals(
+            0.1,
+            attack.hitQuote,
+            "HitQuote getter should return 0.1 for SPOOKY_BALL"
+        )
     }
 
     @Test

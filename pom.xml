@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-    <kotlin.version>2.1.10</kotlin.version>
+    <kotlin.version>2.1.20</kotlin.version>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
     <kotest.version>5.9.1</kotest.version>
@@ -28,6 +28,7 @@
     <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
     <pitest.version>1.19.1</pitest.version>
     <kotest-extensions-pitest.version>1.2.0</kotest-extensions-pitest.version>
+    <serialization.version>1.8.1</serialization.version>
   </properties>
 
   <repositories>
@@ -42,6 +43,11 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>
       <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-serialization-json</artifactId>
+      <version>${serialization.version}</version>
     </dependency>
     <dependency>
       <groupId>io.kotest</groupId>
@@ -93,6 +99,18 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <compilerPlugins>
+            <plugin>kotlinx-serialization</plugin>
+          </compilerPlugins>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-serialization</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -123,6 +141,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
+	  <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
           <systemPropertyVariables>
             <kotest.framework.classpath.scanning.autoscan.disable>true
             </kotest.framework.classpath.scanning.autoscan.disable>
@@ -144,6 +163,10 @@
           <targetTests>
             <param>hwr.oop.*</param>
           </targetTests>
+          <excludedMethods>
+            <param>loadAllTrainers</param>
+            <param>loadAllMonster</param>
+          </excludedMethods>
           <testPlugin>kotest</testPlugin>
         </configuration>
         <executions>

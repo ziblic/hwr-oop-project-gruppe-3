@@ -1,17 +1,20 @@
 package hwr.oop.tnp
 
-class Trainer(val name: String, private var monsters: List<Monster> = emptyList()) {
+import kotlinx.serialization.Serializable
+
+@Serializable
+class Trainer(val name: String, val monsters: List<Monster> = emptyList()) {
     init {
         require(monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
             "Too many monsters: $monsters"
         }
     }
 
-    fun getMonsters(): List<Monster> = monsters
-
-    fun addMonster(monster: Monster) {
+    fun addMonster(monster: Monster): Trainer {
         require(monsters.size < MAX_ALLOWED_MONSTERS_PER_TRAINER) { "Too many monsters" }
-        monsters = monsters.plus(monster)
+        val monsters =
+            listOf(monsters.iterator()).flatMap { it.asSequence().toList() } + monster
+        return Trainer(name, monsters)
     }
 
     fun nextMonster(): Monster? = monsters.firstOrNull { !it.isKO() }

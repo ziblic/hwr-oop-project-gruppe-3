@@ -1,35 +1,35 @@
 package hwr.oop.tnp
 
 enum class Type {
-    Normal,
-    Water,
-    Fire,
-    Plant,
-    Spirit;
+    NORMAL,
+    WATER,
+    FIRE,
+    PLANT,
+    SPIRIT;
 
     val effectiveAgainst: Type?
         get() =
             when (this) {
-                Water -> Fire
-                Fire -> Plant
-                Plant -> Water
+                WATER -> FIRE
+                FIRE -> PLANT
+                PLANT -> WATER
                 else -> null
             }
 
     val lessEffectiveAgainst: Type?
         get() =
             when (this) {
-                Water -> Plant
-                Fire -> Water
-                Plant -> Fire
+                WATER -> PLANT
+                FIRE -> WATER
+                PLANT -> FIRE
                 else -> null
             }
 
     val noEffectAgainst: Type?
         get() =
             when (this) {
-                Spirit -> Normal
-                Normal -> Spirit
+                SPIRIT -> NORMAL
+                NORMAL -> SPIRIT
                 else -> null
             }
 }
