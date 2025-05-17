@@ -156,7 +156,6 @@
           <avoidCallsTo>
             <avoidCallsTo>kotlin.jvm.internal</avoidCallsTo>
             <avoidCallsTo>kotlinx.coroutines</avoidCallsTo>
-            <avoidCallsTo>kotlinx.serialization.Serializable</avoidCallsTo>
           </avoidCallsTo>
           <targetClasses>
             <param>hwr.oop.*</param>
