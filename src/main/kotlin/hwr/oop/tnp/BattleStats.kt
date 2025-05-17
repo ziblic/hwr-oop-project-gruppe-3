@@ -1,3 +1,5 @@
 package hwr.oop.tnp
 
-data class BattleStats(var hp: Int, val speed: Int)
+import kotlinx.serialization.Serializable
+
+@Serializable data class BattleStats(var hp: Int, val speed: Int)

@@ -1,5 +1,9 @@
 package hwr.oop.tnp
 
+const val COULD_NOT_PARSE_ERROR = "Some of the provided arguments could not be parsed correctly"
+const val COULD_NOT_PARSE_TO_INT_ERROR =
+    "Some of the provided arguments could not be parsed to an Int"
+
 const val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
 
 const val defaultHelp =
@@ -38,7 +42,7 @@ const val addMonsterHelp =
 /_/   \_\__,_|\__,_| |_|  |_|\___/|_| |_|___/\__\___|_|    |_| |_|\___|_| .__/
                                                                         |_|
 
-Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER>"""
+Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER>"""
 
 const val newBattleHelp =
     """._   _                 ____        _   _   _        _   _      _

@@ -1,7 +1,9 @@
 package hwr.oop.tnp
 
+import kotlinx.serialization.Serializable
 import kotlin.math.max
 
+@Serializable
 class Monster(
     val name: String,
     val stats: BattleStats,
@@ -35,7 +37,7 @@ class Monster(
         return this.stats.hp == 0
     }
 
-    fun takeDamage(amountOfDamage: Int) {
+    private fun takeDamage(amountOfDamage: Int) {
         this.stats.hp = max(this.stats.hp - amountOfDamage, 0)
     }
 }

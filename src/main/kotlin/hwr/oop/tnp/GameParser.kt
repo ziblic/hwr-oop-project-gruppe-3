@@ -36,10 +36,32 @@ class GameParser(private val args: List<String>) {
     }
 
     private fun parseToInt(argument: String): Int {
-        try {
-            return argument.toInt()
+        return try {
+            argument.toInt()
         } catch (e: NumberFormatException) {
-            throw Exception("Error: Failed to convert '$argument' to Int. Reason: ${e.message}")
+            throw Exception(
+                "Error: Failed to convert '$argument' to Int. Reason: ${e.message}"
+            )
+        }
+    }
+
+    fun parseToAttack(input: String): Attack {
+        return try {
+            Attack.valueOf(input.uppercase())
+        } catch (e: IllegalArgumentException) {
+            throw Exception(
+                "Error: Failed to convert '$input' to Attack. Reason: ${e.message}"
+            )
+        }
+    }
+
+    fun parseToType(input: String): Type {
+        return try {
+            Type.valueOf(input.uppercase())
+        } catch (e: IllegalArgumentException) {
+            throw Exception(
+                "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
+            )
         }
     }
 
@@ -53,22 +75,26 @@ class GameParser(private val args: List<String>) {
     }
 
     private fun parseForAddMonster(args: List<String>) {
-        if (args.isEmpty() || !(args.size >= 5 && args.size <= 8)) {
+        if (args.isEmpty() || !(args.size >= 6 && args.size <= 9)) {
             println(addMonsterHelp)
             return
         }
 
         val monsterName = args[0]
-        val attacks = args.slice(3..args.size - 2).toList()
         val trainerName = args[args.size - 1]
 
         try {
             val hp = parseToInt(args[1])
             val speed = parseToInt(args[2])
+            val type = parseToType(args[3])
+            val attackList: MutableList<Attack> = mutableListOf()
+            for (attack in args.slice(4..args.size - 2).toList()) {
+                attackList.add(parseToAttack(attack))
+            }
 
-            game.addMonster(monsterName, hp, speed, attacks, trainerName)
+            game.addMonster(monsterName, hp, speed, type, attackList, trainerName)
         } catch (e: Exception) {
-            println("Some of the provided arguments could not be parsed to an Int")
+            println(COULD_NOT_PARSE_ERROR)
             return
         }
     }
@@ -96,7 +122,7 @@ class GameParser(private val args: List<String>) {
         try {
             game.viewStatus(parseToInt(args[0]))
         } catch (e: Exception) {
-            println("Some of the provided arguments could not be parsed to an Int")
+            println(COULD_NOT_PARSE_TO_INT_ERROR)
             return
         }
     }
@@ -108,9 +134,9 @@ class GameParser(private val args: List<String>) {
         }
 
         try {
-            game.performAttack(parseToInt(args[0]), args[1], args[2])
+            game.performAttack(parseToInt(args[0]), args[1], parseToAttack(args[2]))
         } catch (e: Exception) {
-            println("Some of the provided arguments could not be parsed to an Int")
+            println(COULD_NOT_PARSE_TO_INT_ERROR)
             return
         }
     }

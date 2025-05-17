@@ -1,17 +1,28 @@
 package hwr.oop.tnp
 
+import kotlinx.serialization.Serializable
+import java.io.File
+
+@Serializable
 class Battle(
-    private val trainerOne: Trainer,
-    private val trainerTwo: Trainer,
-    private val battleId: Int,
+    val trainerOne: Trainer,
+    val trainerTwo: Trainer,
+    val battleId: Int =
+        DataHandler.getNextBattleId(File(System.getProperty("user.dir"), "data/battles")),
     private var currentTrainer: Trainer = setBeginningTrainer(trainerOne, trainerTwo)
 ) {
     companion object {
         private fun setBeginningTrainer(trainerOne: Trainer, trainerTwo: Trainer): Trainer {
-            val m1 = trainerOne.nextMonster()
-                ?: throw IllegalStateException("Trainer one has no alive monsters")
-            val m2 = trainerTwo.nextMonster()
-                ?: throw IllegalStateException("Trainer two has no alive monsters")
+            val m1 =
+                trainerOne.nextMonster()
+                    ?: throw IllegalStateException(
+                        "Trainer one has no alive monsters"
+                    )
+            val m2 =
+                trainerTwo.nextMonster()
+                    ?: throw IllegalStateException(
+                        "Trainer two has no alive monsters"
+                    )
 
             if (m1.stats.speed >= m2.stats.speed) {
                 return trainerOne
@@ -19,12 +30,31 @@ class Battle(
                 return trainerTwo
             }
         }
+
+        fun showAll() {
+            val dataDirName: String = System.getenv("DATADIR")?.toString() ?: "data"
+            val dataDir = File(System.getProperty("user.dir"), dataDirName)
+            val battleFolder = File(dataDir, "battles")
+            val battleFiles =
+                battleFolder.listFiles { file ->
+                    file.extension == "json" &&
+                        file.nameWithoutExtension.toIntOrNull() != null
+                }
+
+            if (battleFiles == null || battleFiles.size == 0) {
+                println("No battles found")
+            } else {
+                println("List of all Battles")
+                battleFiles.forEach { file ->
+                    println("BattleID: ${file.nameWithoutExtension}")
+                }
+            }
+        }
     }
-    fun getBattleId(): Int = battleId
     var currentRound: Int = 0
         private set
     var finished: Boolean = false
-        private set // Only this class can modify the value
+        private set
 
     private fun endBattle() {
         finished = true
@@ -42,7 +72,10 @@ class Battle(
         return if (currentTrainer == trainerOne) trainerTwo else trainerOne
     }
 
-    fun takeTurn(attack: Attack) {
+    fun takeTurn(attack: Attack, trainer: Trainer): Monster {
+        require(currentTrainer.name == trainer.name) {
+            "It is the turn of ${currentTrainer.name}"
+        }
         startRound()
         if (finished) {
             throw IllegalStateException("Battle is already finished")
@@ -53,11 +86,21 @@ class Battle(
 
         monster!!.attack(attack, oppMonster!!)
         currentTrainer = opponent
+
+        return oppMonster
     }
 
     fun determineWinner(): Trainer? {
         if (trainerOne.isDefeated()) return trainerTwo
         if (trainerTwo.isDefeated()) return trainerOne
         return null
+    }
+
+    fun viewStatus() {
+        println(
+            """Battle ($battleId):
+${trainerOne.name} vs ${trainerTwo.name}
+Next trainer to turn is ${currentTrainer.name}"""
+        )
     }
 }
