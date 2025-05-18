@@ -43,6 +43,7 @@ class MonsterDataHandler(private val monstersFile: File = File("data/monsters.js
     }
 
     fun deleteMonster(monster: Monster?) {
+
         if (!monstersFile.exists()) {
             println("No monsters file found.")
             return

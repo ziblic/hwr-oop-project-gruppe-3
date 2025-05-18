@@ -1,5 +1,6 @@
 package hwr.oop.tnp
 
+//import io.mockk.*
 import io.kotest.core.spec.style.AnnotationSpec
 import org.assertj.core.api.Assertions.assertThat
 import java.io.ByteArrayOutputStream
@@ -11,6 +12,7 @@ class GameTest : AnnotationSpec() {
 
     private lateinit var game: Game
     private lateinit var stdOutContent: ByteArrayOutputStream
+    private lateinit var mockHandler: DataHandlerInterface
 
     private fun getDataHandler(game: Game): DataHandler {
         val field: Field = game.javaClass.getDeclaredField("dataHandler")
@@ -30,6 +32,14 @@ class GameTest : AnnotationSpec() {
                 .sorted(Comparator.reverseOrder())
                 .forEach { it.toFile().delete() }
         }
+
+//        mockHandler = mockk()
+//        game = spyk(Game(), recordPrivateCalls = true)
+
+        // Override private dataHandler via reflection (alternative to DI in current setup)
+        val field = Game::class.java.getDeclaredField("dataHandler")
+        field.isAccessible = true
+        field.set(game, mockHandler)
     }
 
     @Test
@@ -162,4 +172,42 @@ class GameTest : AnnotationSpec() {
         val output = stdOutContent.toString()
         assertThat(output).contains("Showing all battles")
     }
+
+//    @Test
+//    fun `initiateBattle returns battleId if successful`() {
+//        val mockBattle = mockk<Battle>()
+//        every { mockBattle.getBattleId() } returns 123
+//        every { mockHandler.createBattle("Ash", "Gary") } returns mockBattle
+//
+//        val result = game.initiateBattle("Ash", "Gary")
+//
+//        assertThat(result).isEqualTo(123)
+//    }
+//
+//    @Test
+//    fun `initiateBattle returns null on IllegalArgumentException`() {
+//        every { mockHandler.createBattle(any(), any()) } throws IllegalArgumentException("Invalid trainer")
+//
+//        val result = game.initiateBattle("Ash", "Unknown")
+//
+//        assertThat(result).isNull()
+//    }
+//
+//    @Test
+//    fun `initiateBattle returns null on NullPointerException`() {
+//        every { mockHandler.createBattle(any(), any()) } throws NullPointerException("Null somewhere")
+//
+//        val result = game.initiateBattle("Ash", "Brock")
+//
+//        assertThat(result).isNull()
+//    }
+//
+//    @Test
+//    fun `initiateBattle returns null when createBattle returns null`() {
+//        every { mockHandler.createBattle(any(), any()) } returns null
+//
+//        val result = game.initiateBattle("Ash", "Brock")
+//
+//        assertThat(result).isNull()
+//    }
 }

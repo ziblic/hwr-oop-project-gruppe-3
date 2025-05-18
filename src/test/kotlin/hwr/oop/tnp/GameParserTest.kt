@@ -81,8 +81,11 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `Create new trainer`() {
+        Game().deleteTrainer("Bob")
         val output = captureStandardOut { main(arrayOf("new_trainer", "Bob")) }.trim()
+        Game().deleteTrainer("Bob")
         assertThat(output).isEqualTo(captureStandardOut { Game().createTrainer("Bob") }.trim())
+        Game().deleteTrainer("Bob")
     }
 
     @Test
@@ -93,6 +96,8 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `Add new monster`() {
+
+        main(arrayOf("new trainer", "Trainer_Kevin"))
         val output =
             captureStandardOut {
                 main(
@@ -113,7 +118,7 @@ class GameParserTest : AnnotationSpec() {
                 main(
                     arrayOf(
                         "add_monster",
-                        "Bob",
+                        "John",
                         "100",
                         "20",
                         "WATERFALL",
@@ -126,6 +131,9 @@ class GameParserTest : AnnotationSpec() {
             }
                 .trim()
 
+
+        Game().deleteMonster("Bob")
+        Game().deleteMonster("John")
         assertThat(output)
             .isEqualTo(
                 captureStandardOut {
@@ -143,7 +151,7 @@ class GameParserTest : AnnotationSpec() {
             .isEqualTo(
                 captureStandardOut {
                     Game().addMonster(
-                        "Bob",
+                        "John",
                         100,
                         20,
                         listOf(
@@ -157,6 +165,9 @@ class GameParserTest : AnnotationSpec() {
                 }
                     .trim()
             )
+
+        Game().deleteMonster("Bob")
+        Game().deleteMonster("John")
     }
 
     @Test

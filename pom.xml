@@ -75,6 +75,13 @@
     </dependency>
   </dependencies>
 
+  <dependency>
+    <groupId>io.mockk</groupId>
+    <artifactId>mockk</artifactId>
+    <version>1.13.10</version> <!-- or latest version -->
+    <scope>test</scope>
+  </dependency>
+
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
     <testSourceDirectory>src/test/kotlin</testSourceDirectory>
