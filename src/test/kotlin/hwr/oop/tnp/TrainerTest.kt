@@ -6,26 +6,28 @@ import org.assertj.core.api.Assertions.assertThatNoException
 import org.junit.jupiter.api.assertThrows
 
 class TrainerTest : AnnotationSpec() {
+    private val bs = BattleStats(100, 100)
+    private val monster = Monster("Peter", bs, Type.WATER, emptyList())
+    lateinit var trainer: Trainer
+
+    @BeforeEach
+    fun init() {
+        trainer = Trainer("Alex", listOf(monster))
+    }
+
     @Test
-    fun `test trainer has name`() {
-        val name = "Alex"
+    fun `trainer has name`() {
+        val name = "Bob"
         val trainer = Trainer(name)
         assertThat(trainer.name).isEqualTo(name)
     }
 
     @Test
-    fun `test trainer has monsters`() {
-        val bs = BattleStats(100, 100)
-        val m1 = Monster("Peter", bs, Type.WATER, emptyList())
-        val m2 = Monster("Hans", bs, Type.FIRE, emptyList())
-
-        val name = "Alex"
-        val trainer = Trainer(name, mutableListOf(m1, m2))
+    fun `trainer has monsters`() {
         val monsters = trainer.monsters
 
-        assertThat(monsters[0].name).isEqualTo(m1.name)
-        assertThat(monsters[1].name).isEqualTo(m2.name)
-        assertThat(monsters.size).isEqualTo(2)
+        assertThat(monsters[0].name).isEqualTo(monster.name)
+        assertThat(monsters.size).isEqualTo(1)
     }
 
     @Test
@@ -37,60 +39,92 @@ class TrainerTest : AnnotationSpec() {
     }
 
     @Test
-    fun `test add monster to trainer`() {
-        val bs = BattleStats(100, 100)
+    fun `add monster to trainer`() {
+        val bs = BattleStats(130, 80)
         val m = Monster("Peter", bs, Type.WATER, emptyList())
 
-        var trainer = Trainer("Alex")
         trainer = trainer.addMonster(m)
         val monsters = trainer.monsters
 
-        assertThat(monsters.size).isEqualTo(1)
-        assertThat(monsters[0].name).isEqualTo(m.name)
+        assertThat(monsters.size).isEqualTo(2)
+        assertThat(monsters[1].name).isEqualTo(m.name)
     }
 
     @Test
     fun `init with max monsters works, throws no expection`() {
-        val bs = BattleStats(100, 100)
-        val m = Monster("Peter", bs, Type.WATER, emptyList())
         assertThatNoException().isThrownBy {
-            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER) { m })
+            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER) { monster })
         }
     }
 
     @Test
-    fun `test init with too many monsters throws exception`() {
-        val bs = BattleStats(100, 100)
-        val m = Monster("Peter", bs, Type.WATER, emptyList())
-
+    fun `init with too many monsters throws exception`() {
         assertThrows<IllegalArgumentException> {
-            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER + 1) { m })
+            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER + 1) { monster })
         }
     }
 
     @Test
-    fun `test add max monsters works`() {
-        val bs = BattleStats(100, 100)
-        val m = Monster("Peter", bs, Type.WATER, emptyList())
-        var t = Trainer("Alex")
+    fun `add max monsters works`() {
+        var trainer = Trainer("Peter")
         assertThatNoException().isThrownBy {
             for (i in 1..MAX_ALLOWED_MONSTERS_PER_TRAINER) {
-                t = t.addMonster(m)
+                trainer = trainer.addMonster(monster)
             }
         }
-        assertThat(t.monsters.size).isEqualTo(MAX_ALLOWED_MONSTERS_PER_TRAINER)
+        assertThat(trainer.monsters.size).isEqualTo(MAX_ALLOWED_MONSTERS_PER_TRAINER)
     }
 
     @Test
-    fun `cant add more than max monsters`() {
-        val bs = BattleStats(100, 100)
-        val m = Monster("Peter", bs, Type.WATER, emptyList())
-        var t = Trainer("Alex")
+    fun `adding too many monsters throws IllegalArgumentException`() {
+        var trainer = Trainer("Alex")
         assertThrows<IllegalArgumentException> {
             for (i in 0..MAX_ALLOWED_MONSTERS_PER_TRAINER) {
-                t = t.addMonster(m)
+                trainer = trainer.addMonster(monster)
             }
         }
-        assertThat(t.monsters.size).isEqualTo(MAX_ALLOWED_MONSTERS_PER_TRAINER)
+        assertThat(trainer.monsters.size).isEqualTo(MAX_ALLOWED_MONSTERS_PER_TRAINER)
+    }
+
+    @Test
+    fun `trainer has next monster`() {
+        assertThat(trainer.nextMonster()).isEqualTo(monster)
+    }
+
+    @Test
+    fun `next monster throws IllegalStateException if no monsters left`() {
+        trainer = Trainer("Alex")
+        assertThrows<IllegalStateException> { trainer.nextMonster() }
+    }
+
+    @Test
+    fun `trainer has next battle ready monster`() {
+        assertThat(trainer.nextBattleReadyMonster()).isEqualTo(monster)
+    }
+
+    @Test
+    fun `next battle ready monster returns null if no monsters left`() {
+        trainer = Trainer("Alex")
+        assertThat(trainer.nextBattleReadyMonster()).isNull()
+    }
+
+    @Test
+    fun `next battle ready monster returns null if monster is KO`() {
+        val monster = Monster("Peter", BattleStats(hp = 0, speed = 20), Type.WATER, emptyList())
+        val trainer = Trainer("Alex", listOf(monster))
+        assertThat(trainer.nextBattleReadyMonster()).isNull()
+    }
+
+    @Test
+    fun `trainer is not defeated if at least one monster is alive`() {
+        assertThat(trainer.isDefeated()).isFalse
+    }
+
+    @Test
+    fun `trainer is defeated if all monsters are KO`() {
+        val bs = BattleStats(hp = 0, speed = 20)
+        val monster = Monster("Peter", bs, Type.WATER, emptyList())
+        val trainer = Trainer("Alex", listOf(monster))
+        assertThat(trainer.isDefeated()).isTrue
     }
 }

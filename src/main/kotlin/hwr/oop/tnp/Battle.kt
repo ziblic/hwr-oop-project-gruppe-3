@@ -1,58 +1,33 @@
 package hwr.oop.tnp
 
 import kotlinx.serialization.Serializable
-import java.io.File
+import java.util.UUID
 
 @Serializable
 class Battle(
     val trainerOne: Trainer,
     val trainerTwo: Trainer,
-    val battleId: Int =
-        DataHandler.getNextBattleId(File(System.getProperty("user.dir"), "data/battles")),
-    private var currentTrainer: Trainer = setBeginningTrainer(trainerOne, trainerTwo)
+    val battleId: String = UUID.randomUUID().toString(),
+    private var currentTrainer: Trainer = determineBeginningTrainer(trainerOne, trainerTwo)
 ) {
     companion object {
-        private fun setBeginningTrainer(trainerOne: Trainer, trainerTwo: Trainer): Trainer {
-            val m1 =
-                trainerOne.nextMonster()
-                    ?: throw IllegalStateException(
-                        "Trainer one has no alive monsters"
-                    )
-            val m2 =
-                trainerTwo.nextMonster()
-                    ?: throw IllegalStateException(
-                        "Trainer two has no alive monsters"
-                    )
+        private fun determineBeginningTrainer(trainerOne: Trainer, trainerTwo: Trainer): Trainer {
+            val m1 = trainerOne.nextMonster()
+            val m2 = trainerTwo.nextMonster()
 
-            if (m1.stats.speed >= m2.stats.speed) {
-                return trainerOne
-            } else {
-                return trainerTwo
-            }
+            return if (m1.isFasterThan(m2))
+                trainerOne
+            else
+                trainerTwo
         }
 
-        fun showAll() {
-            val dataDirName: String = System.getenv("DATADIR")?.toString() ?: "data"
-            val dataDir = File(System.getProperty("user.dir"), dataDirName)
-            val battleFolder = File(dataDir, "battles")
-            val battleFiles =
-                battleFolder.listFiles { file ->
-                    file.extension == "json" &&
-                        file.nameWithoutExtension.toIntOrNull() != null
-                }
-
-            if (battleFiles == null || battleFiles.size == 0) {
-                println("No battles found")
-            } else {
-                println("List of all Battles")
-                battleFiles.forEach { file ->
-                    println("BattleID: ${file.nameWithoutExtension}")
-                }
-            }
-        }
     }
-    var currentRound: Int = 0
+
+    fun currentTrainer() = currentTrainer
+
+    var currentRound: Int = 1
         private set
+
     var finished: Boolean = false
         private set
 
@@ -60,7 +35,7 @@ class Battle(
         finished = true
     }
 
-    private fun startRound() {
+    private fun advanceRound() {
         if (determineWinner() != null) {
             endBattle()
             return
@@ -73,18 +48,20 @@ class Battle(
     }
 
     fun takeTurn(attack: Attack): Monster {
-        startRound()
         if (finished) {
             throw IllegalStateException("Battle is already finished")
         }
-        val monster = currentTrainer.nextMonster()
+        val monster = currentTrainer.nextBattleReadyMonster()
         val opponent = getOpponent()
-        val oppMonster = opponent.nextMonster()
-
-        monster!!.attack(attack, oppMonster!!)
+        val opponentMonster = opponent.nextBattleReadyMonster()
+        if (monster == null || opponentMonster == null) {
+            throw IllegalStateException("No battle ready monster available")
+        }
+        monster.attack(attack, opponentMonster)
         currentTrainer = opponent
 
-        return oppMonster
+        advanceRound()
+        return opponentMonster
     }
 
     fun determineWinner(): Trainer? {
@@ -93,11 +70,10 @@ class Battle(
         return null
     }
 
-    fun viewStatus() {
-        println(
-            """Battle ($battleId):
-${trainerOne.name} vs ${trainerTwo.name}
-Next trainer to turn is ${currentTrainer.name}"""
-        )
+    override fun toString(): String {
+        return """Battle ($battleId):
+${trainerOne.name} vs. ${trainerTwo.name}
+Round: $currentRound
+Next Attacker: ${currentTrainer.name}"""
     }
 }

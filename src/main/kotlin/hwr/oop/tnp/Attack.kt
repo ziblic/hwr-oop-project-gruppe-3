@@ -31,7 +31,7 @@ enum class Attack(val type: Type, val damage: Int, val hitQuote: Double) {
     SPIRIT_WAVE(Type.SPIRIT, 25, 0.9),
     NIGHT_SCREAM(Type.SPIRIT, 40, 0.4);
 
-    public fun calcMultiplierHitQuote(
+    fun calcMultiplierHitQuote(
         critChance: Double,
         random: Double = Math.random()
     ): Double {

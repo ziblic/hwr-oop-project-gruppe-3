@@ -119,12 +119,7 @@ class GameParser(private val args: List<String>) {
             return
         }
 
-        try {
-            game.viewStatus(parseToInt(args[0]))
-        } catch (e: Exception) {
-            println(COULD_NOT_PARSE_TO_INT_ERROR)
-            return
-        }
+        game.viewStatus(args[0])
     }
 
     private fun parseForPerformAttack(args: List<String>) {
@@ -133,12 +128,7 @@ class GameParser(private val args: List<String>) {
             return
         }
 
-        try {
-            game.performAttack(parseToInt(args[0]), parseToAttack(args[1]))
-        } catch (e: Exception) {
-            println(COULD_NOT_PARSE_TO_INT_ERROR)
-            return
-        }
+        game.performAttack(args[0], parseToAttack(args[1]))
     }
 
     private fun printHelp(command: String = "") {

@@ -65,7 +65,7 @@ class DataHandlerTest : AnnotationSpec() {
             }
             assertThrows<Exception> { dataHandler.loadTrainer("Bob") }
             assertThrows<Exception> { dataHandler.loadMonster("Pika") }
-            assertThrows<Exception> { dataHandler.loadBattle(1) }
+            assertThrows<Exception> { dataHandler.loadBattle("1") }
         }
     }
 
@@ -89,7 +89,7 @@ class DataHandlerTest : AnnotationSpec() {
 
             assertThrows<Exception> { dataHandler.loadTrainer("Bob") }
             assertThrows<Exception> { dataHandler.loadMonster("Pika") }
-            assertThrows<Exception> { dataHandler.loadBattle(1) }
+            assertThrows<Exception> { dataHandler.loadBattle("1") }
 
             val monster1 =
                 Monster(

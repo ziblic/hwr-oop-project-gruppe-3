@@ -52,20 +52,20 @@ Trainer:            $trainerName
         }
     }
 
-    override fun viewStatus(battleId: Int) {
+    override fun viewStatus(battleId: String) {
         try {
             val battle = dataHandler.loadBattle(battleId)
-            battle.viewStatus()
+            println(battle.toString())
         } catch (_: Exception) {
             println("The battle with ID $battleId does not exist")
         }
     }
 
     override fun showAllBattles() {
-        Battle.showAll()
+        TODO()
     }
 
-    override fun performAttack(battleID: Int, selectedAttack: Attack) {
+    override fun performAttack(battleID: String, selectedAttack: Attack) {
         try {
             val battle = dataHandler.loadBattle(battleID)
             dataHandler.saveMonster(battle.takeTurn(selectedAttack))

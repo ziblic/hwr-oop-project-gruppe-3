@@ -101,7 +101,7 @@ class DataHandler(
         battleFile.writeText(json.encodeToString(battle))
     }
 
-    override fun loadBattle(battleId: Int): Battle {
+    override fun loadBattle(battleId: String): Battle {
         if (isDryRun) {
             throw Exception(DRY_RUN_ERROR)
         }

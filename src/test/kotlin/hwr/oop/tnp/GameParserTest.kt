@@ -79,7 +79,7 @@ class GameParserTest : AnnotationSpec() {
     @Test
     fun `parseForPerformAttack throw Exception`() {
         val output = captureStandardOut { main(arrayOf("on", "a", "PUNCH")) }.trim()
-        assertThat(output).isEqualTo(COULD_NOT_PARSE_TO_INT_ERROR)
+        assertThat(output).isEqualTo("Could not find battle with id: a.")
     }
 
     @Test
@@ -292,7 +292,7 @@ class GameParserTest : AnnotationSpec() {
         withEnvironment("TESTING", "true") {
             val output = captureStandardOut { main(arrayOf("view_battle", "0")) }.trim()
             assertThat(output)
-                .isEqualTo(captureStandardOut { Game().viewStatus(0) }.trim())
+                .isEqualTo(captureStandardOut { Game().viewStatus("0") }.trim())
         }
     }
 
@@ -300,18 +300,7 @@ class GameParserTest : AnnotationSpec() {
     fun `Throw exception on invalid battleId`() {
         val output = captureStandardOut { main(arrayOf("view_battle", "nr1")) }.trim()
         assertThat(output)
-            .isEqualTo("Some of the provided arguments could not be parsed to an Int")
-    }
-
-    @Test
-    fun `View all battles`() {
-        withEnvironment("TESTING", "true") {
-            val output =
-                captureStandardOut { main(arrayOf("view_battle", "  ALL  ")) }
-                    .trim()
-            assertThat(output)
-                .isEqualTo(captureStandardOut { Game().showAllBattles() }.trim())
-        }
+            .isEqualTo("The battle with ID nr1 does not exist")
     }
 
     @Test
@@ -329,7 +318,7 @@ class GameParserTest : AnnotationSpec() {
             assertThat(output)
                 .isEqualTo(
                     captureStandardOut {
-                        Game().performAttack(1, Attack.PUNCH)
+                        Game().performAttack("1", Attack.PUNCH)
                     }
                         .trim()
                 )

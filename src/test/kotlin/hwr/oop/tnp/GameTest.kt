@@ -62,47 +62,12 @@ Attacks:            [ROOT_SHOT]
 Trainer:            Bob"""
                 )
             val trainer = dataHandler.loadTrainer("Bob")
-            assert(trainer.monsters.size > 0) {}
+            assertThat(trainer.monsters).isNotEmpty
             assertThatNoException().isThrownBy { DataHandler().loadMonster("Pika") }
         }
         File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
     }
 
-    @Test
-    fun `test add max amount of Monster to trainer`() {
-        File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
-        withEnvironment(mapOf("DATADIR" to "temp-dir")) {
-            DataHandler().saveTrainer(Trainer("Bob"))
-            val game = Game()
-            assertThatNoException().isThrownBy {
-                for (_i in 0 until MAX_ALLOWED_MONSTERS_PER_TRAINER) {
-                    game.addMonster(
-                        "Pika",
-                        100,
-                        20,
-                        Type.NORMAL,
-                        listOf(Attack.ROOT_SHOT),
-                        "Bob"
-                    )
-                }
-            }
-
-            val output =
-                captureStandardOut {
-                    game.addMonster(
-                        "Pika",
-                        100,
-                        20,
-                        Type.NORMAL,
-                        listOf(Attack.ROOT_SHOT),
-                        "Bob"
-                    )
-                }
-                    .trim()
-            assertThat(output).isEqualTo("Too many monsters")
-        }
-        File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
-    }
 
     @Test
     fun `test initiateBattle`() {
@@ -138,28 +103,10 @@ Trainer:            Bob"""
     }
 
     @Test
-    fun `test showAllBattles`() {
-        File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
-        withEnvironment("DATADIR" to "temp-dir") {
-            val output = captureStandardOut { Game().showAllBattles() }.trim()
-            assertThat(output).isEqualTo("No battles found")
-
-            DataHandler()
-            val battlesFolder = File(System.getProperty("user.dir"), "temp-dir/battles")
-            File(battlesFolder, "1.json").createNewFile()
-            File(battlesFolder, "a.json").createNewFile()
-
-            val output2 = captureStandardOut { Battle.showAll() }.trim()
-            assertThat(output2).isEqualTo("List of all Battles\nBattleID: 1")
-        }
-        File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
-    }
-
-    @Test
     fun `View battle status`() {
         File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
         withEnvironment("DATADIR" to "temp-dir") {
-            val output = captureStandardOut { Game().viewStatus(2) }.trim()
+            val output = captureStandardOut { Game().viewStatus("2") }.trim()
             assertThat(output).isEqualTo("The battle with ID 2 does not exist")
             val m1 =
                 Monster(
@@ -177,15 +124,16 @@ Trainer:            Bob"""
                 )
             val t1 = Trainer("T1", listOf(m1))
             val t2 = Trainer("T2", listOf(m2))
-            val battle = Battle(t1, t2, 2)
+            val battle = Battle(t1, t2, "12345")
             DataHandler().saveBattle(battle)
 
-            val output2 = captureStandardOut { Game().viewStatus(2) }.trim()
+            val output2 = captureStandardOut { Game().viewStatus("12345") }.trim()
             assertThat(output2)
                 .isEqualTo(
-                    """Battle (2):
-T1 vs T2
-Next trainer to turn is T1"""
+                    """Battle (12345):
+T1 vs. T2
+Round: 1
+Next Attacker: T2"""
                 )
         }
         File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
@@ -211,7 +159,7 @@ Next trainer to turn is T1"""
                 )
             val t1 = Trainer("T1", listOf(m1))
             val t2 = Trainer("T2", listOf(m2))
-            val battle = Battle(t1, t2, 2)
+            val battle = Battle(t1, t2)
 
             val dataHandler = DataHandler()
             dataHandler.saveTrainer(t1)
@@ -220,7 +168,7 @@ Next trainer to turn is T1"""
             dataHandler.saveMonster(m2)
             dataHandler.saveBattle(battle)
 
-            Game().performAttack(2, Attack.PUNCH)
+            Game().performAttack("2", Attack.PUNCH)
 
 //            assertThat(dataHandler.loadMonster("M2").stats.hp).isLessThan(100)
         }

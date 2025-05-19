@@ -1,6 +1,7 @@
 package hwr.oop.tnp
 
 import kotlinx.serialization.Serializable
+import kotlin.collections.firstOrNull
 
 @Serializable
 class Trainer(val name: String, val monsters: List<Monster> = emptyList()) {
@@ -11,13 +12,16 @@ class Trainer(val name: String, val monsters: List<Monster> = emptyList()) {
     }
 
     fun addMonster(monster: Monster): Trainer {
-        require(monsters.size < MAX_ALLOWED_MONSTERS_PER_TRAINER) { "Too many monsters" }
-        val monsters =
-            listOf(monsters.iterator()).flatMap { it.asSequence().toList() } + monster
-        return Trainer(name, monsters)
+        require(monsters.size < MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+            "Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER"
+        }
+        val updatedMonsters = monsters + monster
+        return Trainer(name, updatedMonsters)
     }
 
-    fun nextMonster(): Monster? = monsters.firstOrNull { !it.isKO() }
+    fun nextMonster(): Monster = monsters.firstOrNull() ?: throw IllegalStateException("No monsters available")
+
+    fun nextBattleReadyMonster(): Monster? = monsters.firstOrNull { !it.isKO() }
 
     fun isDefeated(): Boolean = monsters.all { it.isKO() }
 }

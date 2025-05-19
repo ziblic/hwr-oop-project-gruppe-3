@@ -6,5 +6,5 @@ interface DataHandlerInterface {
     fun saveMonster(monster: Monster)
     fun loadMonster(monsterName: String): Monster
     fun saveBattle(battle: Battle)
-    fun loadBattle(battleId: Int): Battle
+    fun loadBattle(battleId: String): Battle
 }
