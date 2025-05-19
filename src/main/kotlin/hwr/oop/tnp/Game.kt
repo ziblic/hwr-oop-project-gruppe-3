@@ -45,6 +45,7 @@ Trainer:            $trainerName
                     dataHandler.loadTrainer(trainer1),
                     dataHandler.loadTrainer(trainer2)
                 )
+            dataHandler.saveBattle(battle)
             println("Battle with ID ${battle.battleId} was created")
         } catch (e: Exception) {
             println(e.message)
@@ -64,11 +65,11 @@ Trainer:            $trainerName
         Battle.showAll()
     }
 
-    override fun performAttack(battleID: Int, trainerName: String, selectedAttack: Attack) {
+    override fun performAttack(battleID: Int, selectedAttack: Attack) {
         try {
-            val trainer = dataHandler.loadTrainer(trainerName)
             val battle = dataHandler.loadBattle(battleID)
-            dataHandler.saveMonster(battle.takeTurn(selectedAttack, trainer))
+            dataHandler.saveMonster(battle.takeTurn(selectedAttack))
+            dataHandler.saveBattle(battle)
         } catch (e: Exception) {
             println(e.message)
         }

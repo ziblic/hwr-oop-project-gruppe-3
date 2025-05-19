@@ -78,7 +78,7 @@ class GameParserTest : AnnotationSpec() {
 
     @Test
     fun `parseForPerformAttack throw Exception`() {
-        val output = captureStandardOut { main(arrayOf("on", "a", "Bob", "PUNCH")) }.trim()
+        val output = captureStandardOut { main(arrayOf("on", "a", "PUNCH")) }.trim()
         assertThat(output).isEqualTo(COULD_NOT_PARSE_TO_INT_ERROR)
     }
 
@@ -324,12 +324,12 @@ class GameParserTest : AnnotationSpec() {
     fun `Attack enemy`() {
         withEnvironment("TESTING", "true") {
             val output =
-                captureStandardOut { main(arrayOf("on", "1", "Bob", "PUNCH")) }
+                captureStandardOut { main(arrayOf("on", "1", "PUNCH")) }
                     .trim()
             assertThat(output)
                 .isEqualTo(
                     captureStandardOut {
-                        Game().performAttack(1, "Bob", Attack.PUNCH)
+                        Game().performAttack(1, Attack.PUNCH)
                     }
                         .trim()
                 )
@@ -346,10 +346,10 @@ class GameParserTest : AnnotationSpec() {
     fun `Attack enemy with not enough or to many arguments`() {
         val output1 =
             captureStandardOut {
-                main(arrayOf("on", "0", "Lisa", "PUNCH", "to many args"))
+                main(arrayOf("on", "0", "PUNCH", "to many args"))
             }
                 .trim()
-        val output2 = captureStandardOut { main(arrayOf("on", "0", "Lisa")) }.trim()
+        val output2 = captureStandardOut { main(arrayOf("on", "0")) }.trim()
         assertThat(output1).isEqualTo(attackHelp)
         assertThat(output2).isEqualTo(attackHelp)
     }

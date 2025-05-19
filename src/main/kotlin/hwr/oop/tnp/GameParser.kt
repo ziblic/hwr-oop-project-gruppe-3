@@ -128,13 +128,13 @@ class GameParser(private val args: List<String>) {
     }
 
     private fun parseForPerformAttack(args: List<String>) {
-        if (args.isEmpty() || args.size != 3) {
+        if (args.isEmpty() || args.size != 2) {
             println(attackHelp)
             return
         }
 
         try {
-            game.performAttack(parseToInt(args[0]), args[1], parseToAttack(args[2]))
+            game.performAttack(parseToInt(args[0]), parseToAttack(args[1]))
         } catch (e: Exception) {
             println(COULD_NOT_PARSE_TO_INT_ERROR)
             return

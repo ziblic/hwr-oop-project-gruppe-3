@@ -13,5 +13,5 @@ interface ParserInterface {
     fun initiateBattle(trainer1: String, trainer2: String)
     fun viewStatus(battleId: Int)
     fun showAllBattles()
-    fun performAttack(battleID: Int, trainerName: String, selectedAttack: Attack)
+    fun performAttack(battleID: Int, selectedAttack: Attack)
 }

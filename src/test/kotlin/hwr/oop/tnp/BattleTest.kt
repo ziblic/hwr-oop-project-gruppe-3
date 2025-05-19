@@ -67,11 +67,11 @@ class BattleTest : AnnotationSpec() {
         val t2 = Trainer("T2", listOf(m2))
         val battle = Battle(t1, t2, 1)
 
-        battle.takeTurn(Attack.PUNCH, t1)
+        battle.takeTurn(Attack.PUNCH)
         assertThat(m2.stats.hp).isLessThan(100)
 
         val prevHp1 = m1.stats.hp
-        battle.takeTurn(Attack.PUNCH, t2)
+        battle.takeTurn(Attack.PUNCH)
         assertThat(m1.stats.hp).isLessThan(prevHp1)
 
         assertThat(battle.currentRound).isEqualTo(2)
@@ -97,7 +97,7 @@ class BattleTest : AnnotationSpec() {
         val t2 = Trainer("T2", listOf(m2))
         val battle = Battle(t1, t2, 2)
 
-        battle.takeTurn(Attack.PUNCH, t2)
+        battle.takeTurn(Attack.PUNCH)
         assertThat(m1.stats.hp).isLessThan(100)
     }
 
@@ -121,7 +121,7 @@ class BattleTest : AnnotationSpec() {
         val t2 = Trainer("T2", listOf(m2))
         val battle = Battle(t1, t2, 2)
 
-        battle.takeTurn(Attack.PUNCH, t1)
+        battle.takeTurn(Attack.PUNCH)
         assertThat(m2.stats.hp).isLessThan(100)
     }
 
@@ -162,7 +162,7 @@ class BattleTest : AnnotationSpec() {
         val t2 = Trainer("T2", listOf(m2))
         val battle = Battle(t1, t2, 3)
 
-        assertThrows<IllegalArgumentException> { battle.takeTurn(Attack.DRUM, t2) }
+        assertThrows<IllegalArgumentException> { battle.takeTurn(Attack.DRUM) }
     }
 
     @Test
@@ -184,7 +184,7 @@ class BattleTest : AnnotationSpec() {
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
         val battle = Battle(t1, t2, 4)
-        battle.takeTurn(Attack.GROUND_HAMMER, t1)
+        battle.takeTurn(Attack.GROUND_HAMMER)
 
         assertThat(m2.isKO()).isTrue()
         assertThat(battle.finished).isFalse()
@@ -210,7 +210,7 @@ class BattleTest : AnnotationSpec() {
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
         val battle = Battle(t1, t2, 4)
-        battle.takeTurn(Attack.GROUND_HAMMER, t2)
+        battle.takeTurn(Attack.GROUND_HAMMER)
         assertThat(battle.determineWinner()).isEqualTo(t2)
     }
 
@@ -233,9 +233,9 @@ class BattleTest : AnnotationSpec() {
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
         val battle = Battle(t1, t2, 5)
-        battle.takeTurn(Attack.GROUND_HAMMER, t1)
+        battle.takeTurn(Attack.GROUND_HAMMER)
 
-        assertThrows<IllegalStateException> { battle.takeTurn(Attack.GROUND_HAMMER, t2) }
+        assertThrows<IllegalStateException> { battle.takeTurn(Attack.GROUND_HAMMER) }
         assertThat(battle.finished).isTrue()
     }
 

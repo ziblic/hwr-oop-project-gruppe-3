@@ -72,10 +72,7 @@ class Battle(
         return if (currentTrainer == trainerOne) trainerTwo else trainerOne
     }
 
-    fun takeTurn(attack: Attack, trainer: Trainer): Monster {
-        require(currentTrainer.name == trainer.name) {
-            "It is the turn of ${currentTrainer.name}"
-        }
+    fun takeTurn(attack: Attack): Monster {
         startRound()
         if (finished) {
             throw IllegalStateException("Battle is already finished")

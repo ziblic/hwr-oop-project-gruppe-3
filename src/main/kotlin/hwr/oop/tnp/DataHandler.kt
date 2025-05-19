@@ -1,7 +1,5 @@
 package hwr.oop.tnp
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 
@@ -15,6 +13,10 @@ class DataHandler(
     private val monsterFile = File(dataDir, "monster.json")
     private val battleFolder = File(dataDir, "battles")
 
+    private val json = Json {
+        prettyPrint = true
+        encodeDefaults = true
+    }
     // SETUP SECTION ---
     init {
         if (!isDryRun) {
@@ -47,12 +49,12 @@ class DataHandler(
         val trainers = loadAllTrainers().toMutableList()
         trainers.removeIf { it.name == trainer.name }
         trainers.add(trainer)
-        trainerFile.writeText(Json.encodeToString(trainers))
+        trainerFile.writeText(json.encodeToString(trainers))
     }
 
     override fun loadTrainer(trainerName: String): Trainer {
         if (isDryRun) {
-            throw Exception("This is a dry run")
+            throw Exception(DRY_RUN_ERROR)
         }
         return loadAllTrainers().find { it.name == trainerName }
             ?: throw Exception("Trainer with the name $trainerName does not exist")
@@ -60,7 +62,7 @@ class DataHandler(
 
     private fun loadAllTrainers(): List<Trainer> {
         if (trainerFile.readText().isBlank()) return emptyList<Trainer>()
-        return Json.decodeFromString(trainerFile.readText())
+        return json.decodeFromString(trainerFile.readText())
     }
     // END TRAINER SECTION ---
 
@@ -73,12 +75,12 @@ class DataHandler(
         val monsterList = loadAllMonster().toMutableList()
         monsterList.removeIf { it.name == monster.name }
         monsterList.add(monster)
-        monsterFile.writeText(Json.encodeToString(monsterList))
+        monsterFile.writeText(json.encodeToString(monsterList))
     }
 
     override fun loadMonster(monsterName: String): Monster {
         if (isDryRun) {
-            throw Exception("This is a dry run")
+            throw Exception(DRY_RUN_ERROR)
         }
         return loadAllMonster().find { it.name == monsterName }
             ?: throw Exception("Monster with the name $monsterName does not exist")
@@ -86,7 +88,7 @@ class DataHandler(
 
     private fun loadAllMonster(): List<Monster> {
         if (monsterFile.readText().isBlank()) return emptyList<Monster>()
-        return Json.decodeFromString(monsterFile.readText())
+        return json.decodeFromString(monsterFile.readText())
     }
     // END MONSTER SECTION ---
 
@@ -96,19 +98,19 @@ class DataHandler(
             return
         }
         val battleFile = File(battleFolder, "${battle.battleId}.json")
-        battleFile.writeText(Json.encodeToString(battle))
+        battleFile.writeText(json.encodeToString(battle))
     }
 
     override fun loadBattle(battleId: Int): Battle {
         if (isDryRun) {
-            throw Exception("This is a dry run")
+            throw Exception(DRY_RUN_ERROR)
         }
 
         val battleFile = File(battleFolder, "$battleId.json")
         if (!battleFile.exists()) {
             throw Exception("Could not find battle with id: $battleId.")
         }
-        return Json.decodeFromString<Battle>(battleFile.readText())
+        return json.decodeFromString<Battle>(battleFile.readText())
     }
 
     companion object {
