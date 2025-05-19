@@ -1,4 +1,4 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 enum class Type {
     NORMAL,

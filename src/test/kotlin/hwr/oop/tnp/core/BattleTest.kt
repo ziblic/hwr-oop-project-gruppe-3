@@ -1,11 +1,9 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
-import io.kotest.extensions.system.withEnvironment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
-import java.io.File
 
 class BattleTest : AnnotationSpec() {
     @Test
@@ -13,14 +11,14 @@ class BattleTest : AnnotationSpec() {
         val m1 =
             Monster(
                 "M1",
-                BattleStats(hp = 100, speed = 20),
+                BattleStats(maxHp = 100, speed = 20),
                 Type.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m1))
-        val battle = Battle(t1, t2, 100)
-        assertThat(battle.battleId).isEqualTo(100)
+        val battle = Battle(t1, t2, "100")
+        assertThat(battle.battleId).isEqualTo("100")
     }
 
     @Test
@@ -28,20 +26,20 @@ class BattleTest : AnnotationSpec() {
         val m1 =
             Monster(
                 "M1",
-                BattleStats(hp = 100, speed = 20),
+                BattleStats(maxHp = 100, speed = 20),
                 Type.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
-                BattleStats(hp = 100, speed = 10),
+                BattleStats(maxHp = 100, speed = 10),
                 Type.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 0)
+        val battle = Battle(t1, t2, "0")
 
         assertThat(battle.finished).isFalse()
         assertThat(battle.currentRound).isEqualTo(0)
@@ -65,7 +63,7 @@ class BattleTest : AnnotationSpec() {
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 1)
+        val battle = Battle(t1, t2, "1")
 
         battle.takeTurn(Attack.PUNCH, t1)
         assertThat(m2.stats.hp).isLessThan(100)
@@ -95,7 +93,7 @@ class BattleTest : AnnotationSpec() {
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 2)
+        val battle = Battle(t1, t2, "2")
 
         battle.takeTurn(Attack.PUNCH, t2)
         assertThat(m1.stats.hp).isLessThan(100)
@@ -119,7 +117,7 @@ class BattleTest : AnnotationSpec() {
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 2)
+        val battle = Battle(t1, t2, "2")
 
         battle.takeTurn(Attack.PUNCH, t1)
         assertThat(m2.stats.hp).isLessThan(100)
@@ -135,10 +133,10 @@ class BattleTest : AnnotationSpec() {
                 attacks = listOf(Attack.PUNCH)
             )
         assertThrows<IllegalStateException> {
-            Battle(Trainer("T1", listOf(m1)), Trainer("T2", emptyList()), 9)
+            Battle(Trainer("T1", listOf(m1)), Trainer("T2", emptyList()), "9")
         }
         assertThrows<IllegalStateException> {
-            Battle(Trainer("T1", emptyList()), Trainer("T2", listOf(m1)), 17)
+            Battle(Trainer("T1", emptyList()), Trainer("T2", listOf(m1)), "17")
         }
     }
 
@@ -160,7 +158,7 @@ class BattleTest : AnnotationSpec() {
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 3)
+        val battle = Battle(t1, t2, "3")
 
         assertThrows<IllegalArgumentException> { battle.takeTurn(Attack.DRUM, t2) }
     }
@@ -183,7 +181,7 @@ class BattleTest : AnnotationSpec() {
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 4)
+        val battle = Battle(t1, t2, "4")
         battle.takeTurn(Attack.GROUND_HAMMER, t1)
 
         assertThat(m2.isKO()).isTrue()
@@ -209,7 +207,7 @@ class BattleTest : AnnotationSpec() {
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 4)
+        val battle = Battle(t1, t2, "4")
         battle.takeTurn(Attack.GROUND_HAMMER, t2)
         assertThat(battle.determineWinner()).isEqualTo(t2)
     }
@@ -232,7 +230,7 @@ class BattleTest : AnnotationSpec() {
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m2))
-        val battle = Battle(t1, t2, 5)
+        val battle = Battle(t1, t2, "5")
         battle.takeTurn(Attack.GROUND_HAMMER, t1)
 
         assertThrows<IllegalStateException> { battle.takeTurn(Attack.GROUND_HAMMER, t2) }
@@ -240,35 +238,17 @@ class BattleTest : AnnotationSpec() {
     }
 
     @Test
-    fun `Show all battles`() {
-        File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
-        withEnvironment("DATADIR" to "temp-dir") {
-            val output = captureStandardOut { Battle.showAll() }.trim()
-            assertThat(output).isEqualTo("No battles found")
-
-            DataHandler()
-            val battlesFolder = File(System.getProperty("user.dir"), "temp-dir/battles")
-            File(battlesFolder, "1.json").createNewFile()
-            File(battlesFolder, "a.json").createNewFile()
-
-            val output2 = captureStandardOut { Battle.showAll() }.trim()
-            assertThat(output2).isEqualTo("List of all Battles\nBattleID: 1")
-        }
-        File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
-    }
-
-    @Test
     fun `Show a specific battle`() {
         val m1 =
             Monster(
                 "M1",
-                BattleStats(hp = 100, speed = 20),
+                BattleStats(maxHp = 100, speed = 20),
                 Type.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
         val t2 = Trainer("T2", listOf(m1))
-        val battle = Battle(t1, t2, 1)
+        val battle = Battle(t1, t2, "1")
 
         val output = captureStandardOut { battle.viewStatus() }.trim()
 

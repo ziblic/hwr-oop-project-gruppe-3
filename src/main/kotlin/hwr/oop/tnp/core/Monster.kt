@@ -1,4 +1,4 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 import kotlinx.serialization.Serializable
 import kotlin.math.max

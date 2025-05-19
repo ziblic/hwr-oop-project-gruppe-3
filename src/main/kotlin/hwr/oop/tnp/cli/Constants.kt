@@ -1,10 +1,8 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.cli
 
 const val COULD_NOT_PARSE_ERROR = "Some of the provided arguments could not be parsed correctly"
 const val COULD_NOT_PARSE_TO_INT_ERROR =
     "Some of the provided arguments could not be parsed to an Int"
-
-const val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
 
 const val defaultHelp =
     """___________  _____  ___     _______

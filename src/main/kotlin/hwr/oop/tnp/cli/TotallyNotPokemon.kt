@@ -1,10 +1,14 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.cli
 
+import hwr.oop.tnp.core.Attack
+import hwr.oop.tnp.core.Game
+import hwr.oop.tnp.core.GameUsage
+import hwr.oop.tnp.core.Type
 import kotlin.io.println
 
-class GameParser(private val args: List<String>) {
+class TotallyNotPokemon(private val args: List<String>) {
 
-    private val game: ParserInterface = Game()
+    private val game: GameUsage = Game()
 
     init {
         parseArguments()
@@ -148,5 +152,5 @@ class GameParser(private val args: List<String>) {
 }
 
 fun main(args: Array<String>) {
-    GameParser(args.toList())
+    TotallyNotPokemon(args.toList())
 }
