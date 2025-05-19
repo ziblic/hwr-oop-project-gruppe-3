@@ -1,14 +1,14 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 import kotlinx.serialization.Serializable
 import java.io.File
+import java.util.UUID
 
 @Serializable
 class Battle(
     val trainerOne: Trainer,
     val trainerTwo: Trainer,
-    val battleId: Int =
-        DataHandler.getNextBattleId(File(System.getProperty("user.dir"), "data/battles")),
+    val battleId: String = UUID.randomUUID().toString(),
     private var currentTrainer: Trainer = setBeginningTrainer(trainerOne, trainerTwo)
 ) {
     companion object {

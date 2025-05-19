@@ -1,4 +1,4 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.jupiter.api.Assertions.assertEquals
