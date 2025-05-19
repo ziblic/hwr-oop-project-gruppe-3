@@ -4,7 +4,7 @@ const val COULD_NOT_PARSE_ERROR = "Some of the provided arguments could not be p
 const val COULD_NOT_PARSE_TO_INT_ERROR =
     "Some of the provided arguments could not be parsed to an Int"
 
-const val DRY_RUN_ERROR= "This is a dry run"
+const val DRY_RUN_ERROR = "This is a dry run"
 
 const val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
 

@@ -68,7 +68,6 @@ Trainer:            Bob"""
         File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()
     }
 
-
     @Test
     fun `test initiateBattle`() {
         File(System.getProperty("user.dir"), "temp-dir").deleteRecursively()

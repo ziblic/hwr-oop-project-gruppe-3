@@ -3,7 +3,6 @@ package hwr.oop.tnp
 import io.kotest.core.spec.style.AnnotationSpec
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
@@ -124,7 +123,7 @@ class BattleTest : AnnotationSpec() {
 
     @Test
     fun `taking a turn with no battler ready monsters left throws IllegalStateException`() {
-         val m1 =
+        val m1 =
             Monster(
                 "M1",
                 BattleStats(hp = 0, speed = 20), // already KO

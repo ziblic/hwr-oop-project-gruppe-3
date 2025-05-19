@@ -20,7 +20,6 @@ class Battle(
             else
                 trainerTwo
         }
-
     }
 
     fun currentTrainer() = currentTrainer
