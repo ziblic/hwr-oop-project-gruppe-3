@@ -27,7 +27,7 @@ class Monster(
             (
                 attackUsed.damage.toDouble() *
                     multiplier *
-                    attackUsed.calcMultiplierHitQuote(attackUsed.hitQuote)
+                    attackUsed.calculateMultiplierHitQuote(attackUsed.hitQuote)
                 )
                 .toInt()
         otherMonster.takeDamage(damageAmount)

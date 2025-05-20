@@ -21,7 +21,7 @@ class Game : GameUsage {
         TODO()
     }
 
-    override fun viewStatus(battleId: Int) {
+    override fun viewStatus(battleId: String) {
         TODO()
     }
 
@@ -29,7 +29,7 @@ class Game : GameUsage {
         TODO()
     }
 
-    override fun performAttack(battleID: Int, trainerName: String, selectedAttack: Attack) {
+    override fun performAttack(battleID: String, selectedAttack: Attack) {
         TODO()
     }
 }

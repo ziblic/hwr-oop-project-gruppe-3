@@ -9,7 +9,7 @@ class AttackTest : AnnotationSpec() {
     fun `calcMultiplierHitQuote valid input`() {
         val attack = Attack.PUNCH
         val critChance = 0.5
-        val result = attack.calcMultiplierHitQuote(critChance)
+        val result = attack.calculateMultiplierHitQuote(critChance)
         assert(result in 1.0..1.5)
     }
 
@@ -17,7 +17,7 @@ class AttackTest : AnnotationSpec() {
     fun `calcMultiplierHitQuote when critChance is zero`() {
         val attack = Attack.PUNCH
         val critChance = 0.0
-        val result = attack.calcMultiplierHitQuote(critChance)
+        val result = attack.calculateMultiplierHitQuote(critChance)
         assertEquals(1.0, result, "Multiplier for critChance of 0 should be 1.0")
     }
 
@@ -25,7 +25,7 @@ class AttackTest : AnnotationSpec() {
     fun `calcMultiplierHitQuote when critChance is one`() {
         val attack = Attack.PUNCH
         val critChance = 1.0
-        val result = attack.calcMultiplierHitQuote(critChance)
+        val result = attack.calculateMultiplierHitQuote(critChance)
         assertEquals(1.5, result, "Multiplier for critChance of 1 should be 1.5")
     }
 
@@ -35,7 +35,7 @@ class AttackTest : AnnotationSpec() {
         val critChance = -0.1
         val exception =
             assertThrows<IllegalArgumentException> {
-                attack.calcMultiplierHitQuote(critChance)
+                attack.calculateMultiplierHitQuote(critChance)
             }
         assertEquals("critChance must be between 0.0 and 1.0", exception.message)
     }
@@ -46,7 +46,7 @@ class AttackTest : AnnotationSpec() {
         val critChance = 1.1
         val exception =
             assertThrows<IllegalArgumentException> {
-                attack.calcMultiplierHitQuote(critChance)
+                attack.calculateMultiplierHitQuote(critChance)
             }
         assertEquals("critChance must be between 0.0 and 1.0", exception.message)
     }
@@ -120,7 +120,7 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.PUNCH
         val critChance = 0.5
         val random = 0.3 // Simulating scenario where critical hit should happen
-        val result = attack.calcMultiplierHitQuote(critChance, random)
+        val result = attack.calculateMultiplierHitQuote(critChance, random)
         assertEquals(1.5, result, "Expected multiplier should be 1.5 on critical hit")
     }
 
@@ -129,7 +129,7 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.PUNCH
         val critChance = 0.5
         val random = 0.6 // Simulating scenario where critical hit does not happen
-        val result = attack.calcMultiplierHitQuote(critChance, random)
+        val result = attack.calculateMultiplierHitQuote(critChance, random)
         assertEquals(1.0, result, "Expected multiplier should be 1.0 when no critical hit")
     }
 
@@ -138,7 +138,7 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.PUNCH
         val critChance = 0.5
         val random = 0.5 // Simulating scenario where critical hit does not happen
-        val result = attack.calcMultiplierHitQuote(critChance, random)
+        val result = attack.calculateMultiplierHitQuote(critChance, random)
         assertEquals(1.0, result, "Expected multiplier should be 1.0 when no critical hit")
     }
 }

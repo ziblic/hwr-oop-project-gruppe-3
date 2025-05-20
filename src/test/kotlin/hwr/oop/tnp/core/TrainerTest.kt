@@ -110,7 +110,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `next battle ready monster returns null if monster is KO`() {
-        val monster = Monster("Peter", BattleStats(hp = 0, speed = 20), Type.WATER, emptyList())
+        val monster = Monster("Peter", BattleStats(0, 20), Type.WATER, emptyList())
         val trainer = Trainer("Alex", listOf(monster))
         assertThat(trainer.nextBattleReadyMonster()).isNull()
     }
@@ -122,7 +122,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `trainer is defeated if all monsters are KO`() {
-        val bs = BattleStats(hp = 0, speed = 20)
+        val bs = BattleStats(0, 20)
         val monster = Monster("Peter", bs, Type.WATER, emptyList())
         val trainer = Trainer("Alex", listOf(monster))
         assertThat(trainer.isDefeated()).isTrue

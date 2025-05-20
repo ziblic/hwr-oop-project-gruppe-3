@@ -10,14 +10,14 @@ class BattleTest : AnnotationSpec() {
     private val m1 =
         Monster(
             "M1",
-            BattleStats(hp = 100, speed = 20),
+            BattleStats(100, 20),
             Type.NORMAL,
             attacks = listOf(Attack.PUNCH)
         )
     private val m2 =
         Monster(
             "M2",
-            BattleStats(hp = 100, speed = 10),
+            BattleStats(100, 10),
             Type.NORMAL,
             attacks = listOf(Attack.PUNCH)
         )
@@ -35,14 +35,14 @@ class BattleTest : AnnotationSpec() {
         val m1 =
             Monster(
                 "M1",
-                BattleStats(hp = 100, speed = 20),
+                BattleStats(100, 20),
                 Type.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
-                BattleStats(hp = 10, speed = 10),
+                BattleStats(10, 10),
                 Type.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
@@ -122,15 +122,30 @@ class BattleTest : AnnotationSpec() {
     }
 
     @Test
-    fun `taking a turn with no battler ready monsters left throws IllegalStateException`() {
+    fun `taking a turn with no battle ready monsters left throws IllegalStateException`() {
         val m1 =
             Monster(
                 "M1",
-                BattleStats(hp = 0, speed = 20), // already KO
+                BattleStats(0, 20), // already KO
                 Type.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val battle = Battle(Trainer("T1", listOf(m1)), t2)
+        assertThrows<IllegalStateException> {
+            battle.takeTurn(Attack.PUNCH)
+        }
+    }
+
+    @Test
+    fun `taking a turn and the opponent has no battle ready monsters left throws IllegalStateException`() {
+        val m2 =
+            Monster(
+                "M2",
+                BattleStats(0, 5), // already KO
+                Type.NORMAL,
+                attacks = listOf(Attack.PUNCH)
+            )
+        val battle = Battle(t1, Trainer("T2", listOf(m2)))
         assertThrows<IllegalStateException> {
             battle.takeTurn(Attack.PUNCH)
         }

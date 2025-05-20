@@ -301,10 +301,10 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `Attack enemy`() {
-        val output = captureStandardOut { main(arrayOf("on", "1", "Bob", "PUNCH")) }.trim()
+        val output = captureStandardOut { main(arrayOf("on", "1", "PUNCH")) }.trim()
         assertThat(output)
             .isEqualTo(
-                captureStandardOut { Game().performAttack(1, "Bob", Attack.PUNCH) }
+                captureStandardOut { Game().performAttack("1", Attack.PUNCH) }
                     .trim()
             )
     }
