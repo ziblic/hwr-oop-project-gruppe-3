@@ -163,10 +163,6 @@
           <targetTests>
             <param>hwr.oop.*</param>
           </targetTests>
-          <excludedMethods>
-            <param>loadAllTrainers</param>
-            <param>loadAllMonster</param>
-          </excludedMethods>
           <testPlugin>kotest</testPlugin>
         </configuration>
         <executions>

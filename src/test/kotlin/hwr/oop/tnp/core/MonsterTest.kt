@@ -1,4 +1,4 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 import io.kotest.core.spec.style.AnnotationSpec
 import kotlinx.serialization.SerializationException
@@ -27,7 +27,7 @@ class MonsterTest : AnnotationSpec() {
         val jsonMonster = Json.encodeToString(monster)
         assertThat(jsonMonster)
             .isEqualTo(
-                "{\"name\":\"Kevin\",\"stats\":{\"hp\":200,\"speed\":20},\"type\":\"WATER\",\"attacks\":[\"PUNCH\",\"DRUM\"]}"
+                "{\"name\":\"Kevin\",\"stats\":${Json.encodeToString(stats)},\"type\":\"WATER\",\"attacks\":[\"PUNCH\",\"DRUM\"]}"
             )
         val decodedMonster = Json.decodeFromString<Monster>(jsonMonster)
         assertThat(monster.name).isEqualTo(decodedMonster.name)
@@ -40,7 +40,7 @@ class MonsterTest : AnnotationSpec() {
     fun `wrong Json throws JsonDecodingException`() {
         assertThrows<SerializationException> {
             Json.decodeFromString<Monster>(
-                "{\"name\":\"Kevin\",\"battlestats\":{\"hp\":0,\"speed\":20},\"type\":\"WATER\",\"attacks\":[\"PUNCH\",\"DRUM\"]}"
+                "{\"name\":\"Kevin\",\"battlestats\":{\"maxHp\":0,\"hp\":0,\"speed\":20},\"type\":\"WATER\",\"attacks\":[\"PUNCH\",\"DRUM\"]}"
             )
         }
         assertThrows<SerializationException> {

@@ -1,4 +1,4 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 import io.kotest.core.spec.style.AnnotationSpec
 import kotlinx.serialization.json.Json
@@ -11,7 +11,7 @@ class BattleStatsTest : AnnotationSpec() {
     fun `check if serializable`() {
         val battleStats = BattleStats(100, 25)
         val jsonStats = Json.encodeToString(battleStats)
-        assertThat(jsonStats).isEqualTo("{\"hp\":100,\"speed\":25}")
+        assertThat(jsonStats).isEqualTo("{\"maxHp\":100,\"hp\":100,\"speed\":25}")
 
         val decodedStats = Json.decodeFromString<BattleStats>(jsonStats)
         assertThat(battleStats.hp).isEqualTo(decodedStats.hp)
