@@ -78,7 +78,7 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `parseForPerformAttack throw Exception`() {
-        val output = captureStandardOut { main(arrayOf("on", "a", "Bob", "PUNCH")) }.trim()
+        val output = captureStandardOut { main(arrayOf("on", "a", "PUNCH")) }.trim()
         assertThat(output).isEqualTo(COULD_NOT_PARSE_TO_INT_ERROR)
     }
 
