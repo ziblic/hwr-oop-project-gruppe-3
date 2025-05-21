@@ -1,6 +1,6 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
-interface ParserInterface {
+interface GameUsage {
     fun createTrainer(trainerName: String)
     fun addMonster(
         monsterName: String,
@@ -11,7 +11,7 @@ interface ParserInterface {
         trainerName: String
     )
     fun initiateBattle(trainer1: String, trainer2: String)
-    fun viewStatus(battleId: Int)
+    fun viewStatus(battleId: String)
     fun showAllBattles()
-    fun performAttack(battleID: Int, trainerName: String, selectedAttack: Attack)
+    fun performAttack(battleID: String, selectedAttack: Attack)
 }

@@ -1,4 +1,4 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.core
 
 import kotlinx.serialization.Serializable
 import kotlin.math.max
@@ -27,17 +27,21 @@ class Monster(
             (
                 attackUsed.damage.toDouble() *
                     multiplier *
-                    attackUsed.calcMultiplierHitQuote(attackUsed.hitQuote)
+                    attackUsed.calculateMultiplierHitQuote(attackUsed.hitQuote)
                 )
                 .toInt()
         otherMonster.takeDamage(damageAmount)
     }
 
     fun isKO(): Boolean {
-        return this.stats.hp == 0
+        return stats.hp == 0
     }
 
     private fun takeDamage(amountOfDamage: Int) {
-        this.stats.hp = max(this.stats.hp - amountOfDamage, 0)
+        stats.hp = max(stats.hp - amountOfDamage, 0)
+    }
+
+    fun isFasterThan(otherMonster: Monster): Boolean {
+        return stats.speed > otherMonster.stats.speed
     }
 }

@@ -1,10 +1,14 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.cli
 
+import hwr.oop.tnp.core.Attack
+import hwr.oop.tnp.core.Game
+import hwr.oop.tnp.core.GameUsage
+import hwr.oop.tnp.core.Type
 import kotlin.io.println
 
-class GameParser(private val args: List<String>) {
+class TotallyNotPokemon(private val args: List<String>) {
 
-    private val game: ParserInterface = Game()
+    private val game: GameUsage = Game()
 
     init {
         parseArguments()
@@ -119,26 +123,16 @@ class GameParser(private val args: List<String>) {
             return
         }
 
-        try {
-            game.viewStatus(parseToInt(args[0]))
-        } catch (e: Exception) {
-            println(COULD_NOT_PARSE_TO_INT_ERROR)
-            return
-        }
+        game.viewStatus(args[0])
     }
 
     private fun parseForPerformAttack(args: List<String>) {
-        if (args.isEmpty() || args.size != 3) {
+        if (args.isEmpty() || args.size != 2) {
             println(attackHelp)
             return
         }
 
-        try {
-            game.performAttack(parseToInt(args[0]), args[1], parseToAttack(args[2]))
-        } catch (e: Exception) {
-            println(COULD_NOT_PARSE_TO_INT_ERROR)
-            return
-        }
+        game.performAttack(args[0], parseToAttack(args[1]))
     }
 
     private fun printHelp(command: String = "") {
@@ -148,5 +142,5 @@ class GameParser(private val args: List<String>) {
 }
 
 fun main(args: Array<String>) {
-    GameParser(args.toList())
+    TotallyNotPokemon(args.toList())
 }
