@@ -319,10 +319,10 @@ class TotallyNotPokemonTest : AnnotationSpec() {
     fun `Attack enemy with not enough or to many arguments`() {
         val output1 =
             captureStandardOut {
-                main(arrayOf("on", "0", "Lisa", "PUNCH", "to many args"))
+                main(arrayOf("on", "0", "PUNCH", "too many args"))
             }
                 .trim()
-        val output2 = captureStandardOut { main(arrayOf("on", "0", "Lisa")) }.trim()
+        val output2 = captureStandardOut { main(arrayOf("on", "0")) }.trim()
         assertThat(output1).isEqualTo(attackHelp)
         assertThat(output2).isEqualTo(attackHelp)
     }
