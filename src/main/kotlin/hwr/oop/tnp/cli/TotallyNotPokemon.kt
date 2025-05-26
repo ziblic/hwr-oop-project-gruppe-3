@@ -76,7 +76,10 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
 
         try {
-            game.createTrainer(args[0], PersistenceAdapter().loadBattle(args[1]))
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[1])
+            game.createTrainer(args[0], battle)
+            adapter.saveBattle(battle)
         } catch (e: IllegalArgumentException) {
             println(e.message)
         }
@@ -99,7 +102,8 @@ class TotallyNotPokemon(private val args: List<String>) {
             for (attack in args.slice(4..args.size - 2).toList()) {
                 attackList.add(parseToAttack(attack))
             }
-            val battle = PersistenceAdapter().loadBattle(args[args.size - 1])
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[args.size - 1])
 
             game.addMonster(
                 monsterName,
@@ -110,6 +114,7 @@ class TotallyNotPokemon(private val args: List<String>) {
                 trainerName,
                 battle
             )
+            adapter.saveBattle(battle)
         } catch (e: Exception) {
             println(COULD_NOT_PARSE_ERROR)
             return
@@ -122,7 +127,7 @@ class TotallyNotPokemon(private val args: List<String>) {
             return
         }
 
-        game.initiateBattle()
+        PersistenceAdapter().saveBattle(game.initiateBattle())
     }
 
     private fun parseForViewBattle(args: List<String>) {
@@ -141,7 +146,10 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
 
         try {
-            game.viewStatus(PersistenceAdapter().loadBattle(args[0]))
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[0])
+            game.viewStatus(battle)
+            adapter.saveBattle(battle)
         } catch (e: IllegalArgumentException) {
             println(e.message)
         }
@@ -154,10 +162,10 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
 
         try {
-            game.performAttack(
-                PersistenceAdapter().loadBattle(args[0]),
-                parseToAttack(args[1])
-            )
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[0])
+            game.performAttack(battle, parseToAttack(args[1]))
+            adapter.saveBattle(battle)
         } catch (e: IllegalArgumentException) {
             println(e.message)
         }

@@ -18,7 +18,7 @@ class PersistenceAdapter : GamePersistencePort {
     }
 
     override fun saveBattle(battle: Battle) {
-        val battleFile = File(dataFolder, battle.battleId)
+        val battleFile = File(dataFolder, "${battle.battleId}.json")
         if (!battleFile.exists()) {
             battleFile.createNewFile()
         }

@@ -5,7 +5,7 @@ const val COULD_NOT_PARSE_TO_INT_ERROR =
     "Some of the provided arguments could not be parsed to an Int"
 
 const val defaultHelp =
-    """___________  _____  ___     _______
+    """.___________  _____  ___     _______
 ("     _   ")(\"   \|"  \   |   __ "\
  )__/  \\__/ |.\\   \    |  (. |__) :)
     \\_ /    |: \.   \\  |  |:  ____/

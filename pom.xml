@@ -122,7 +122,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>hwr.oop.tnp.GameParserKt</mainClass>
+              <mainClass>hwr.oop.tnp.cli.TotallyNotPokemonKt</mainClass>
             </manifest>
           </archive>
         </configuration>

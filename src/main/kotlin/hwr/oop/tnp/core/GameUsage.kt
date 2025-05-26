@@ -11,7 +11,7 @@ interface GameUsage {
         trainerName: String,
         battle: Battle,
     )
-    fun initiateBattle()
+    fun initiateBattle(): Battle
     fun viewStatus(battle: Battle)
     fun showAllBattles(battles: List<Battle>)
     fun performAttack(battle: Battle, selectedAttack: Attack)

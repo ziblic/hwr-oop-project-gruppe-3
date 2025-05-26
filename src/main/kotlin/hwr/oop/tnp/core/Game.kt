@@ -29,9 +29,10 @@ class Game : GameUsage {
         }
     }
 
-    override fun initiateBattle() {
+    override fun initiateBattle(): Battle {
         val battle = Battle()
         println(battle.toString())
+        return battle
     }
 
     override fun viewStatus(battle: Battle) {
@@ -40,6 +41,9 @@ class Game : GameUsage {
     }
 
     override fun showAllBattles(battles: List<Battle>) {
+        if (battles.isEmpty()) {
+            println("No battles created yet")
+        }
         for (battle in battles) {
             println(battle.toString())
         }
