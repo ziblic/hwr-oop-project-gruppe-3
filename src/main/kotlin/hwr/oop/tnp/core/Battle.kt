@@ -1,115 +1,115 @@
 package hwr.oop.tnp.core
 
-import kotlinx.serialization.Serializable
 import java.util.UUID
+import kotlinx.serialization.Serializable
 
 enum class BattleStatus {
-    PREGAME,
-    STARTED,
-    FINISHED,
+        PREGAME,
+        STARTED,
+        FINISHED,
 }
 
 @Serializable
 class Battle(
-    val battleId: String = UUID.randomUUID().toString(),
+        val battleId: String = UUID.randomUUID().toString(),
 ) {
-    lateinit var trainerOne: Trainer
-        private set
-    lateinit var trainerTwo: Trainer
-        private set
-    private lateinit var currentTrainer: Trainer
+        lateinit var trainerOne: Trainer
+                private set
+        lateinit var trainerTwo: Trainer
+                private set
+        lateinit var currentTrainer: Trainer
+                private set
 
-    var status: BattleStatus = BattleStatus.PREGAME
-        private set
-
-    var currentRound: Int = 1
-        private set
-
-    companion object {
-        private fun determineBeginningTrainer(
-            trainerOne: Trainer,
-            trainerTwo: Trainer
-        ): Trainer {
-            val m1 = trainerOne.nextMonster()
-            val m2 = trainerTwo.nextMonster()
-
-            return if (m1.isFasterThan(m2)) trainerOne else trainerTwo
+        fun getTrainerByName(name: String): Trainer {
+                return when {
+                        ::trainerOne.isInitialized &&
+                                trainerOne.name.equals(name, ignoreCase = true) -> trainerOne
+                        ::trainerTwo.isInitialized &&
+                                trainerTwo.name.equals(name, ignoreCase = true) -> trainerTwo
+                        else ->
+                                throw IllegalArgumentException(
+                                        "Trainer '$name' not found in battle."
+                                )
+                }
         }
-    }
 
-    fun addTrainerToBattle(trainer: Trainer) {
-        when {
-            !::trainerOne.isInitialized -> trainerOne = trainer
-            !::trainerTwo.isInitialized -> trainerTwo = trainer
-            else ->
-                throw IllegalStateException(
-                    "Both trainerOne and trainerTwo are already initialized."
-                )
+        var status: BattleStatus = BattleStatus.PREGAME
+                private set
+
+        var currentRound: Int = 1
+                private set
+
+        companion object {
+                private fun determineBeginningTrainer(
+                        trainerOne: Trainer,
+                        trainerTwo: Trainer
+                ): Trainer {
+                        val m1 = trainerOne.nextMonster()
+                        val m2 = trainerTwo.nextMonster()
+
+                        return if (m1.isFasterThan(m2)) trainerOne else trainerTwo
+                }
         }
-    }
 
-    fun addMonsterToTrainer(monster: Monster, trainerName: String) {
-        val trainer =
-            when (trainerName) {
-                trainerOne.name -> trainerOne
-                trainerTwo.name -> trainerTwo
-                else ->
-                    throw IllegalArgumentException(
-                        "Trainer with name $trainerName not found in battle."
-                    )
-            }
-
-        trainer.addMonster(monster)
-    }
-
-    fun startBattle() {
-        currentTrainer = determineBeginningTrainer(trainerOne, trainerTwo)
-        status = BattleStatus.STARTED
-    }
-
-    private fun endBattle() {
-        status = BattleStatus.FINISHED
-    }
-
-    private fun advanceRound() {
-        if (determineWinner() != null) {
-            endBattle()
-            return
+        fun addTrainerToBattle(trainer: Trainer) {
+                when {
+                        !::trainerOne.isInitialized -> trainerOne = trainer
+                        !::trainerTwo.isInitialized -> trainerTwo = trainer
+                        else ->
+                                throw IllegalStateException(
+                                        "Both trainerOne and trainerTwo are already initialized."
+                                )
+                }
         }
-        currentRound++
-    }
 
-    private fun getOpponent(): Trainer {
-        return if (currentTrainer == trainerOne) trainerTwo else trainerOne
-    }
-
-    fun takeTurn(attack: Attack): Monster {
-        if (status == BattleStatus.FINISHED) {
-            throw IllegalStateException("Battle is already finished")
+        fun startBattle() {
+                currentTrainer = determineBeginningTrainer(trainerOne, trainerTwo)
+                status = BattleStatus.STARTED
         }
-        val monster = currentTrainer.nextBattleReadyMonster()
-        val opponent = getOpponent()
-        val opponentMonster = opponent.nextBattleReadyMonster()
-        if (monster == null || opponentMonster == null) {
-            throw IllegalStateException("No battle ready monster available")
+
+        private fun endBattle() {
+                status = BattleStatus.FINISHED
         }
-        monster.attack(attack, opponentMonster)
-        currentTrainer = opponent
 
-        advanceRound()
-        return opponentMonster
-    }
+        private fun advanceRound() {
+                if (determineWinner() != null) {
+                        endBattle()
+                        return
+                }
+                currentRound++
+        }
 
-    fun determineWinner(): Trainer? {
-        if (trainerOne.isDefeated()) return trainerTwo
-        if (trainerTwo.isDefeated()) return trainerOne
-        return null
-    }
+        private fun getOpponent(): Trainer {
+                return if (currentTrainer == trainerOne) trainerTwo else trainerOne
+        }
 
-    override fun toString(): String {
-        return """Battle ($battleId):
+        fun takeTurn(attack: Attack): Monster {
+                if (status == BattleStatus.FINISHED) {
+                        throw IllegalStateException("Battle is already finished")
+                }
+                val monster = currentTrainer.nextBattleReadyMonster()
+                val opponent = getOpponent()
+                val opponentMonster = opponent.nextBattleReadyMonster()
+                if (monster == null || opponentMonster == null) {
+                        throw IllegalStateException("No battle ready monster available")
+                }
+                monster.attack(attack, opponentMonster)
+                currentTrainer = opponent
+
+                advanceRound()
+                return opponentMonster
+        }
+
+        fun determineWinner(): Trainer? {
+                if (trainerOne.isDefeated()) return trainerTwo
+                if (trainerTwo.isDefeated()) return trainerOne
+                return null
+        }
+
+        override fun toString(): String {
+                return """Battle ($battleId):
 ${trainerOne.name} vs. ${trainerTwo.name}
 Round: $currentRound
 Next Attacker: ${currentTrainer.name}"""
-    }
+        }
 }

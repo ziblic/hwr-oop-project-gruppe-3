@@ -8,7 +8,8 @@ interface GameUsage {
         speed: Int,
         type: Type,
         attacks: List<Attack>,
-        trainerName: String
+        trainerName: String,
+        battle: Battle,
     )
     fun initiateBattle(trainer1: String, trainer2: String)
     fun viewStatus(battleId: String)
