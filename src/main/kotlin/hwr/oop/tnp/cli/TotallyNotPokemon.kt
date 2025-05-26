@@ -4,7 +4,7 @@ import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Game
 import hwr.oop.tnp.core.GameUsage
 import hwr.oop.tnp.core.PrimitiveType
-import kotlin.io.println
+import hwr.oop.tnp.persistency.PersistenceAdapter
 
 class TotallyNotPokemon(private val args: List<String>) {
 
@@ -79,13 +79,13 @@ class TotallyNotPokemon(private val args: List<String>) {
     }
 
     private fun parseForAddMonster(args: List<String>) {
-        if (args.isEmpty() || !(args.size >= 6 && args.size <= 9)) {
+        if (args.isEmpty() || !(args.size >= 7 && args.size <= 10)) {
             println(addMonsterHelp)
             return
         }
 
         val monsterName = args[0]
-        val trainerName = args[args.size - 1]
+        val trainerName = args[args.size - 2]
 
         try {
             val hp = parseToInt(args[1])
@@ -95,8 +95,17 @@ class TotallyNotPokemon(private val args: List<String>) {
             for (attack in args.slice(4..args.size - 2).toList()) {
                 attackList.add(parseToAttack(attack))
             }
+            val battle = PersistenceAdapter().loadBattle(args[args.size - 1])
 
-            game.addMonster(monsterName, hp, speed, type, attackList, trainerName)
+            game.addMonster(
+                monsterName,
+                hp,
+                speed,
+                type,
+                attackList,
+                trainerName,
+                battle
+            )
         } catch (e: Exception) {
             println(COULD_NOT_PARSE_ERROR)
             return

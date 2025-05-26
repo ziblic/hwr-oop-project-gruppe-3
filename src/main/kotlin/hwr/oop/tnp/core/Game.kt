@@ -12,9 +12,16 @@ class Game : GameUsage {
         speed: Int,
         primitiveType: PrimitiveType,
         attacks: List<Attack>,
-        trainerName: String
+        trainerName: String,
+        battle: Battle,
     ) {
-        TODO()
+        val monster = Monster(monsterName, BattleStats(hp, speed), type, attacks)
+        try {
+            val trainer = battle.getTrainerByName(trainerName)
+            trainer.addMonster(monster)
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
     }
 
     override fun initiateBattle(trainer1: String, trainer2: String) {
