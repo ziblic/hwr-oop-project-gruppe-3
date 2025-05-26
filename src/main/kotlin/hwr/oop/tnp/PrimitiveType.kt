@@ -1,13 +1,13 @@
 package hwr.oop.tnp
 
-enum class Type {
+enum class PrimitiveType {
     NORMAL,
     WATER,
     FIRE,
     PLANT,
     SPIRIT;
 
-    val effectiveAgainst: Type?
+    val effectiveAgainst: PrimitiveType?
         get() =
             when (this) {
                 WATER -> FIRE
@@ -16,7 +16,7 @@ enum class Type {
                 else -> null
             }
 
-    val lessEffectiveAgainst: Type?
+    val lessEffectiveAgainst: PrimitiveType?
         get() =
             when (this) {
                 WATER -> PLANT
@@ -25,11 +25,19 @@ enum class Type {
                 else -> null
             }
 
-    val noEffectAgainst: Type?
+    val noEffectAgainst: PrimitiveType?
         get() =
             when (this) {
                 SPIRIT -> NORMAL
                 NORMAL -> SPIRIT
                 else -> null
             }
+    fun getEffectivenessAgainst(defender: PrimitiveType): Double {
+        return when (defender) {
+            this.effectiveAgainst -> 2.0
+            this.lessEffectiveAgainst -> 0.5
+            this.noEffectAgainst -> 0.0
+            else -> 1.0
+        }
+    }
 }

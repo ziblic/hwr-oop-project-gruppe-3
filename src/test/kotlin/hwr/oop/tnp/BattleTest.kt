@@ -14,7 +14,7 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(hp = 100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -29,14 +29,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(hp = 100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(hp = 100, speed = 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -53,14 +53,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(100, speed = 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -83,14 +83,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(100, speed = 30),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -107,14 +107,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -131,7 +131,7 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         assertThrows<IllegalStateException> {
@@ -148,14 +148,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(50, speed = 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(50, speed = 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -171,14 +171,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.GROUND_HAMMER)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(30, speed = 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.GROUND_HAMMER)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -197,14 +197,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(40, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.GROUND_HAMMER)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(30, speed = 25),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.GROUND_HAMMER)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -220,14 +220,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.GROUND_HAMMER)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(30, speed = 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.GROUND_HAMMER)
             )
         val t1 = Trainer("T1", listOf(m1))
@@ -263,7 +263,7 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(hp = 100, speed = 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val t1 = Trainer("T1", listOf(m1))

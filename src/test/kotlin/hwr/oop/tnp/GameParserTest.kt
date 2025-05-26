@@ -179,7 +179,7 @@ class GameParserTest : AnnotationSpec() {
                             "Bob",
                             100,
                             20,
-                            Type.FIRE,
+                            PrimitiveType.FIRE,
                             listOf(Attack.PUNCH),
                             "Trainer_Kevin"
                         )
@@ -193,7 +193,7 @@ class GameParserTest : AnnotationSpec() {
                             "Bob",
                             100,
                             20,
-                            Type.FIRE,
+                            PrimitiveType.FIRE,
                             listOf(
                                 Attack.PUNCH,
                                 Attack.FIRE_VOW,

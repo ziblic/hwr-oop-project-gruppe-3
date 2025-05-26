@@ -30,7 +30,7 @@ class GameTest : AnnotationSpec() {
                         "Pika",
                         100,
                         20,
-                        Type.NORMAL,
+                        PrimitiveType.NORMAL,
                         listOf(Attack.ROOT_SHOT),
                         "Bob"
                     )
@@ -45,7 +45,7 @@ class GameTest : AnnotationSpec() {
                         "Pika",
                         100,
                         20,
-                        Type.NORMAL,
+                        PrimitiveType.NORMAL,
                         listOf(Attack.ROOT_SHOT),
                         "Bob"
                     )
@@ -80,7 +80,7 @@ Trainer:            Bob"""
                         "Pika",
                         100,
                         20,
-                        Type.NORMAL,
+                        PrimitiveType.NORMAL,
                         listOf(Attack.ROOT_SHOT),
                         "Bob"
                     )
@@ -93,7 +93,7 @@ Trainer:            Bob"""
                         "Pika",
                         100,
                         20,
-                        Type.NORMAL,
+                        PrimitiveType.NORMAL,
                         listOf(Attack.ROOT_SHOT),
                         "Bob"
                     )
@@ -113,14 +113,14 @@ Trainer:            Bob"""
                 Monster(
                     "M1",
                     BattleStats(100, speed = 20),
-                    Type.NORMAL,
+                    PrimitiveType.NORMAL,
                     attacks = listOf(Attack.PUNCH)
                 )
             val m2 =
                 Monster(
                     "M2",
                     BattleStats(100, speed = 20),
-                    Type.NORMAL,
+                    PrimitiveType.NORMAL,
                     attacks = listOf(Attack.PUNCH)
                 )
             dataHandler.saveTrainer(Trainer("Bob", listOf(m1)))
@@ -165,14 +165,14 @@ Trainer:            Bob"""
                 Monster(
                     "M1",
                     BattleStats(100, speed = 20),
-                    Type.NORMAL,
+                    PrimitiveType.NORMAL,
                     attacks = listOf(Attack.PUNCH)
                 )
             val m2 =
                 Monster(
                     "M2",
                     BattleStats(100, speed = 20),
-                    Type.NORMAL,
+                    PrimitiveType.NORMAL,
                     attacks = listOf(Attack.PUNCH)
                 )
             val t1 = Trainer("T1", listOf(m1))
@@ -203,14 +203,14 @@ Next trainer to turn is T1"""
                 Monster(
                     "M1",
                     BattleStats(100, speed = 20),
-                    Type.NORMAL,
+                    PrimitiveType.NORMAL,
                     attacks = listOf(Attack.PUNCH)
                 )
             val m2 =
                 Monster(
                     "M2",
                     BattleStats(100, speed = 20),
-                    Type.NORMAL,
+                    PrimitiveType.NORMAL,
                     attacks = listOf(Attack.PUNCH)
                 )
             val t1 = Trainer("T1", listOf(m1))

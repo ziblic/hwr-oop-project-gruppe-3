@@ -31,7 +31,7 @@ class DataHandlerTest : AnnotationSpec() {
                     Monster(
                         "Pika",
                         BattleStats(100, 20),
-                        Type.FIRE,
+                        PrimitiveType.FIRE,
                         listOf(Attack.FLAME_WREATH)
                     )
                 )
@@ -44,7 +44,7 @@ class DataHandlerTest : AnnotationSpec() {
                                 Monster(
                                     "Pika",
                                     BattleStats(100, 20),
-                                    Type.FIRE,
+                                    PrimitiveType.FIRE,
                                     listOf(Attack.FLAME_WREATH)
                                 )
                             )
@@ -55,7 +55,7 @@ class DataHandlerTest : AnnotationSpec() {
                                 Monster(
                                     "Bulbasaur",
                                     BattleStats(200, 10),
-                                    Type.FIRE,
+                                    PrimitiveType.FIRE,
                                     listOf(Attack.FLAME_WREATH)
                                 )
                             )
@@ -95,14 +95,14 @@ class DataHandlerTest : AnnotationSpec() {
                 Monster(
                     "Pika",
                     BattleStats(100, 20),
-                    Type.FIRE,
+                    PrimitiveType.FIRE,
                     listOf(Attack.FLAME_WREATH)
                 )
             val monster2 =
                 Monster(
                     "Glurak",
                     BattleStats(100, 20),
-                    Type.FIRE,
+                    PrimitiveType.FIRE,
                     listOf(Attack.FLAME_WREATH)
                 )
             val trainer1 = Trainer("Kevin", listOf(monster1))

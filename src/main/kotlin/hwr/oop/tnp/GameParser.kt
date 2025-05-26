@@ -55,9 +55,9 @@ class GameParser(private val args: List<String>) {
         }
     }
 
-    fun parseToType(input: String): Type {
+    fun parseToType(input: String): PrimitiveType {
         return try {
-            Type.valueOf(input.uppercase())
+            PrimitiveType.valueOf(input.uppercase())
         } catch (e: IllegalArgumentException) {
             throw Exception(
                 "Error: Failed to convert '$input' to Type. Reason: ${e.message}"

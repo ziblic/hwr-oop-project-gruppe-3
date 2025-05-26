@@ -14,20 +14,20 @@ class Game : ParserInterface {
         monsterName: String,
         hp: Int,
         speed: Int,
-        type: Type,
+        primitiveType: PrimitiveType,
         attacks: List<Attack>,
         trainerName: String
     ) {
         try {
             val trainer = dataHandler.loadTrainer(trainerName)
-            val monster = Monster(monsterName, BattleStats(hp, speed), type, attacks)
+            val monster = Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
             dataHandler.saveTrainer(trainer.addMonster(monster))
             println(
                 """Created new Monster:
 Name:               $monsterName
 HP:                 $hp
 Speed:              $speed
-Type:               $type
+Type:               $primitiveType
 Attacks:            $attacks
 Trainer:            $trainerName
 """

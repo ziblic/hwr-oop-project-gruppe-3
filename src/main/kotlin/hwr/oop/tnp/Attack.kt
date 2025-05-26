@@ -1,37 +1,37 @@
 package hwr.oop.tnp
 
-enum class Attack(val type: Type, val damage: Int, val hitQuote: Double) {
+        enum class Attack(val primitiveType: PrimitiveType, val damage: Int, val hitQuote: Double) {
     // NORMAL Type
-    PUNCH(Type.NORMAL, 15, 0.1),
-    DRUM(Type.NORMAL, 25, 0.2),
-    NORMAL_SLAM(Type.NORMAL, 35, 0.3),
-    GROUND_HAMMER(Type.NORMAL, 45, 0.2),
+    PUNCH(PrimitiveType.NORMAL, 15, 0.1),
+    DRUM(PrimitiveType.NORMAL, 25, 0.2),
+    NORMAL_SLAM(PrimitiveType.NORMAL, 35, 0.3),
+    GROUND_HAMMER(PrimitiveType.NORMAL, 45, 0.2),
 
     // FIRE Type
-    FLAME_WREATH(Type.FIRE, 20, 0.4),
-    SPARK_TAIL(Type.FIRE, 10, 0.2),
-    LAVA_FLOOD(Type.FIRE, 40, 0.3),
-    FIRE_VOW(Type.FIRE, 30, 0.1),
+    FLAME_WREATH(PrimitiveType.FIRE, 20, 0.4),
+    SPARK_TAIL(PrimitiveType.FIRE, 10, 0.2),
+    LAVA_FLOOD(PrimitiveType.FIRE, 40, 0.3),
+    FIRE_VOW(PrimitiveType.FIRE, 30, 0.1),
 
     // WATER Type
-    SPLASH(Type.WATER, 20, 0.7),
-    WATERFALL(Type.WATER, 35, 0.2),
-    DEEP_SEA_GRIP(Type.WATER, 25, 0.1),
-    TSUNAMI(Type.WATER, 50, 0.4),
+    SPLASH(PrimitiveType.WATER, 20, 0.7),
+    WATERFALL(PrimitiveType.WATER, 35, 0.2),
+    DEEP_SEA_GRIP(PrimitiveType.WATER, 25, 0.1),
+    TSUNAMI(PrimitiveType.WATER, 50, 0.4),
 
     // PLANT Type
-    LEAF_GUN(Type.PLANT, 20, 0.2),
-    PREDATOR_LEAF(Type.PLANT, 30, 0.1),
-    ROOT_SHOT(Type.PLANT, 25, 0.5),
-    FOLIAGE_STORM(Type.PLANT, 45, 0.2),
+    LEAF_GUN(PrimitiveType.PLANT, 20, 0.2),
+    PREDATOR_LEAF(PrimitiveType.PLANT, 30, 0.1),
+    ROOT_SHOT(PrimitiveType.PLANT, 25, 0.5),
+    FOLIAGE_STORM(PrimitiveType.PLANT, 45, 0.2),
 
     // SPIRIT Type
-    SPOOKY_BALL(Type.SPIRIT, 20, 0.1),
-    SHADOW_CLAW(Type.SPIRIT, 30, 0.8),
-    SPIRIT_WAVE(Type.SPIRIT, 25, 0.9),
-    NIGHT_SCREAM(Type.SPIRIT, 40, 0.4);
+    SPOOKY_BALL(PrimitiveType.SPIRIT, 20, 0.1),
+    SHADOW_CLAW(PrimitiveType.SPIRIT, 30, 0.8),
+    SPIRIT_WAVE(PrimitiveType.SPIRIT, 25, 0.9),
+    NIGHT_SCREAM(PrimitiveType.SPIRIT, 40, 0.4);
 
-    public fun calcMultiplierHitQuote(
+    fun calcMultiplierHitQuote(
         critChance: Double,
         random: Double = Math.random()
     ): Double {

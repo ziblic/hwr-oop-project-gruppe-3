@@ -7,7 +7,7 @@ import kotlin.math.max
 class Monster(
     val name: String,
     val stats: BattleStats,
-    val type: Type,
+    val primitiveType: PrimitiveType,
     val attacks: List<Attack>,
 ) {
     fun attack(attackUsed: Attack, otherMonster: Monster) {
@@ -15,13 +15,7 @@ class Monster(
             "The used attack is not part of the attacks of the monster"
         }
 
-        val multiplier: Double =
-            when (otherMonster.type) {
-                attackUsed.type.effectiveAgainst -> 2.0
-                attackUsed.type.lessEffectiveAgainst -> 0.5
-                attackUsed.type.noEffectAgainst -> 0.0
-                else -> 1.0
-            }
+        val multiplier = attackUsed.primitiveType.getEffectivenessAgainst(otherMonster.primitiveType)
 
         val damageAmount: Int =
             (
