@@ -2,7 +2,6 @@ package hwr.oop.tnp.cli
 
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Game
-import hwr.oop.tnp.core.PrimitiveType
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
 import org.assertj.core.api.Assertions.assertThat

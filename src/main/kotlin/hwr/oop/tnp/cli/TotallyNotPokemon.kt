@@ -3,8 +3,8 @@ package hwr.oop.tnp.cli
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Game
 import hwr.oop.tnp.core.GameUsage
-import hwr.oop.tnp.persistency.PersistenceAdapter
 import hwr.oop.tnp.core.PrimitiveType
+import hwr.oop.tnp.persistency.PersistenceAdapter
 
 class TotallyNotPokemon(private val args: List<String>) {
 
