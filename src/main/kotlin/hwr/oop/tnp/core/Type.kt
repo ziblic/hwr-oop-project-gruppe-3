@@ -7,6 +7,15 @@ enum class Type {
     PLANT,
     SPIRIT;
 
+    fun calculateDamangeMultiplier(monster: Monster): Double {
+        return when (monster.type) {
+            effectiveAgainst -> 2.0
+            lessEffectiveAgainst -> 0.5
+            noEffectAgainst -> 0.0
+            else -> 1.0
+        }
+    }
+
     val effectiveAgainst: Type?
         get() =
             when (this) {
