@@ -29,9 +29,32 @@ class PersistenceAdapter : GamePersistencePort {
     override fun loadBattle(battleId: String): Battle {
         val battleFile = File(dataFolder, "$battleId.json")
         if (!battleFile.exists()) {
-            throw Exception("Could not find battle with id: $battleId.")
+            throw IllegalArgumentException("Could not find battle with id: $battleId.")
         }
 
         return json.decodeFromString<Battle>(battleFile.readText())
+    }
+
+    fun loadAllBattles(): List<Battle> {
+        val battles = mutableListOf<Battle>()
+
+        val files =
+            dataFolder.listFiles { file -> file.isFile && file.extension == "json" }
+                ?: throw IllegalStateException(
+                    "Failed to list files in data folder."
+                )
+
+        for (file in files) {
+            try {
+                val battle = json.decodeFromString<Battle>(file.readText())
+                battles.add(battle)
+            } catch (e: Exception) {
+                println(
+                    "Failed to load battle from file ${file.name}: ${e.message}"
+                )
+            }
+        }
+
+        return battles
     }
 }

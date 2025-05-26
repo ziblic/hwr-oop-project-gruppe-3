@@ -70,12 +70,16 @@ class TotallyNotPokemon(private val args: List<String>) {
     }
 
     private fun prepareForCreateTrainer(args: List<String>) {
-        if (args.isEmpty()) {
+        if (args.size != 2) {
             println(newTrainerHelp)
             return
         }
 
-        game.createTrainer(args[0])
+        try {
+            game.createTrainer(args[0], PersistenceAdapter().loadBattle(args[1]))
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
     }
 
     private fun parseForAddMonster(args: List<String>) {
@@ -113,12 +117,12 @@ class TotallyNotPokemon(private val args: List<String>) {
     }
 
     private fun parseForNewBattle(args: List<String>) {
-        if (args.isEmpty() || args.size != 2) {
+        if (!args.isEmpty()) {
             println(newBattleHelp)
             return
         }
 
-        game.initiateBattle(args[0], args[1])
+        game.initiateBattle()
     }
 
     private fun parseForViewBattle(args: List<String>) {
@@ -128,11 +132,19 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
 
         if (args[0].trim().lowercase() == "all") {
-            game.showAllBattles()
+            try {
+                game.showAllBattles(PersistenceAdapter().loadAllBattles())
+            } catch (e: IllegalArgumentException) {
+                println(e.message)
+            }
             return
         }
 
-        game.viewStatus(args[0])
+        try {
+            game.viewStatus(PersistenceAdapter().loadBattle(args[0]))
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
     }
 
     private fun parseForPerformAttack(args: List<String>) {
@@ -141,7 +153,14 @@ class TotallyNotPokemon(private val args: List<String>) {
             return
         }
 
-        game.performAttack(args[0], parseToAttack(args[1]))
+        try {
+            game.performAttack(
+                PersistenceAdapter().loadBattle(args[0]),
+                parseToAttack(args[1])
+            )
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
     }
 
     private fun printHelp(command: String = "") {

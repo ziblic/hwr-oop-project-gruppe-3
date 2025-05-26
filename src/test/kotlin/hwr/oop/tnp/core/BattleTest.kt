@@ -7,9 +7,19 @@ import java.util.UUID
 
 class BattleTest : AnnotationSpec() {
     private val m1 =
-        Monster("M1", BattleStats(100, 20), Type.NORMAL, attacks = listOf(Attack.PUNCH))
+        Monster(
+            "M1",
+            BattleStats(100, 20),
+            PrimitiveType.NORMAL,
+            attacks = listOf(Attack.PUNCH)
+        )
     private val m2 =
-        Monster("M2", BattleStats(100, 10), Type.NORMAL, attacks = listOf(Attack.PUNCH))
+        Monster(
+            "M2",
+            BattleStats(100, 10),
+            PrimitiveType.NORMAL,
+            attacks = listOf(Attack.PUNCH)
+        )
     private val t1 = Trainer("T1", listOf(m1))
     private val t2 = Trainer("T2", listOf(m2))
 

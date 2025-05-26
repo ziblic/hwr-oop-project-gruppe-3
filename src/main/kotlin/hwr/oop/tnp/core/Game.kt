@@ -2,8 +2,13 @@ package hwr.oop.tnp.core
 
 class Game : GameUsage {
 
-    override fun createTrainer(trainerName: String) {
-        TODO()
+    override fun createTrainer(trainerName: String, battle: Battle) {
+        val trainer = Trainer(trainerName)
+        try {
+            battle.addTrainerToBattle(trainer)
+        } catch (e: IllegalStateException) {
+            println(e.message)
+        }
     }
 
     override fun addMonster(
@@ -15,7 +20,7 @@ class Game : GameUsage {
         trainerName: String,
         battle: Battle,
     ) {
-        val monster = Monster(monsterName, BattleStats(hp, speed), type, attacks)
+        val monster = Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
         try {
             val trainer = battle.getTrainerByName(trainerName)
             trainer.addMonster(monster)
@@ -24,19 +29,27 @@ class Game : GameUsage {
         }
     }
 
-    override fun initiateBattle(trainer1: String, trainer2: String) {
-        TODO()
+    override fun initiateBattle() {
+        val battle = Battle()
+        println(battle.toString())
     }
 
-    override fun viewStatus(battleId: String) {
-        TODO()
+    override fun viewStatus(battle: Battle) {
+        // TODO: print the battle history instead
+        println(battle.toString())
     }
 
-    override fun showAllBattles() {
-        TODO()
+    override fun showAllBattles(battles: List<Battle>) {
+        for (battle in battles) {
+            println(battle.toString())
+        }
     }
 
-    override fun performAttack(battleID: String, selectedAttack: Attack) {
-        TODO()
+    override fun performAttack(battle: Battle, selectedAttack: Attack) {
+        try {
+            battle.takeTurn(selectedAttack)
+        } catch (e: IllegalStateException) {
+            println(e.message)
+        }
     }
 }

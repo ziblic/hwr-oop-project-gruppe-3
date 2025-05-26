@@ -25,7 +25,7 @@ class MonsterTest : AnnotationSpec() {
         val jsonMonster = Json.encodeToString(monster)
         assertThat(jsonMonster)
             .isEqualTo(
-                "{\"name\":\"Kevin\",\"stats\":${Json.encodeToString(stats)},\"type\":\"WATER\",\"attacks\":[\"PUNCH\",\"DRUM\"]}"
+                "{\"name\":\"Kevin\",\"stats\":${Json.encodeToString(stats)},\"primitiveType\":\"WATER\",\"attacks\":[\"PUNCH\",\"DRUM\"]}"
             )
         val decodedMonster = Json.decodeFromString<Monster>(jsonMonster)
         assertThat(monster.name).isEqualTo(decodedMonster.name)
@@ -104,7 +104,8 @@ class MonsterTest : AnnotationSpec() {
                 listOf(Attack.DEEP_SEA_GRIP)
             )
         val invalidAttack = Attack.LEAF_GUN
-        val otherMonster = Monster("Bob", BattleStats(100, 100), PrimitiveType.PLANT, listOf())
+        val otherMonster =
+            Monster("Bob", BattleStats(100, 100), PrimitiveType.PLANT, listOf())
 
         assertThrows<IllegalArgumentException> {
             monster.attack(invalidAttack, otherMonster)
@@ -115,7 +116,12 @@ class MonsterTest : AnnotationSpec() {
     fun `calculates damage correctly with effective type`() {
         val fireAttack = Attack.LAVA_FLOOD
         val fireMonster =
-            Monster("Kevin", BattleStats(100, 100), PrimitiveType.FIRE, listOf(fireAttack))
+            Monster(
+                "Kevin",
+                BattleStats(100, 100),
+                PrimitiveType.FIRE,
+                listOf(fireAttack)
+            )
         val plantMonster =
             Monster(
                 "Bob",
@@ -135,7 +141,12 @@ class MonsterTest : AnnotationSpec() {
     fun `calculates damage correctly with less effective type`() {
         val fireAttack = Attack.LAVA_FLOOD
         val fireMonster =
-            Monster("Kevin", BattleStats(100, 100), PrimitiveType.FIRE, listOf(fireAttack))
+            Monster(
+                "Kevin",
+                BattleStats(100, 100),
+                PrimitiveType.FIRE,
+                listOf(fireAttack)
+            )
         val waterMonster =
             Monster(
                 "Bob",
@@ -156,8 +167,14 @@ class MonsterTest : AnnotationSpec() {
     fun `calculates damage correctly with none effecting types`() {
         val normalAttack = Attack.PUNCH
         val normalMonster =
-            Monster("Kevin", BattleStats(100, 100), PrimitiveType.NORMAL, listOf(normalAttack))
-        val spiritMonster = Monster("Bob", BattleStats(100, 100), PrimitiveType.SPIRIT, listOf())
+            Monster(
+                "Kevin",
+                BattleStats(100, 100),
+                PrimitiveType.NORMAL,
+                listOf(normalAttack)
+            )
+        val spiritMonster =
+            Monster("Bob", BattleStats(100, 100), PrimitiveType.SPIRIT, listOf())
 
         normalMonster.attack(normalAttack, spiritMonster)
         assert(spiritMonster.stats.hp == 100)
@@ -167,7 +184,12 @@ class MonsterTest : AnnotationSpec() {
     fun `calculates damage correctly with default effective type`() {
         val fireAttack = Attack.LAVA_FLOOD
         val fireMonster =
-            Monster("Kevin", BattleStats(100, 100), PrimitiveType.FIRE, listOf(fireAttack))
+            Monster(
+                "Kevin",
+                BattleStats(100, 100),
+                PrimitiveType.FIRE,
+                listOf(fireAttack)
+            )
         val normalMonster =
             Monster(
                 "Bob",

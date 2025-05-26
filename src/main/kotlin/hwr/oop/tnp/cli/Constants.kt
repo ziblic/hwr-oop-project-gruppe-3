@@ -30,7 +30,7 @@ const val newTrainerHelp =
   |_||_|  \__,_|_|_| |_|\___|_|    |_| |_|\___|_| .__/
                                                 |_|
 
-Usage: ./tnp new_trainer <TRAINERNAME>"""
+Usage: ./tnp new_trainer <TRAINERNAME> <BATTLE_ID>"""
 
 const val addMonsterHelp =
     """.   _       _     _   __  __                 _              _   _      _
@@ -50,7 +50,7 @@ const val newBattleHelp =
 |_| \_|\___| \_/\_/   |____/ \__,_|\__|\__|_|\___| |_| |_|\___|_| .__/
                                                                 |_|
 
-Usage: ./tnp new_battle <TRAINERNAME 1> <TRAINERNAME 2>"""
+Usage: ./tnp new_battle"""
 
 const val viewBattleHelp =
     """__     ___                 ____        _   _   _        _   _      _
