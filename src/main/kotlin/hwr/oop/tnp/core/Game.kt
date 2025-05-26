@@ -10,7 +10,7 @@ class Game : GameUsage {
         monsterName: String,
         hp: Int,
         speed: Int,
-        type: Type,
+        primitiveType: PrimitiveType,
         attacks: List<Attack>,
         trainerName: String,
         battle: Battle,

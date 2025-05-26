@@ -25,14 +25,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(10, 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val winningTrainer = Trainer("T1", listOf(m1))
