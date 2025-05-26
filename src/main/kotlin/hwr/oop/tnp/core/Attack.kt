@@ -35,9 +35,9 @@ enum class Attack(val type: Type, val damage: Int, val critChance: Double) {
         val multiplier = type.calculateDamangeMultiplier(monster)
         return (
             damage *
-            multiplier *
-            calculateMultiplierHitQuote()
-        ).toInt()
+                multiplier *
+                calculateMultiplierHitQuote()
+            ).toInt()
     }
 
     fun calculateMultiplierHitQuote(
