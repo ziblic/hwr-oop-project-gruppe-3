@@ -8,7 +8,7 @@ class AttackTest : AnnotationSpec() {
     fun `check getters for PUNCH attack`() {
         val attack = Attack.PUNCH
 
-        assertEquals(Type.NORMAL, attack.type, "Type getter should return NORMAL for PUNCH")
+        assertEquals(PrimitiveType.NORMAL, attack.primitiveType, "Type getter should return NORMAL for PUNCH")
         assertEquals(15, attack.damage, "Damage getter should return 15 for PUNCH")
         assertEquals(0.1, attack.critChance, "HitQuote getter should return 0.1 for PUNCH")
     }
@@ -18,8 +18,8 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.FLAME_WREATH
 
         assertEquals(
-            Type.FIRE,
-            attack.type,
+            PrimitiveType.FIRE,
+            attack.primitiveType,
             "Type getter should return FIRE for FLAME_WREATH"
         )
         assertEquals(20, attack.damage, "Damage getter should return 20 for FLAME_WREATH")
@@ -34,7 +34,7 @@ class AttackTest : AnnotationSpec() {
     fun `check getters for SPLASH attack`() {
         val attack = Attack.SPLASH
 
-        assertEquals(Type.WATER, attack.type, "Type getter should return WATER for SPLASH")
+        assertEquals(PrimitiveType.WATER, attack.primitiveType, "Type getter should return WATER for SPLASH")
         assertEquals(20, attack.damage, "Damage getter should return 20 for SPLASH")
         assertEquals(0.7, attack.critChance, "HitQuote getter should return 0.7 for SPLASH")
     }
@@ -44,8 +44,8 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.LEAF_GUN
 
         assertEquals(
-            Type.PLANT,
-            attack.type,
+            PrimitiveType.PLANT,
+            attack.primitiveType,
             "Type getter should return PLANT for LEAF_GUN"
         )
         assertEquals(20, attack.damage, "Damage getter should return 20 for LEAF_GUN")
@@ -57,8 +57,8 @@ class AttackTest : AnnotationSpec() {
         val attack = Attack.SPOOKY_BALL
 
         assertEquals(
-            Type.SPIRIT,
-            attack.type,
+            PrimitiveType.SPIRIT,
+            attack.primitiveType,
             "Type getter should return SPIRIT for SPOOKY_BALL"
         )
         assertEquals(20, attack.damage, "Damage getter should return 20 for SPOOKY_BALL")

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.assertThrows
 
 class TrainerTest : AnnotationSpec() {
     private val bs = BattleStats(100, 100)
-    private val monster = Monster("Peter", bs, Type.WATER, emptyList())
+    private val monster = Monster("Peter", bs, PrimitiveType.WATER, emptyList())
     lateinit var trainer: Trainer
 
     @BeforeEach
@@ -41,7 +41,7 @@ class TrainerTest : AnnotationSpec() {
     @Test
     fun `add monster to trainer`() {
         val bs = BattleStats(130, 80)
-        val m = Monster("Peter", bs, Type.WATER, emptyList())
+        val m = Monster("Peter", bs, PrimitiveType.WATER, emptyList())
 
         trainer = trainer.addMonster(m)
         val monsters = trainer.monsters
@@ -110,7 +110,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `next battle ready monster returns null if monster is KO`() {
-        val monster = Monster("Peter", BattleStats(0, 20), Type.WATER, emptyList())
+        val monster = Monster("Peter", BattleStats(0, 20), PrimitiveType.WATER, emptyList())
         val trainer = Trainer("Alex", listOf(monster))
         assertThat(trainer.nextBattleReadyMonster()).isNull()
     }
@@ -123,7 +123,7 @@ class TrainerTest : AnnotationSpec() {
     @Test
     fun `trainer is defeated if all monsters are KO`() {
         val bs = BattleStats(0, 20)
-        val monster = Monster("Peter", bs, Type.WATER, emptyList())
+        val monster = Monster("Peter", bs, PrimitiveType.WATER, emptyList())
         val trainer = Trainer("Alex", listOf(monster))
         assertThat(trainer.isDefeated()).isTrue
     }

@@ -7,7 +7,7 @@ import kotlin.math.max
 class Monster(
     val name: String,
     val stats: BattleStats,
-    val type: Type,
+    val primitiveType: PrimitiveType,
     val attacks: List<Attack>,
 ) {
     fun attack(attackUsed: Attack, otherMonster: Monster) {

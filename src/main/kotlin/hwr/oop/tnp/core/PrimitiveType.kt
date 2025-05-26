@@ -1,6 +1,6 @@
 package hwr.oop.tnp.core
 
-enum class Type {
+enum class PrimitiveType {
     NORMAL,
     WATER,
     FIRE,
@@ -8,7 +8,7 @@ enum class Type {
     SPIRIT;
 
     fun calculateDamangeMultiplier(monster: Monster): Double {
-        return when (monster.type) {
+        return when (monster.primitiveType) {
             effectiveAgainst -> 2.0
             lessEffectiveAgainst -> 0.5
             noEffectAgainst -> 0.0
@@ -16,7 +16,7 @@ enum class Type {
         }
     }
 
-    val effectiveAgainst: Type?
+    val effectiveAgainst: PrimitiveType?
         get() =
             when (this) {
                 WATER -> FIRE
@@ -25,7 +25,7 @@ enum class Type {
                 else -> null
             }
 
-    val lessEffectiveAgainst: Type?
+    val lessEffectiveAgainst: PrimitiveType?
         get() =
             when (this) {
                 WATER -> PLANT
@@ -34,7 +34,7 @@ enum class Type {
                 else -> null
             }
 
-    val noEffectAgainst: Type?
+    val noEffectAgainst: PrimitiveType?
         get() =
             when (this) {
                 SPIRIT -> NORMAL

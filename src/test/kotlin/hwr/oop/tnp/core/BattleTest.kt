@@ -11,14 +11,14 @@ class BattleTest : AnnotationSpec() {
         Monster(
             "M1",
             BattleStats(100, 20),
-            Type.NORMAL,
+            PrimitiveType.NORMAL,
             attacks = listOf(Attack.PUNCH)
         )
     private val m2 =
         Monster(
             "M2",
             BattleStats(100, 10),
-            Type.NORMAL,
+            PrimitiveType.NORMAL,
             attacks = listOf(Attack.PUNCH)
         )
     private val t1 = Trainer("T1", listOf(m1))
@@ -36,14 +36,14 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(100, 20),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val m2 =
             Monster(
                 "M2",
                 BattleStats(10, 10),
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val winningTrainer = Trainer("T1", listOf(m1))
@@ -127,7 +127,7 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M1",
                 BattleStats(0, 20), // already KO
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val battle = Battle(Trainer("T1", listOf(m1)), t2)
@@ -142,7 +142,7 @@ class BattleTest : AnnotationSpec() {
             Monster(
                 "M2",
                 BattleStats(0, 5), // already KO
-                Type.NORMAL,
+                PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
         val battle = Battle(t1, Trainer("T2", listOf(m2)))

@@ -3,7 +3,7 @@ package hwr.oop.tnp.cli
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Game
 import hwr.oop.tnp.core.GameUsage
-import hwr.oop.tnp.core.Type
+import hwr.oop.tnp.core.PrimitiveType
 import kotlin.io.println
 
 class TotallyNotPokemon(private val args: List<String>) {
@@ -59,9 +59,9 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
     }
 
-    fun parseToType(input: String): Type {
+    fun parseToType(input: String): PrimitiveType {
         return try {
-            Type.valueOf(input.uppercase())
+            PrimitiveType.valueOf(input.uppercase())
         } catch (e: IllegalArgumentException) {
             throw Exception(
                 "Error: Failed to convert '$input' to Type. Reason: ${e.message}"

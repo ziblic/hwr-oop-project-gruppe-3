@@ -2,7 +2,7 @@ package hwr.oop.tnp.cli
 
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Game
-import hwr.oop.tnp.core.Type
+import hwr.oop.tnp.core.PrimitiveType
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
 import org.assertj.core.api.Assertions.assertThat
@@ -173,7 +173,7 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                         "Bob",
                         100,
                         20,
-                        Type.FIRE,
+                        PrimitiveType.FIRE,
                         listOf(Attack.PUNCH),
                         "Trainer_Kevin"
                     )
@@ -187,7 +187,7 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                         "Bob",
                         100,
                         20,
-                        Type.FIRE,
+                        PrimitiveType.FIRE,
                         listOf(
                             Attack.PUNCH,
                             Attack.FIRE_VOW,
