@@ -3,17 +3,20 @@ package hwr.oop.tnp.cli
 import hwr.oop.tnp.InMemoryPersistence
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Battle
+import hwr.oop.tnp.core.BattleStats
 import hwr.oop.tnp.core.Game
+import hwr.oop.tnp.core.Monster
 import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.core.Trainer
-import hwr.oop.tnp.persistency.PersistenceAdapter
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
+import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 
 class TotallyNotPokemonTest : AnnotationSpec() {
     @Test
     fun `test parseToXXXXX with invalid input`() {
+        val adapter = InMemoryPersistence()
         val output =
             captureStandardOut {
                 TotallyNotPokemon(
@@ -26,7 +29,8 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                         "PUNCH",
                         "Trainer_Kevin",
                         "1"
-                    )
+                    ),
+                    adapter
                 )
             }
                 .trim()
@@ -43,7 +47,8 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                         "PUNCH",
                         "Trainer_Kevin",
                         "1"
-                    )
+                    ),
+                    adapter
                 )
             }
                 .trim()
@@ -60,7 +65,8 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                         "Tackle_3",
                         "Trainer_Kevin",
                         "1"
-                    )
+                    ),
+                    adapter
                 )
             }
                 .trim()
@@ -69,8 +75,11 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `Run invalid command`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("some_unknown_command")) }
+            captureStandardOut {
+                TotallyNotPokemon(listOf("some_unknown_command"), adapter)
+            }
                 .trim()
         assertThat(output)
             .isEqualTo(
@@ -80,15 +89,20 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `Run without any command`() {
-        val output = captureStandardOut { TotallyNotPokemon(listOf()) }.trim()
+        val adapter = InMemoryPersistence()
+        val output = captureStandardOut { TotallyNotPokemon(listOf(), adapter) }.trim()
         assertThat(output).isEqualTo(defaultHelp)
     }
 
     @Test
     fun `parseForPerformAttack throw Exception`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("on", "a", "PUNCH")) }.trim()
-        assertThat(output).isEqualTo("Could not find battle with id: a.")
+            captureStandardOut {
+                TotallyNotPokemon(listOf("on", "a", "PUNCH"), adapter)
+            }
+                .trim()
+        assertThat(output).isEqualTo("Battle not found: a")
     }
 
     @Test
@@ -99,46 +113,62 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `Get help message for new_trainer command`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("help", "new_trainer")) }
+            captureStandardOut {
+                TotallyNotPokemon(listOf("help", "new_trainer"), adapter)
+            }
                 .trim()
         assertThat(output).isEqualTo(newTrainerHelp)
     }
 
     @Test
     fun `Get help message for add_monster command`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("help", "add_monster")) }
+            captureStandardOut {
+                TotallyNotPokemon(listOf("help", "add_monster"), adapter)
+            }
                 .trim()
         assertThat(output).isEqualTo(addMonsterHelp)
     }
 
     @Test
     fun `Get help message for new_battle command`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("help", "new_battle")) }
+            captureStandardOut {
+                TotallyNotPokemon(listOf("help", "new_battle"), adapter)
+            }
                 .trim()
         assertThat(output).isEqualTo(newBattleHelp)
     }
 
     @Test
     fun `Get help message for view_battle command`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("help", "view_battle")) }
+            captureStandardOut {
+                TotallyNotPokemon(listOf("help", "view_battle"), adapter)
+            }
                 .trim()
         assertThat(output).isEqualTo(viewBattleHelp)
     }
 
     @Test
     fun `Get help message for on command`() {
-        val output = captureStandardOut { TotallyNotPokemon(listOf("help", "on")) }.trim()
+        val adapter = InMemoryPersistence()
+        val output =
+            captureStandardOut { TotallyNotPokemon(listOf("help", "on"), adapter) }
+                .trim()
         assertThat(output).isEqualTo(attackHelp)
     }
 
     @Test
     fun `Create new trainer`() {
         val adapter = InMemoryPersistence()
-        adapter.saveBattle(Battle("1"))
+        val battle = Battle("1")
+        adapter.saveBattle(battle)
         val output =
             captureStandardOut {
                 TotallyNotPokemon(
@@ -147,19 +177,35 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                 )
             }
                 .trim()
+        assertThat(Json.encodeToString(adapter.loadBattle("1")))
+            .isEqualTo("{\"battleId\":\"1\",\"trainerOne\":{\"name\":\"Bob\"}}")
         assertThat(output)
             .isEqualTo(
-                captureStandardOut {
-                    Game().createTrainer("Bob", adapter.loadBattle("1"))
-                }
-                    .trim()
+                captureStandardOut { Game().createTrainer("Bob", battle) }.trim()
             )
     }
 
     @Test
     fun `Create new trainer with no arguments`() {
-        val output = captureStandardOut { TotallyNotPokemon(listOf("new_trainer")) }.trim()
+        val adapter = InMemoryPersistence()
+        val output =
+            captureStandardOut { TotallyNotPokemon(listOf("new_trainer"), adapter) }
+                .trim()
         assertThat(output).isEqualTo(newTrainerHelp)
+    }
+
+    @Test
+    fun `Try adding trainer to non existing battle print exception message`() {
+        val adapter = InMemoryPersistence()
+        val output =
+            captureStandardOut {
+                TotallyNotPokemon(
+                    listOf("new_trainer", "Bob", "1"),
+                    adapter
+                )
+            }
+                .trim()
+        assertThat(output).isEqualTo("Battle not found: 1")
     }
 
     @Test
@@ -186,6 +232,10 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                 )
             }
                 .trim()
+        assertThat(Json.encodeToString(adapter.loadBattle("1")))
+            .isEqualTo(
+                "{\"battleId\":\"1\",\"trainerOne\":{\"name\":\"Trainer_Kevin\",\"monsters\":[{\"name\":\"Bob\",\"stats\":{\"maxHp\":100,\"hp\":100,\"speed\":20},\"primitiveType\":\"FIRE\",\"attacks\":[\"PUNCH\"]}]}}"
+            )
         val output_2 =
             captureStandardOut {
                 TotallyNotPokemon(
@@ -245,12 +295,16 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `Add new monster with no arguments`() {
-        val output = captureStandardOut { TotallyNotPokemon(listOf("add_monster")) }.trim()
+        val adapter = InMemoryPersistence()
+        val output =
+            captureStandardOut { TotallyNotPokemon(listOf("add_monster"), adapter) }
+                .trim()
         assertThat(output).isEqualTo(addMonsterHelp)
     }
 
     @Test
     fun `Add new monster with not enough or to many arguments`() {
+        val adapter = InMemoryPersistence()
         val output1 =
             captureStandardOut {
                 TotallyNotPokemon(
@@ -267,7 +321,8 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                         "Trainer_Kevin",
                         "1",
                         "too many args"
-                    )
+                    ),
+                    adapter
                 )
             }
                 .trim()
@@ -281,7 +336,8 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                         "20",
                         "FIRE",
                         "PUNCH"
-                    )
+                    ),
+                    adapter
                 )
             }
                 .trim()
@@ -298,9 +354,13 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `Start new battle with not enough or to many arguments`() {
+        val adapter = InMemoryPersistence()
         val output1 =
             captureStandardOut {
-                TotallyNotPokemon(listOf("new_battle", "to many args"))
+                TotallyNotPokemon(
+                    listOf("new_battle", "to many args"),
+                    adapter
+                )
             }
                 .trim()
         assertThat(output1).isEqualTo(newBattleHelp)
@@ -308,31 +368,41 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `View battle status`() {
+        val adapter = InMemoryPersistence()
+        val battle = Battle("0")
+        adapter.saveBattle(battle)
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("view_battle", "0")) }.trim()
-        assertThat(output)
+            captureStandardOut {
+                TotallyNotPokemon(listOf("view_battle", "0"), adapter)
+            }
+                .trim()
+        val expectedOutput = captureStandardOut { Game().viewStatus(battle) }.trim()
+        assertThat(output).isEqualTo(expectedOutput)
     }
 
     @Test
     fun `Throw exception on invalid battleId`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("view_battle", "nr1")) }
+            captureStandardOut {
+                TotallyNotPokemon(listOf("view_battle", "nr1"), adapter)
+            }
                 .trim()
-        assertThat(output).isEqualTo("Could not find battle with id: nr1.")
+        assertThat(output).isEqualTo("Battle not found: nr1")
     }
 
     @Test
     fun `View all battles`() {
+        val adapter = InMemoryPersistence()
         val output =
-            captureStandardOut { TotallyNotPokemon(listOf("view_battle", "  ALL  ")) }
+            captureStandardOut {
+                TotallyNotPokemon(listOf("view_battle", "  ALL  "), adapter)
+            }
                 .trim()
         assertThat(output)
             .isEqualTo(
                 captureStandardOut {
-                    Game().showAllBattles(
-                        PersistenceAdapter()
-                            .loadAllBattles()
-                    )
+                    Game().showAllBattles(adapter.loadAllBattles())
                 }
                     .trim()
             )
@@ -340,7 +410,10 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `View battle with no arguments`() {
-        val output = captureStandardOut { TotallyNotPokemon(listOf("view_battle")) }.trim()
+        val adapter = InMemoryPersistence()
+        val output =
+            captureStandardOut { TotallyNotPokemon(listOf("view_battle"), adapter) }
+                .trim()
         assertThat(output).isEqualTo(viewBattleHelp)
     }
 
@@ -352,6 +425,23 @@ class TotallyNotPokemonTest : AnnotationSpec() {
         val t2 = Trainer("Trainer_Bob")
         battle.addTrainerToBattle(t1)
         battle.addTrainerToBattle(t2)
+        t1.addMonster(
+            Monster(
+                "Pika",
+                BattleStats(100, 20),
+                PrimitiveType.FIRE,
+                listOf(Attack.PUNCH)
+            )
+        )
+        t2.addMonster(
+            Monster(
+                "Glurak",
+                BattleStats(100, 20),
+                PrimitiveType.FIRE,
+                listOf(Attack.PUNCH)
+            )
+        )
+        val battleJson = Json.encodeToString(battle)
         adapter.saveBattle(battle)
 
         val output =
@@ -359,6 +449,8 @@ class TotallyNotPokemonTest : AnnotationSpec() {
                 TotallyNotPokemon(listOf("on", "1", "PUNCH"), adapter)
             }
                 .trim()
+        val newBattleJson = Json.encodeToString(adapter.loadBattle("1"))
+        assertThat(battleJson).isNotEqualTo(newBattleJson)
         assertThat(output)
             .isEqualTo(
                 captureStandardOut { Game().performAttack(battle, Attack.PUNCH) }
@@ -368,21 +460,24 @@ class TotallyNotPokemonTest : AnnotationSpec() {
 
     @Test
     fun `Attack enemy with no arguments`() {
-        val output = captureStandardOut { TotallyNotPokemon(listOf("on")) }.trim()
+        val adapter = InMemoryPersistence()
+        val output = captureStandardOut { TotallyNotPokemon(listOf("on"), adapter) }.trim()
         assertThat(output).isEqualTo(attackHelp)
     }
 
     @Test
     fun `Attack enemy with not enough or to many arguments`() {
+        val adapter = InMemoryPersistence()
         val output1 =
             captureStandardOut {
                 TotallyNotPokemon(
                     listOf("on", "0", "PUNCH", "too many args"),
-                    InMemoryPersistence()
+                    adapter
                 )
             }
                 .trim()
-        val output2 = captureStandardOut { TotallyNotPokemon(listOf("on", "0")) }.trim()
+        val output2 =
+            captureStandardOut { TotallyNotPokemon(listOf("on", "0"), adapter) }.trim()
         assertThat(output1).isEqualTo(attackHelp)
         assertThat(output2).isEqualTo(attackHelp)
     }
