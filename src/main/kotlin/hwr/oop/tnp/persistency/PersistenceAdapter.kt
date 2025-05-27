@@ -4,8 +4,9 @@ import hwr.oop.tnp.core.Battle
 import kotlinx.serialization.json.Json
 import java.io.File
 
-class PersistenceAdapter : GamePersistencePort {
-    private val dataFolder = File(System.getProperty("user.dir"), "data")
+class PersistenceAdapter(
+    private val dataFolder: File = File(System.getProperty("user.dir"), "data")
+) : GamePersistencePort {
     private val json = Json {
         prettyPrint = true
         encodeDefaults = true
@@ -35,14 +36,10 @@ class PersistenceAdapter : GamePersistencePort {
         return json.decodeFromString<Battle>(battleFile.readText())
     }
 
-    fun loadAllBattles(): List<Battle> {
+    override fun loadAllBattles(): List<Battle> {
         val battles = mutableListOf<Battle>()
 
-        val files =
-            dataFolder.listFiles { file -> file.isFile && file.extension == "json" }
-                ?: throw IllegalStateException(
-                    "Failed to list files in data folder."
-                )
+        val files = dataFolder.listFiles { file -> file.isFile && file.extension == "json" }
 
         for (file in files) {
             try {
