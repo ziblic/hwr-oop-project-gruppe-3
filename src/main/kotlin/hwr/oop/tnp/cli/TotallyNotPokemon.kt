@@ -11,7 +11,6 @@ class TotallyNotPokemon(
     private val args: List<String>,
     private val adapter: GamePersistencePort = PersistenceAdapter()
 ) {
-
     private val game: GameUsage = Game()
 
     init {
@@ -128,7 +127,6 @@ class TotallyNotPokemon(
             println(newBattleHelp)
             return
         }
-
         adapter.saveBattle(game.initiateBattle())
     }
 
