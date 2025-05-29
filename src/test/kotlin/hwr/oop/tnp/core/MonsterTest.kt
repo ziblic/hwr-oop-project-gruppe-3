@@ -205,4 +205,19 @@ class MonsterTest : AnnotationSpec() {
                 (1000 - Attack.LAVA_FLOOD.damage * 0.5).toInt()
         )
     }
+
+    @Test
+    fun `monster A faster than monster B`() {
+        val monsterA = Monster("A", BattleStats(100, 100), PrimitiveType.PLANT, listOf())
+        val monsterB = Monster("B", BattleStats(100, 90), PrimitiveType.WATER, listOf())
+        assertThat(monsterA.isFasterThan(monsterB)).isTrue()
+        assertThat(monsterB.isFasterThan(monsterA)).isFalse()
+    }
+
+    @Test
+    fun `monster A is not faster than monster B when same speed`() {
+        val monsterA = Monster("A", BattleStats(100, 100), PrimitiveType.PLANT, listOf())
+        val monsterB = Monster("B", BattleStats(100, 100), PrimitiveType.WATER, listOf())
+        assertThat(monsterA.isFasterThan(monsterB)).isFalse()
+    }
 }
