@@ -48,14 +48,22 @@ class PersistenceAdapterTest : AnnotationSpec() {
     @Test
     fun `Load all battles correctly`() {
         val adapter = PersistenceAdapter(tmpDir)
+
+        // Save two battles
         adapter.saveBattle(Battle("1"))
         adapter.saveBattle(Battle("2"))
+
+        // Load all battles
         val battles = adapter.loadAllBattles()
-        assert(battles.size == 2)
-        battles.forEachIndexed { index, battle ->
-            assertThat(Json.encodeToString(battle))
-                .isEqualTo("{\"battleId\":\"${index + 1}\"}")
-        }
+
+        // Make sure both were loaded
+        assertThat(battles).hasSize(2)
+
+        // Compare the encoded JSON outputs, order-independent
+        val encodedBattles = battles.map { Json.encodeToString(it) }
+        assertThat(encodedBattles)
+            .containsExactlyInAnyOrder("""{"battleId":"1"}""", """{"battleId":"2"}""")
+
         tmpDir.deleteRecursively()
     }
 
