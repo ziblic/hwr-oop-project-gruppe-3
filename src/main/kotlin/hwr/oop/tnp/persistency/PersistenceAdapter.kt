@@ -7,10 +7,7 @@ import java.io.File
 class PersistenceAdapter(
     private val dataFolder: File = File(System.getProperty("user.dir"), "data")
 ) : GamePersistencePort {
-    private val json = Json {
-        prettyPrint = true
-        encodeDefaults = true
-    }
+    private val json = Json
 
     init {
         if (!dataFolder.exists()) {
@@ -20,9 +17,7 @@ class PersistenceAdapter(
 
     override fun saveBattle(battle: Battle) {
         val battleFile = File(dataFolder, "${battle.battleId}.json")
-        if (!battleFile.exists()) {
-            battleFile.createNewFile()
-        }
+        battleFile.createNewFile()
 
         battleFile.writeText(json.encodeToString(battle))
     }

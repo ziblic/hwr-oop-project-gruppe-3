@@ -169,6 +169,7 @@ class TotallyNotPokemonTest : AnnotationSpec() {
         val adapter = InMemoryPersistence()
         val battle = Battle("1")
         adapter.saveBattle(battle)
+        assertThat(adapter.savedBattles["1"]).isEqualTo("{\"battleId\":\"1\"}")
         val output =
             captureStandardOut {
                 TotallyNotPokemon(

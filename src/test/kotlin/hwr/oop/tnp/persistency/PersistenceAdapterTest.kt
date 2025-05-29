@@ -5,10 +5,15 @@ import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.assertThrows
 import java.io.File
 
 class PersistenceAdapterTest : AnnotationSpec() {
     private val tmpDir = File(System.getProperty("user.dir"), "tmp")
+    private val json = Json {
+        prettyPrint = true
+        encodeDefaults = true
+    }
 
     @Test
     fun `Create folder if not exists yet`() {
@@ -22,22 +27,9 @@ class PersistenceAdapterTest : AnnotationSpec() {
     fun `Save battle`() {
         val adapter = PersistenceAdapter(tmpDir)
         val dataFile = File(tmpDir, "1.json")
-        assert(!dataFile.exists())
         adapter.saveBattle(Battle("1"))
         assert(dataFile.exists())
-        assertThat(dataFile.readLines())
-            .isEqualTo(
-                listOf(
-                    "{",
-                    "    \"battleId\": \"1\",",
-                    "    \"trainerOne\": null,",
-                    "    \"trainerTwo\": null,",
-                    "    \"currentTrainer\": null,",
-                    "    \"status\": \"PREGAME\",",
-                    "    \"currentRound\": 1",
-                    "}"
-                )
-            )
+        assertThat(dataFile.readLines()).isEqualTo(listOf("{\"battleId\":\"1\"}"))
         tmpDir.deleteRecursively()
     }
 
@@ -45,8 +37,25 @@ class PersistenceAdapterTest : AnnotationSpec() {
     fun `Load Battle correctly`() {
         val adapter = PersistenceAdapter(tmpDir)
         adapter.saveBattle(Battle("1"))
-        val battleJson = Json.encodeToString(adapter.loadBattle("1"))
-        assertThat(battleJson).isEqualTo("{\"battleId\":\"1\"}")
+        val battleJson = json.encodeToString(adapter.loadBattle("1"))
+        assertThat(battleJson)
+            .isEqualTo(
+                """{
+    "battleId": "1",
+    "trainerOne": null,
+    "trainerTwo": null,
+    "currentTrainer": null,
+    "status": "PREGAME",
+    "currentRound": 1
+}"""
+            )
+        tmpDir.deleteRecursively()
+    }
+
+    @Test
+    fun `Throw IllegalArgumentException on loading non existing battle`() {
+        val adapter = PersistenceAdapter(tmpDir)
+        assertThrows<IllegalArgumentException> { adapter.loadBattle("1") }
         tmpDir.deleteRecursively()
     }
 
@@ -58,8 +67,17 @@ class PersistenceAdapterTest : AnnotationSpec() {
         val battles = adapter.loadAllBattles()
         assert(battles.size == 2)
         battles.forEachIndexed { index, battle ->
-            assertThat(Json.encodeToString(battle))
-                .isEqualTo("{\"battleId\":\"${index + 1}\"}")
+            assertThat(json.encodeToString(battle))
+                .isEqualTo(
+                    """{
+    "battleId": "${index + 1}",
+    "trainerOne": null,
+    "trainerTwo": null,
+    "currentTrainer": null,
+    "status": "PREGAME",
+    "currentRound": 1
+}"""
+                )
         }
         tmpDir.deleteRecursively()
     }

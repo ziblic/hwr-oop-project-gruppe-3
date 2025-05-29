@@ -146,7 +146,6 @@ class TotallyNotPokemon(
         try {
             val battle = adapter.loadBattle(args[0])
             game.viewStatus(battle)
-            adapter.saveBattle(battle)
         } catch (e: IllegalArgumentException) {
             println(e.message)
         }
