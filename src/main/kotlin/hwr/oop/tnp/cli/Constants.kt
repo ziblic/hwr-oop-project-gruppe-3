@@ -1,13 +1,11 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.cli
 
 const val COULD_NOT_PARSE_ERROR = "Some of the provided arguments could not be parsed correctly"
 const val COULD_NOT_PARSE_TO_INT_ERROR =
     "Some of the provided arguments could not be parsed to an Int"
 
-const val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
-
 const val defaultHelp =
-    """___________  _____  ___     _______
+    """.___________  _____  ___     _______
 ("     _   ")(\"   \|"  \   |   __ "\
  )__/  \\__/ |.\\   \    |  (. |__) :)
     \\_ /    |: \.   \\  |  |:  ____/
@@ -32,7 +30,7 @@ const val newTrainerHelp =
   |_||_|  \__,_|_|_| |_|\___|_|    |_| |_|\___|_| .__/
                                                 |_|
 
-Usage: ./tnp new_trainer <TRAINERNAME>"""
+Usage: ./tnp new_trainer <TRAINERNAME> <BATTLE_ID>"""
 
 const val addMonsterHelp =
     """.   _       _     _   __  __                 _              _   _      _
@@ -42,7 +40,7 @@ const val addMonsterHelp =
 /_/   \_\__,_|\__,_| |_|  |_|\___/|_| |_|___/\__\___|_|    |_| |_|\___|_| .__/
                                                                         |_|
 
-Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER>"""
+Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER> <BATTLE_ID>"""
 
 const val newBattleHelp =
     """._   _                 ____        _   _   _        _   _      _
@@ -52,7 +50,7 @@ const val newBattleHelp =
 |_| \_|\___| \_/\_/   |____/ \__,_|\__|\__|_|\___| |_| |_|\___|_| .__/
                                                                 |_|
 
-Usage: ./tnp new_battle <TRAINERNAME 1> <TRAINERNAME 2>"""
+Usage: ./tnp new_battle"""
 
 const val viewBattleHelp =
     """__     ___                 ____        _   _   _        _   _      _
@@ -79,7 +77,7 @@ const val attackHelp =
 /_/   \_\__|\__\__,_|\___|_|\_\ |_| |_|\___|_| .__/
                                              |_|
 
-Usage: ./tnp on <BATTLE_ID> <TRAINERNAME> <ATTACKNAME>"""
+Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
 val commands: List<String> =
     listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")

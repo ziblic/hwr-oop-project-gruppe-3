@@ -122,7 +122,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>hwr.oop.tnp.GameParserKt</mainClass>
+              <mainClass>hwr.oop.tnp.cli.TotallyNotPokemonKt</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -163,10 +163,6 @@
           <targetTests>
             <param>hwr.oop.*</param>
           </targetTests>
-          <excludedMethods>
-            <param>loadAllTrainers</param>
-            <param>loadAllMonster</param>
-          </excludedMethods>
           <testPlugin>kotest</testPlugin>
         </configuration>
         <executions>

@@ -1,10 +1,14 @@
-package hwr.oop.tnp
+package hwr.oop.tnp.cli
 
-import kotlin.io.println
+import hwr.oop.tnp.core.Attack
+import hwr.oop.tnp.core.Game
+import hwr.oop.tnp.core.GameUsage
+import hwr.oop.tnp.core.PrimitiveType
+import hwr.oop.tnp.persistency.PersistenceAdapter
 
-class GameParser(private val args: List<String>) {
+class TotallyNotPokemon(private val args: List<String>) {
 
-    private val game: ParserInterface = Game()
+    private val game: GameUsage = Game()
 
     init {
         parseArguments()
@@ -55,9 +59,9 @@ class GameParser(private val args: List<String>) {
         }
     }
 
-    fun parseToType(input: String): Type {
+    fun parseToType(input: String): PrimitiveType {
         return try {
-            Type.valueOf(input.uppercase())
+            PrimitiveType.valueOf(input.uppercase())
         } catch (e: IllegalArgumentException) {
             throw Exception(
                 "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
@@ -66,22 +70,29 @@ class GameParser(private val args: List<String>) {
     }
 
     private fun prepareForCreateTrainer(args: List<String>) {
-        if (args.isEmpty()) {
+        if (args.size != 2) {
             println(newTrainerHelp)
             return
         }
 
-        game.createTrainer(args[0])
+        try {
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[1])
+            game.createTrainer(args[0], battle)
+            adapter.saveBattle(battle)
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
     }
 
     private fun parseForAddMonster(args: List<String>) {
-        if (args.isEmpty() || !(args.size >= 6 && args.size <= 9)) {
+        if (args.isEmpty() || !(args.size >= 7 && args.size <= 10)) {
             println(addMonsterHelp)
             return
         }
 
         val monsterName = args[0]
-        val trainerName = args[args.size - 1]
+        val trainerName = args[args.size - 2]
 
         try {
             val hp = parseToInt(args[1])
@@ -91,8 +102,19 @@ class GameParser(private val args: List<String>) {
             for (attack in args.slice(4..args.size - 2).toList()) {
                 attackList.add(parseToAttack(attack))
             }
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[args.size - 1])
 
-            game.addMonster(monsterName, hp, speed, type, attackList, trainerName)
+            game.addMonster(
+                monsterName,
+                hp,
+                speed,
+                type,
+                attackList,
+                trainerName,
+                battle
+            )
+            adapter.saveBattle(battle)
         } catch (e: Exception) {
             println(COULD_NOT_PARSE_ERROR)
             return
@@ -100,12 +122,12 @@ class GameParser(private val args: List<String>) {
     }
 
     private fun parseForNewBattle(args: List<String>) {
-        if (args.isEmpty() || args.size != 2) {
+        if (!args.isEmpty()) {
             println(newBattleHelp)
             return
         }
 
-        game.initiateBattle(args[0], args[1])
+        PersistenceAdapter().saveBattle(game.initiateBattle())
     }
 
     private fun parseForViewBattle(args: List<String>) {
@@ -115,29 +137,37 @@ class GameParser(private val args: List<String>) {
         }
 
         if (args[0].trim().lowercase() == "all") {
-            game.showAllBattles()
+            try {
+                game.showAllBattles(PersistenceAdapter().loadAllBattles())
+            } catch (e: IllegalArgumentException) {
+                println(e.message)
+            }
             return
         }
 
         try {
-            game.viewStatus(parseToInt(args[0]))
-        } catch (e: Exception) {
-            println(COULD_NOT_PARSE_TO_INT_ERROR)
-            return
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[0])
+            game.viewStatus(battle)
+            adapter.saveBattle(battle)
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
         }
     }
 
     private fun parseForPerformAttack(args: List<String>) {
-        if (args.isEmpty() || args.size != 3) {
+        if (args.isEmpty() || args.size != 2) {
             println(attackHelp)
             return
         }
 
         try {
-            game.performAttack(parseToInt(args[0]), args[1], parseToAttack(args[2]))
-        } catch (e: Exception) {
-            println(COULD_NOT_PARSE_TO_INT_ERROR)
-            return
+            val adapter = PersistenceAdapter()
+            val battle = adapter.loadBattle(args[0])
+            game.performAttack(battle, parseToAttack(args[1]))
+            adapter.saveBattle(battle)
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
         }
     }
 
@@ -148,5 +178,5 @@ class GameParser(private val args: List<String>) {
 }
 
 fun main(args: Array<String>) {
-    GameParser(args.toList())
+    TotallyNotPokemon(args.toList())
 }
