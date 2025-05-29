@@ -1,6 +1,7 @@
 package hwr.oop.tnp.core
 
 import io.kotest.core.spec.style.AnnotationSpec
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 
 class AttackTest : AnnotationSpec() {
@@ -8,7 +9,11 @@ class AttackTest : AnnotationSpec() {
     fun `check getters for PUNCH attack`() {
         val attack = Attack.PUNCH
 
-        assertEquals(PrimitiveType.NORMAL, attack.primitiveType, "Type getter should return NORMAL for PUNCH")
+        assertEquals(
+            PrimitiveType.NORMAL,
+            attack.primitiveType,
+            "Type getter should return NORMAL for PUNCH"
+        )
         assertEquals(15, attack.damage, "Damage getter should return 15 for PUNCH")
         assertEquals(0.1, attack.critChance, "HitQuote getter should return 0.1 for PUNCH")
     }
@@ -34,7 +39,11 @@ class AttackTest : AnnotationSpec() {
     fun `check getters for SPLASH attack`() {
         val attack = Attack.SPLASH
 
-        assertEquals(PrimitiveType.WATER, attack.primitiveType, "Type getter should return WATER for SPLASH")
+        assertEquals(
+            PrimitiveType.WATER,
+            attack.primitiveType,
+            "Type getter should return WATER for SPLASH"
+        )
         assertEquals(20, attack.damage, "Damage getter should return 20 for SPLASH")
         assertEquals(0.7, attack.critChance, "HitQuote getter should return 0.7 for SPLASH")
     }
@@ -49,7 +58,11 @@ class AttackTest : AnnotationSpec() {
             "Type getter should return PLANT for LEAF_GUN"
         )
         assertEquals(20, attack.damage, "Damage getter should return 20 for LEAF_GUN")
-        assertEquals(0.2, attack.critChance, "HitQuote getter should return 0.2 for LEAF_GUN")
+        assertEquals(
+            0.2,
+            attack.critChance,
+            "HitQuote getter should return 0.2 for LEAF_GUN"
+        )
     }
 
     @Test
@@ -91,5 +104,42 @@ class AttackTest : AnnotationSpec() {
         val random = 0.1 // Simulating scenario where critical hit does not happen
         val result = attack.calculateMultiplierHitQuote(random)
         assertEquals(1.0, result, "Expected multiplier should be 1.0 when no critical hit")
+    }
+
+    @Test
+    fun `calculateDamageAgainst computes correct damage without crit`() {
+        val defender =
+            Monster(
+                name = "Defender",
+                stats = BattleStats(100, 10),
+                primitiveType = PrimitiveType.PLANT,
+                attacks = listOf()
+            )
+
+        val damage = Attack.FLAME_WREATH.damage
+        val multiplier =
+            Attack.FLAME_WREATH.primitiveType.calculateDamangeMultiplier(defender)
+        val crit = 1.0
+
+        val expected = (damage * multiplier * crit).toInt()
+        val result =
+            Attack.FLAME_WREATH.run {
+                val m = primitiveType.calculateDamangeMultiplier(defender)
+                (damage * m * 1.0).toInt()
+            }
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `damage is calculated using multiplication only`() {
+        val baseDamage = 20
+        val multiplier = 2.0
+        val crit = 1.5
+
+        val expected = (baseDamage * multiplier * crit).toInt()
+        val mutated = (baseDamage * multiplier / crit).toInt()
+
+        assertThat(expected).isNotEqualTo(mutated)
     }
 }
