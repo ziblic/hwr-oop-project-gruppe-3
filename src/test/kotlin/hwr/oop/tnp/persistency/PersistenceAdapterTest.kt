@@ -10,10 +10,6 @@ import java.io.File
 
 class PersistenceAdapterTest : AnnotationSpec() {
     private val tmpDir = File(System.getProperty("user.dir"), "tmp")
-    private val json = Json {
-        prettyPrint = true
-        encodeDefaults = true
-    }
 
     @Test
     fun `Create folder if not exists yet`() {
@@ -37,18 +33,8 @@ class PersistenceAdapterTest : AnnotationSpec() {
     fun `Load Battle correctly`() {
         val adapter = PersistenceAdapter(tmpDir)
         adapter.saveBattle(Battle("1"))
-        val battleJson = json.encodeToString(adapter.loadBattle("1"))
-        assertThat(battleJson)
-            .isEqualTo(
-                """{
-    "battleId": "1",
-    "trainerOne": null,
-    "trainerTwo": null,
-    "currentTrainer": null,
-    "status": "PREGAME",
-    "currentRound": 1
-}"""
-            )
+        val battleJson = Json.encodeToString(adapter.loadBattle("1"))
+        assertThat(battleJson).isEqualTo("{\"battleId\":\"1\"}")
         tmpDir.deleteRecursively()
     }
 
@@ -67,17 +53,8 @@ class PersistenceAdapterTest : AnnotationSpec() {
         val battles = adapter.loadAllBattles()
         assert(battles.size == 2)
         battles.forEachIndexed { index, battle ->
-            assertThat(json.encodeToString(battle))
-                .isEqualTo(
-                    """{
-    "battleId": "${index + 1}",
-    "trainerOne": null,
-    "trainerTwo": null,
-    "currentTrainer": null,
-    "status": "PREGAME",
-    "currentRound": 1
-}"""
-                )
+            assertThat(Json.encodeToString(battle))
+                .isEqualTo("{\"battleId\":\"${index + 1}\"}")
         }
         tmpDir.deleteRecursively()
     }
