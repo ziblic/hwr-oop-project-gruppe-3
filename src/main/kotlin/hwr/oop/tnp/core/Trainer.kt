@@ -18,7 +18,8 @@ class Trainer(val name: String, val monsters: List<Monster> = emptyList()) {
         return Trainer(name, updatedMonsters)
     }
 
-    fun nextMonster(): Monster = monsters.firstOrNull() ?: throw IllegalStateException("No monsters available")
+    fun nextMonster(): Monster =
+        monsters.firstOrNull() ?: throw IllegalStateException("No monsters available")
 
     fun nextBattleReadyMonster(): Monster? = monsters.firstOrNull { !it.isKO() }
 
