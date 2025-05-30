@@ -13,11 +13,11 @@ enum class BattleStatus {
 class Battle(
     val battleId: String = UUID.randomUUID().toString(),
 ) {
-    var trainerOne: Trainer? = null
+    var trainerOne: Trainer = Trainer.EMPTY
         private set
-    var trainerTwo: Trainer? = null
+    var trainerTwo: Trainer = Trainer.EMPTY
         private set
-    var currentTrainer: Trainer? = null
+    var currentTrainer: Trainer = Trainer.EMPTY
         private set
 
     var status: BattleStatus = BattleStatus.PREGAME
@@ -43,25 +43,25 @@ class Battle(
         val two = trainerTwo
 
         return when {
-            one?.name.equals(name, ignoreCase = true) -> one!!
-            two?.name.equals(name, ignoreCase = true) -> two!!
+            one.name.equals(name, ignoreCase = true) -> one
+            two.name.equals(name, ignoreCase = true) -> two
             else -> throw IllegalArgumentException("Trainer '$name' not found.")
         }
     }
 
     fun addTrainerToBattle(trainer: Trainer) {
         when {
-            trainerOne == null -> trainerOne = trainer
-            trainerTwo == null -> trainerTwo = trainer
+            trainerOne == Trainer.EMPTY -> trainerOne = trainer
+            trainerTwo == Trainer.EMPTY -> trainerTwo = trainer
             else -> throw IllegalStateException("Both trainers are already set.")
         }
     }
 
     fun startBattle() {
-        require(trainerOne != null && trainerTwo != null) {
+        require(trainerOne != Trainer.EMPTY && trainerTwo != Trainer.EMPTY) {
             "Trainer need to have been set for this operation"
         }
-        currentTrainer = determineBeginningTrainer(trainerOne!!, trainerTwo!!)
+        currentTrainer = determineBeginningTrainer(trainerOne, trainerTwo)
         status = BattleStatus.STARTED
     }
 
@@ -70,7 +70,7 @@ class Battle(
     }
 
     private fun advanceRound() {
-        if (determineWinner() != null) {
+        if (determineWinner() != Trainer.EMPTY) {
             endBattle()
             return
         }
@@ -78,22 +78,24 @@ class Battle(
     }
 
     private fun getOpponent(): Trainer {
-        require(trainerOne != null && trainerTwo != null && currentTrainer != null) {
-            "Trainer need to have been set for this operation"
-        }
-        return if (currentTrainer!! == trainerOne!!) trainerTwo!! else trainerOne!!
+        require(
+            trainerOne != Trainer.EMPTY &&
+                trainerTwo != Trainer.EMPTY &&
+                currentTrainer != Trainer.EMPTY
+        ) { "Trainer need to have been set for this operation" }
+        return if (currentTrainer == trainerOne) trainerTwo else trainerOne
     }
 
     fun takeTurn(attack: Attack): Monster {
         if (status == BattleStatus.FINISHED) {
             throw IllegalStateException("Battle is already finished")
         }
-        if (currentTrainer == null) {
+        if (currentTrainer == Trainer.EMPTY) {
             throw IllegalStateException(
                 "Trainer need to have been set for this operation"
             )
         }
-        val monster = currentTrainer!!.nextBattleReadyMonster()
+        val monster = currentTrainer.nextBattleReadyMonster()
         val opponent = getOpponent()
         val opponentMonster = opponent.nextBattleReadyMonster()
         if (monster == null || opponentMonster == null) {
@@ -107,20 +109,23 @@ class Battle(
     }
 
     fun determineWinner(): Trainer? {
-        require(trainerOne != null && trainerTwo != null) {
+        require(trainerOne != Trainer.EMPTY && trainerTwo != Trainer.EMPTY) {
             "Trainer need to have been set for this operation"
         }
-        if (trainerOne!!.isDefeated()) return trainerTwo!!
-        if (trainerTwo!!.isDefeated()) return trainerOne!!
+        if (trainerOne.isDefeated()) return trainerTwo
+        if (trainerTwo.isDefeated()) return trainerOne
         return null
     }
 
     override fun toString(): String {
-        return if (trainerOne != null && trainerTwo != null && currentTrainer != null)
+        return if (trainerOne != Trainer.EMPTY &&
+            trainerTwo != Trainer.EMPTY &&
+            currentTrainer != Trainer.EMPTY
+        )
             """Battle ($battleId):
-${trainerOne!!.name} vs. ${trainerTwo!!.name}
+${trainerOne.name} vs. ${trainerTwo.name}
 Round: $currentRound
-Next Attacker: ${currentTrainer!!.name}"""
+Next Attacker: ${currentTrainer.name}"""
         else "Battle with ID: $battleId is in a pregame state"
     }
 }
