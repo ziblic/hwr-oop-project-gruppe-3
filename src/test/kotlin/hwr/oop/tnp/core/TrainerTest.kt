@@ -124,14 +124,14 @@ class TrainerTest : AnnotationSpec() {
     @Test
     fun `next battle ready monster returns null if no monsters left`() {
         val trainer = Trainer("Alex")
-        assertThat(trainer.nextBattleReadyMonster()).isNull()
+        assertThrows<IllegalStateException> { trainer.nextBattleReadyMonster() }
     }
 
     @Test
     fun `next battle ready monster returns null if monster is KO`() {
         val monster = Monster("Peter", BattleStats(0, 20), PrimitiveType.WATER, emptyList())
         val trainer = Trainer("Alex", mutableListOf(monster))
-        assertThat(trainer.nextBattleReadyMonster()).isNull()
+        assertThrows<IllegalStateException> { trainer.nextBattleReadyMonster() }
     }
 
     @Test

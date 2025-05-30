@@ -78,11 +78,6 @@ class Battle(
     }
 
     private fun getOpponent(): Trainer {
-        require(
-            trainerOne != Trainer.EMPTY &&
-                trainerTwo != Trainer.EMPTY &&
-                currentTrainer != Trainer.EMPTY
-        ) { "Trainer need to have been set for this operation" }
         return if (currentTrainer == trainerOne) trainerTwo else trainerOne
     }
 
@@ -98,9 +93,6 @@ class Battle(
         val monster = currentTrainer.nextBattleReadyMonster()
         val opponent = getOpponent()
         val opponentMonster = opponent.nextBattleReadyMonster()
-        if (monster == null || opponentMonster == null) {
-            throw IllegalStateException("No battle ready monster available")
-        }
         monster.attack(attack, opponentMonster)
         currentTrainer = opponent
 
@@ -108,13 +100,13 @@ class Battle(
         return opponentMonster
     }
 
-    fun determineWinner(): Trainer? {
+    fun determineWinner(): Trainer {
         require(trainerOne != Trainer.EMPTY && trainerTwo != Trainer.EMPTY) {
             "Trainer need to have been set for this operation"
         }
         if (trainerOne.isDefeated()) return trainerTwo
         if (trainerTwo.isDefeated()) return trainerOne
-        return null
+        return Trainer.EMPTY
     }
 
     override fun toString(): String {
