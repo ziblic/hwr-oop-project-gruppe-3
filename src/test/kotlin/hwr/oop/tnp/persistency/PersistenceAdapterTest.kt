@@ -11,6 +11,17 @@ import java.io.File
 class PersistenceAdapterTest : AnnotationSpec() {
     private val tmpDir = File(System.getProperty("user.dir"), "tmp")
 
+    @BeforeEach
+    fun prepare() {
+        tmpDir.deleteRecursively()
+        tmpDir.mkdirs()
+    }
+
+    @AfterEach
+    fun cleanup() {
+        tmpDir.deleteRecursively()
+    }
+
     @Test
     fun `Create folder if not exists yet`() {
         tmpDir.deleteRecursively()

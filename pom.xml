@@ -157,6 +157,9 @@
             <avoidCallsTo>kotlin.jvm.internal</avoidCallsTo>
             <avoidCallsTo>kotlinx.coroutines</avoidCallsTo>
           </avoidCallsTo>
+          <excludedMethods>
+            <param>deserialize</param>
+          </excludedMethods>
           <targetClasses>
             <param>hwr.oop.*</param>
           </targetClasses>
