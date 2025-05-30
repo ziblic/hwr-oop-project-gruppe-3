@@ -27,7 +27,7 @@ class BattleTest : AnnotationSpec() {
 
     @BeforeEach
     fun init() {
-        battle = Battle()
+        battle = Battle("1")
     }
 
     fun createFinishedBattle(firstTrainerWins: Boolean = true): Battle {
@@ -59,18 +59,17 @@ class BattleTest : AnnotationSpec() {
         return battle
     }
 
-    // @Test
-    // fun `battle shows info`() {
-    //         assertThat(battle.toString())
-    //                 .contains(t1.name, t2.name, battle.battleId,
-    // battle.currentRound.toString())
-    // }
-
     @Test
-    fun `battle has ID`() {
-        assertThat(battle.battleId).isNotEmpty
-        assertThatNoException().isThrownBy { UUID.fromString(battle.battleId) }
-    }
+    fun `battle shows info`() {
+         assertThat(battle.toString())
+                     .isEqualTo("Battle with ID: 1 is in a pregame state")
+     }
+
+   // @Test
+    //fun `battle has ID`() {
+    //  assertThat(battle.battleId).isNotEmpty
+    //assertThatNoException().isThrownBy { UUID.fromString(battle.battleId) }
+    //}
 
     @Test
     fun `battle is not finished and round is 1 after creation`() {
@@ -78,23 +77,22 @@ class BattleTest : AnnotationSpec() {
         assertThat(battle.currentRound).isEqualTo(1)
     }
 
-    // @Test
-    // fun `the trainer with the faster monster will attack first, next attack is the other
-    // trainer`() {
-    //         val prevHpM2 = m2.stats.hp
-    //         battle.takeTurn(Attack.PUNCH)
-    //         assertThat(m2.stats.hp).isLessThan(prevHpM2)
-    //
-    //         assertThat(battle.currentTrainer).isEqualTo(t2)
-    //
-    //         val prevHpM1 = m1.stats.hp
-    //         battle.takeTurn(Attack.PUNCH)
-    //         assertThat(m1.stats.hp).isLessThan(prevHpM1)
-    //
-    //         assertThat(battle.currentRound).isEqualTo(3)
-    //
-    //         assertThat(battle.currentTrainer).isEqualTo(t1)
-    // }
+     @Test
+     fun `the trainer with the faster monster will attack first, next attack is the other trainer`() {
+             val prevHpM2 = m2.stats.hp
+             battle.takeTurn(Attack.PUNCH)
+             assertThat(m2.stats.hp).isLessThan(prevHpM2)
+
+             assertThat(battle.currentTrainer).isEqualTo(t2)
+
+             val prevHpM1 = m1.stats.hp
+            battle.takeTurn(Attack.PUNCH)
+            assertThat(m1.stats.hp).isLessThan(prevHpM1)
+
+            assertThat(battle.currentRound).isEqualTo(3)
+
+            assertThat(battle.currentTrainer).isEqualTo(t1)
+     }
 
     // @Test
     // fun `trainer two has the faster monster, so he will begin`() {
