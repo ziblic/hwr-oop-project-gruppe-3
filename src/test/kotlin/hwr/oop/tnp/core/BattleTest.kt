@@ -20,8 +20,8 @@ class BattleTest : AnnotationSpec() {
             PrimitiveType.NORMAL,
             attacks = listOf(Attack.PUNCH)
         )
-    private val t1 = Trainer("T1", listOf(m1))
-    private val t2 = Trainer("T2", listOf(m2))
+    private val t1 = Trainer("T1", mutableListOf(m1))
+    private val t2 = Trainer("T2", mutableListOf(m2))
 
     lateinit var battle: Battle
 
@@ -45,8 +45,8 @@ class BattleTest : AnnotationSpec() {
                 PrimitiveType.NORMAL,
                 attacks = listOf(Attack.PUNCH)
             )
-        val winningTrainer = Trainer("T1", listOf(m1))
-        val otherTrainer = Trainer("T2", listOf(m2))
+        val winningTrainer = Trainer("T1", mutableListOf(m1))
+        val otherTrainer = Trainer("T2", mutableListOf(m2))
         val battle = Battle()
         if (firstTrainerWins) {
             battle.addTrainerToBattle(winningTrainer)

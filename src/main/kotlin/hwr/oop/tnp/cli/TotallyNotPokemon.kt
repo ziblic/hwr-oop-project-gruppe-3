@@ -4,10 +4,13 @@ import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Game
 import hwr.oop.tnp.core.GameUsage
 import hwr.oop.tnp.core.PrimitiveType
+import hwr.oop.tnp.persistency.GamePersistencePort
 import hwr.oop.tnp.persistency.PersistenceAdapter
 
-class TotallyNotPokemon(private val args: List<String>) {
-
+class TotallyNotPokemon(
+    private val args: List<String>,
+    private val adapter: GamePersistencePort = PersistenceAdapter()
+) {
     private val game: GameUsage = Game()
 
     init {
@@ -76,7 +79,6 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
 
         try {
-            val adapter = PersistenceAdapter()
             val battle = adapter.loadBattle(args[1])
             game.createTrainer(args[0], battle)
             adapter.saveBattle(battle)
@@ -99,10 +101,9 @@ class TotallyNotPokemon(private val args: List<String>) {
             val speed = parseToInt(args[2])
             val type = parseToType(args[3])
             val attackList: MutableList<Attack> = mutableListOf()
-            for (attack in args.slice(4..args.size - 2).toList()) {
+            for (attack in args.slice(4..args.size - 3).toList()) {
                 attackList.add(parseToAttack(attack))
             }
-            val adapter = PersistenceAdapter()
             val battle = adapter.loadBattle(args[args.size - 1])
 
             game.addMonster(
@@ -126,8 +127,7 @@ class TotallyNotPokemon(private val args: List<String>) {
             println(newBattleHelp)
             return
         }
-
-        PersistenceAdapter().saveBattle(game.initiateBattle())
+        adapter.saveBattle(game.initiateBattle())
     }
 
     private fun parseForViewBattle(args: List<String>) {
@@ -137,19 +137,13 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
 
         if (args[0].trim().lowercase() == "all") {
-            try {
-                game.showAllBattles(PersistenceAdapter().loadAllBattles())
-            } catch (e: IllegalArgumentException) {
-                println(e.message)
-            }
+            game.showAllBattles(adapter.loadAllBattles())
             return
         }
 
         try {
-            val adapter = PersistenceAdapter()
             val battle = adapter.loadBattle(args[0])
             game.viewStatus(battle)
-            adapter.saveBattle(battle)
         } catch (e: IllegalArgumentException) {
             println(e.message)
         }
@@ -162,7 +156,6 @@ class TotallyNotPokemon(private val args: List<String>) {
         }
 
         try {
-            val adapter = PersistenceAdapter()
             val battle = adapter.loadBattle(args[0])
             game.performAttack(battle, parseToAttack(args[1]))
             adapter.saveBattle(battle)
