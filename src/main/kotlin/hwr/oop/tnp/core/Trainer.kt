@@ -24,7 +24,9 @@ data class Trainer(val name: String, val monsters: MutableList<Monster> = mutabl
     fun nextMonster(): Monster =
         monsters.firstOrNull() ?: throw IllegalStateException("No monsters available")
 
-    fun nextBattleReadyMonster(): Monster? = monsters.firstOrNull { !it.isKO() }
+    fun nextBattleReadyMonster(): Monster =
+        monsters.firstOrNull { !it.isKO() }
+            ?: throw IllegalStateException("No monster is alive anymore")
 
     fun isDefeated(): Boolean = monsters.all { it.isKO() }
 }
