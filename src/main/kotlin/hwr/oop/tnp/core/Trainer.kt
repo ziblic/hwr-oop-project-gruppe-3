@@ -3,19 +3,18 @@ package hwr.oop.tnp.core
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Trainer(val name: String, val monsters: List<Monster> = emptyList()) {
+class Trainer(val name: String, val monsters: MutableList<Monster> = mutableListOf()) {
     init {
         require(monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
             "Too many monsters: $monsters"
         }
     }
 
-    fun addMonster(monster: Monster): Trainer {
+    fun addMonster(monster: Monster) {
         require(monsters.size < MAX_ALLOWED_MONSTERS_PER_TRAINER) {
             "Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER"
         }
-        val updatedMonsters = monsters + monster
-        return Trainer(name, updatedMonsters)
+        monsters.add(monster)
     }
 
     fun nextMonster(): Monster =

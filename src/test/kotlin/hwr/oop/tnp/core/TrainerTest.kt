@@ -52,7 +52,7 @@ class TrainerTest : AnnotationSpec() {
         val bs = BattleStats(130, 80)
         val m = Monster("Peter", bs, PrimitiveType.WATER, emptyList())
 
-        trainer = trainer.addMonster(m)
+        trainer.addMonster(m)
         val monsters = trainer.monsters
 
         assertThat(monsters.size).isEqualTo(2)
@@ -62,14 +62,17 @@ class TrainerTest : AnnotationSpec() {
     @Test
     fun `init with max monsters works, throws no expection`() {
         assertThatNoException().isThrownBy {
-            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER) { monster })
+            Trainer("Alex", MutableList(MAX_ALLOWED_MONSTERS_PER_TRAINER) { monster })
         }
     }
 
     @Test
     fun `init with too many monsters throws exception`() {
         assertThrows<IllegalArgumentException> {
-            Trainer("Alex", List(MAX_ALLOWED_MONSTERS_PER_TRAINER + 1) { monster })
+            Trainer(
+                "Alex",
+                MutableList(MAX_ALLOWED_MONSTERS_PER_TRAINER + 1) { monster }
+            )
         }
     }
 
@@ -78,7 +81,7 @@ class TrainerTest : AnnotationSpec() {
         var trainer = Trainer("Peter")
         assertThatNoException().isThrownBy {
             for (i in 1..MAX_ALLOWED_MONSTERS_PER_TRAINER) {
-                trainer = trainer.addMonster(monster)
+                trainer.addMonster(monster)
             }
         }
         assertThat(trainer.monsters.size).isEqualTo(MAX_ALLOWED_MONSTERS_PER_TRAINER)
@@ -88,11 +91,11 @@ class TrainerTest : AnnotationSpec() {
     fun `adding too many monsters throws IllegalArgumentException`() {
         var trainer = Trainer("Alex")
 
-        repeat(MAX_ALLOWED_MONSTERS_PER_TRAINER) { trainer = trainer.addMonster(monster) }
+        repeat(MAX_ALLOWED_MONSTERS_PER_TRAINER) { trainer.addMonster(monster) }
 
         val exception =
             assertThrows<IllegalArgumentException> {
-                trainer = trainer.addMonster(monster)
+                trainer.addMonster(monster)
             }
 
         assertThat(exception.message)
@@ -129,7 +132,7 @@ class TrainerTest : AnnotationSpec() {
     @Test
     fun `next battle ready monster returns null if monster is KO`() {
         val monster = Monster("Peter", BattleStats(0, 20), PrimitiveType.WATER, emptyList())
-        val trainer = Trainer("Alex", listOf(monster))
+        val trainer = Trainer("Alex", mutableListOf(monster))
         assertThat(trainer.nextBattleReadyMonster()).isNull()
     }
 
@@ -143,7 +146,7 @@ class TrainerTest : AnnotationSpec() {
     fun `trainer is defeated if all monsters are KO`() {
         val bs = BattleStats(0, 20)
         val monster = Monster("Peter", bs, PrimitiveType.WATER, emptyList())
-        val trainer = Trainer("Alex", listOf(monster))
+        val trainer = Trainer("Alex", mutableListOf(monster))
         assertThat(trainer.isDefeated()).isTrue
     }
 }

@@ -19,6 +19,11 @@ class BattleStatsTest : AnnotationSpec() {
     }
 
     @Test
+    fun `test battleStats has maxHP`() {
+        assertThat(battleStats.maxHp).isEqualTo(200)
+    }
+
+    @Test
     fun `test battleStats has HP`() {
         assertThat(battleStats.hp).isEqualTo(200)
     }
