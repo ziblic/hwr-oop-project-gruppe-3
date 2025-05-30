@@ -12,7 +12,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `check serializable`() {
-        val trainer = Trainer("Alex", listOf(monster))
+        val trainer = Trainer("Alex", mutableListOf(monster))
         val trainerJson = Json.encodeToString(trainer)
         assertThat(trainerJson)
             .isEqualTo(
@@ -31,7 +31,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `trainer has monsters`() {
-        val trainer = Trainer("Alex", listOf(monster))
+        val trainer = Trainer("Alex", mutableListOf(monster))
         val monsters = trainer.monsters
 
         assertThat(monsters[0].name).isEqualTo(monster.name)
@@ -48,7 +48,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `add monster to trainer`() {
-        var trainer = Trainer("Alex", listOf(monster))
+        var trainer = Trainer("Alex", mutableListOf(monster))
         val bs = BattleStats(130, 80)
         val m = Monster("Peter", bs, PrimitiveType.WATER, emptyList())
 
@@ -94,9 +94,7 @@ class TrainerTest : AnnotationSpec() {
         repeat(MAX_ALLOWED_MONSTERS_PER_TRAINER) { trainer.addMonster(monster) }
 
         val exception =
-            assertThrows<IllegalArgumentException> {
-                trainer.addMonster(monster)
-            }
+            assertThrows<IllegalArgumentException> { trainer.addMonster(monster) }
 
         assertThat(exception.message)
             .isEqualTo(
@@ -107,7 +105,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `trainer has next monster`() {
-        val trainer = Trainer("Alex", listOf(monster))
+        val trainer = Trainer("Alex", mutableListOf(monster))
         assertThat(trainer.nextMonster()).isEqualTo(monster)
     }
 
@@ -119,7 +117,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `trainer has next battle ready monster`() {
-        val trainer = Trainer("Alex", listOf(monster))
+        val trainer = Trainer("Alex", mutableListOf(monster))
         assertThat(trainer.nextBattleReadyMonster()).isEqualTo(monster)
     }
 
@@ -138,7 +136,7 @@ class TrainerTest : AnnotationSpec() {
 
     @Test
     fun `trainer is not defeated if at least one monster is alive`() {
-        val trainer = Trainer("Alex", listOf(monster))
+        val trainer = Trainer("Alex", mutableListOf(monster))
         assertThat(trainer.isDefeated()).isFalse
     }
 
