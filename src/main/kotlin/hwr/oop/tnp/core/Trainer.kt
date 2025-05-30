@@ -3,7 +3,11 @@ package hwr.oop.tnp.core
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Trainer(val name: String, val monsters: MutableList<Monster> = mutableListOf()) {
+data class Trainer(val name: String, val monsters: MutableList<Monster> = mutableListOf()) {
+    companion object {
+        val EMPTY = Trainer("Unknown")
+    }
+
     init {
         require(monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
             "Too many monsters: $monsters"
