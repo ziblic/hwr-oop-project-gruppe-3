@@ -28,9 +28,7 @@ class GameTest : AnnotationSpec() {
         battle.addTrainerToBattle(Trainer("Ash"))
         battle.addTrainerToBattle(Trainer("Misty"))
 
-        val output = captureStandardOut {
-            game.createTrainer("Brock", battle)
-        }
+        val output = captureStandardOut { game.createTrainer("Brock", battle) }
 
         assertThat(output).contains("Both trainers are already set.")
     }
@@ -84,9 +82,7 @@ class GameTest : AnnotationSpec() {
 
     @Test
     fun `viewStatus should print current battle status`() {
-        val output = captureStandardOut {
-            game.viewStatus(battle)
-        }
+        val output = captureStandardOut { game.viewStatus(battle) }
 
         assertThat(output).contains("Battle")
     }
@@ -96,47 +92,46 @@ class GameTest : AnnotationSpec() {
         val battle1 = Battle()
         val battle2 = Battle()
 
-        val output = captureStandardOut {
-            game.showAllBattles(listOf(battle1, battle2))
-        }
+        val output = captureStandardOut { game.showAllBattles(listOf(battle1, battle2)) }
 
-        assertThat(output).contains("Battle")
+        assertThat(output)
+            .contains("Battle")
             .contains(battle1.battleId)
             .contains(battle2.battleId)
     }
 
     @Test
     fun `showAllBattles should notify when list is empty`() {
-        val output = captureStandardOut {
-            game.showAllBattles(emptyList())
-        }
+        val output = captureStandardOut { game.showAllBattles(emptyList()) }
 
         assertThat(output).contains("No battles created yet")
     }
 
     @Test
     fun `performAttack should start battle if status is PREGAME`() {
-        val ash = Trainer("Ash").apply {
-            addMonster(
-                Monster(
-                    name = "Bulbasaur",
-                    stats = BattleStats(100, 50),
-                    primitiveType = PrimitiveType.PLANT,
-                    attacks = listOf(Attack.PUNCH)
+        val ash =
+            Trainer("Ash").apply {
+                addMonster(
+                    Monster(
+                        name = "Bulbasaur",
+                        stats = BattleStats(100, 50),
+                        primitiveType = PrimitiveType.PLANT,
+                        attacks = listOf(Attack.PUNCH)
+                    )
                 )
-            )
-        }
+            }
 
-        val gary = Trainer("Gary").apply {
-            addMonster(
-                Monster(
-                    name = "Charmander",
-                    stats = BattleStats(90, 60),
-                    primitiveType = PrimitiveType.FIRE,
-                    attacks = listOf(Attack.PUNCH)
+        val gary =
+            Trainer("Gary").apply {
+                addMonster(
+                    Monster(
+                        name = "Charmander",
+                        stats = BattleStats(90, 60),
+                        primitiveType = PrimitiveType.FIRE,
+                        attacks = listOf(Attack.PUNCH)
+                    )
                 )
-            )
-        }
+            }
 
         battle.addTrainerToBattle(ash)
         battle.addTrainerToBattle(gary)
@@ -147,39 +142,38 @@ class GameTest : AnnotationSpec() {
     }
 
     @Test
-    fun `performAttack should print exception messages when battle cannot start or attack fails`() {
-        val output = captureStandardOut {
-            game.performAttack(battle, Attack.PUNCH)
-        }
+    fun `check performAttack exception messages`() {
+        val output = captureStandardOut { game.performAttack(battle, Attack.PUNCH) }.trim()
+        assertThat(output).isEqualTo("Trainer need to have been set for this operation")
+        val ash =
+            Trainer("Ash").apply {
+                addMonster(
+                    Monster(
+                        name = "Bulbasaur",
+                        stats = BattleStats(10, 50),
+                        primitiveType = PrimitiveType.PLANT,
+                        attacks = listOf(Attack.PUNCH)
+                    )
+                )
+            }
 
-        // These messages are printed from two exception cases:
-        // 1. Battle.startBattle() throws IllegalArgumentException
-        // 2. battle.takeTurn(...) throws IllegalStateException
+        val gary =
+            Trainer("Gary").apply {
+                addMonster(
+                    Monster(
+                        name = "Charmander",
+                        stats = BattleStats(20, 60),
+                        primitiveType = PrimitiveType.FIRE,
+                        attacks = listOf(Attack.PUNCH)
+                    )
+                )
+            }
 
-        assertThat(output).contains("Trainer need to have been set for this operation")
+        battle.addTrainerToBattle(ash)
+        battle.addTrainerToBattle(gary)
+        battle.startBattle()
+        game.performAttack(battle, Attack.PUNCH)
+        val output2 = captureStandardOut { game.performAttack(battle, Attack.PUNCH) }.trim()
+        assertThat(output2).isEqualTo("Battle is already finished")
     }
-
-//
-//    @Test
-//    fun `performAttack should print error when turn cannot be taken`() {
-//        val trainer1 = Trainer("Ash")
-//        val trainer2 = Trainer("Misty")
-//
-//        trainer1.addMonster(Monster("Pikachu", BattleStats(100, 50), PrimitiveType.WATER, listOf(Attack.PUNCH)))
-//        trainer2.addMonster(Monster("Charmander", BattleStats(100, 60), PrimitiveType.FIRE, listOf(Attack.PUNCH)))
-//
-//        battle.addTrainerToBattle(trainer1)
-//        battle.addTrainerToBattle(trainer2)
-//
-//        // Start battle manually, then break the rules (current trainer must be empty)
-//        battle.startBattle()
-//
-//
-//
-//        val output = captureStandardOut {
-//            game.performAttack(battle, Attack.PUNCH)
-//        }
-//
-//        assertThat(output).contains("Trainer need to have been set for this operation")
-//    }
 }
