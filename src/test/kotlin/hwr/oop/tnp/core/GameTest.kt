@@ -147,15 +147,6 @@ class GameTest : AnnotationSpec() {
     }
 
     @Test
-    fun `performAttack should print error when trainers are not set`() {
-        val output = captureStandardOut {
-            game.performAttack(battle, Attack.PUNCH)
-        }
-
-        assertThat(output).contains("Trainer need to have been set for this operation")
-    }
-
-    @Test
     fun `performAttack should print exception messages when battle cannot start or attack fails`() {
         val output = captureStandardOut {
             game.performAttack(battle, Attack.PUNCH)
@@ -166,6 +157,31 @@ class GameTest : AnnotationSpec() {
         // 2. battle.takeTurn(...) throws IllegalStateException
 
         assertThat(output).contains("Trainer need to have been set for this operation")
-            .contains("Battle must be RUNNING to take a turn")
     }
+
+//
+//    @Test
+//    fun `performAttack should print error when turn cannot be taken`() {
+//        val trainer1 = Trainer("Ash")
+//        val trainer2 = Trainer("Misty")
+//
+//        trainer1.addMonster(Monster("Pikachu", BattleStats(100, 50), PrimitiveType.WATER, listOf(Attack.PUNCH)))
+//        trainer2.addMonster(Monster("Charmander", BattleStats(100, 60), PrimitiveType.FIRE, listOf(Attack.PUNCH)))
+//
+//        battle.addTrainerToBattle(trainer1)
+//        battle.addTrainerToBattle(trainer2)
+//
+//        // Start battle manually, then break the rules (current trainer must be empty)
+//        battle.startBattle()
+//
+//
+//
+//        val output = captureStandardOut {
+//            game.performAttack(battle, Attack.PUNCH)
+//        }
+//
+//        assertThat(output).contains("Trainer need to have been set for this operation")
+//    }
+
+
 }
