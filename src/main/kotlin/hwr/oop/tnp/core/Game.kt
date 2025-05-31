@@ -52,11 +52,10 @@ class Game : GameUsage {
     override fun performAttack(battle: Battle, selectedAttack: Attack) {
 
         try {
-            if(battle.status == BattleStatus.PREGAME) {
+            if (battle.status == BattleStatus.PREGAME) {
                 battle.startBattle()
             }
-        }
-        catch (e: IllegalArgumentException){
+        } catch (e: IllegalArgumentException) {
             println(e.message)
         }
         try {

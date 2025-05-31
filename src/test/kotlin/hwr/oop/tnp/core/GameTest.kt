@@ -168,5 +168,4 @@ class GameTest : AnnotationSpec() {
         assertThat(output).contains("Trainer need to have been set for this operation")
             .contains("Battle must be RUNNING to take a turn")
     }
-
 }
