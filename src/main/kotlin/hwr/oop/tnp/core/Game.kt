@@ -50,8 +50,14 @@ class Game : GameUsage {
     }
 
     override fun performAttack(battle: Battle, selectedAttack: Attack) {
-        if (battle.status == BattleStatus.PREGAME) {
-            battle.startBattle()
+
+        try {
+            if(battle.status == BattleStatus.PREGAME) {
+                battle.startBattle()
+            }
+        }
+        catch (e: IllegalArgumentException){
+            println(e.message)
         }
         try {
             battle.takeTurn(selectedAttack)
