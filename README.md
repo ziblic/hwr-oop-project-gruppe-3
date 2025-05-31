@@ -51,18 +51,18 @@ Additionally, we prioritized intuitive user interface design through usability t
 
 ## Feature List
 
-| Number |    Feature   | Tests |
-|--------|--------------|-------|
-| 1      | BattleStats  | 6     |
-| 2      | GameLoader   | 0     |
-| 3      | GameParser   | 20    |
-| 4      | Game         | 0     |
-| 5      | Monster      | 8     |
-| 6      | Trainer      | 4     |
-| 7      | Type         | 5     |
+| Number |      Feature     | Tests |
+|--------|------------------|-------|
+| 1      | ./tnp            | 12    |
+| 2      | ./tnp help       | 18    |
+| 3      | ./tnp add_monster| 20    |
+| 4      | ./tnp new_battle | 13    |
+| 5      | ./tnp view_battle| 12    |
+| 6      | ./tnp on         | 15    |
 
 ## Additional Dependencies
 
-| Number | Dependency Name | Dependency Description | Why is it necessary? |
-|--------|-----------------|------------------------|----------------------|
-| 1      | /               | /                      | /                    |
+| Number | Dependency Name       | Dependency Description                                                                                   | Why is it necessary?                                                                                                                                                                                                         |
+| ------ | --------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1      | kotlinx.serialization | A Kotlin library for converting Kotlin objects to and from JSON and other formats using `@Serializable`. | Enables automatic serialization and deserialization of data classes, making it easier to handle structured data in formats like JSON. It is especially useful for APIs, persistent storage, and inter-process communication. |
+
