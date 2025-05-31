@@ -182,6 +182,4 @@ class GameTest : AnnotationSpec() {
 //
 //        assertThat(output).contains("Trainer need to have been set for this operation")
 //    }
-
-
 }

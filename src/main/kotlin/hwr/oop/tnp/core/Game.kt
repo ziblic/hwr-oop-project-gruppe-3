@@ -64,6 +64,4 @@ class Game : GameUsage {
             println(e.message)
         }
     }
-
-
 }
