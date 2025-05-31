@@ -36,7 +36,6 @@ class Game : GameUsage {
     }
 
     override fun viewStatus(battle: Battle) {
-        // TODO: print the battle history instead
         println(battle.toString())
     }
 
@@ -50,8 +49,13 @@ class Game : GameUsage {
     }
 
     override fun performAttack(battle: Battle, selectedAttack: Attack) {
-        if (battle.status == BattleStatus.PREGAME) {
-            battle.startBattle()
+        try {
+            if (battle.status == BattleStatus.PREGAME) {
+                battle.startBattle()
+            }
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+            return
         }
         try {
             battle.takeTurn(selectedAttack)
