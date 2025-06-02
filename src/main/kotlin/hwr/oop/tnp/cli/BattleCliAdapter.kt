@@ -8,8 +8,17 @@ import hwr.oop.tnp.core.BattleUsage
 import hwr.oop.tnp.core.Monster
 import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.core.Trainer
+import hwr.oop.tnp.persistency.FileSystemBasedJSONPersistence
+import hwr.oop.tnp.persistency.LoadBattlePort
+import hwr.oop.tnp.persistency.SaveBattlePort
 
-class BattleCliAdapter(private val battle: BattleUsage) {
+class BattleCliAdapter(private val battleId: String) {
+  private var battle: BattleUsage
+
+  init {
+    battle = Battle(battleId)
+  }
+
   fun createTrainer(trainerName: String) {
     val trainer = Trainer(trainerName)
     try {
@@ -36,18 +45,21 @@ class BattleCliAdapter(private val battle: BattleUsage) {
     }
   }
 
-  fun initiateBattle(): Battle {
-    val battle = Battle()
-    println(battle.toString())
-    return battle
-  }
-
-  fun viewStatus(battle: Battle) {
+  fun viewStatus() {
     println(battle.toString())
   }
 
   companion object {
-    fun showAllBattles(battles: List<Battle>) {
+    fun initiateBattle() {
+      val saveAdapter: SaveBattlePort = FileSystemBasedJSONPersistence()
+      val battle = Battle()
+      println(battle.toString())
+      saveAdapter.saveBattle(battle)
+    }
+
+    fun showAllBattles() {
+      val loadAdapter: LoadBattlePort = FileSystemBasedJSONPersistence()
+      val battles = loadAdapter.loadAllBattles()
       if (battles.isEmpty()) {
         println("No battles created yet")
       }

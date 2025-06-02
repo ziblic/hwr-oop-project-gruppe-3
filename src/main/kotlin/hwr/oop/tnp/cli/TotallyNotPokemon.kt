@@ -2,15 +2,11 @@ package hwr.oop.tnp.cli
 
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.PrimitiveType
-import hwr.oop.tnp.persistency.FileSystemBasedJSONPersistence
-import hwr.oop.tnp.persistency.LoadBattlePort
 
 class TotallyNotPokemon(
   private val args: List<String>,
-  private val loadAdapter: LoadBattlePort = FileSystemBasedJSONPersistence(),
 ) {
-  private val COULD_NOT_PARSE_ERROR =
-    "Some of the provided arguments could not be parsed correctly"
+  private val COULD_NOT_PARSE_ERROR = "Some of the provided arguments could not be parsed correctly"
   private val COULD_NOT_PARSE_TO_INT_ERROR =
     "Some of the provided arguments could not be parsed to an Int"
 
@@ -137,9 +133,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     return try {
       argument.toInt()
     } catch (e: NumberFormatException) {
-      throw Exception(
-        "Error: Failed to convert '$argument' to Int. Reason: ${e.message}"
-      )
+      throw ParseToIntException("Error: Failed to convert '$argument' to int. Reason: ${e.message}")
     }
   }
 
@@ -147,17 +141,17 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     return try {
       Attack.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
-      throw Exception(
+      throw ParseToAttackException(
         "Error: Failed to convert '$input' to Attack. Reason: ${e.message}"
       )
     }
   }
 
-  fun parseToType(input: String): PrimitiveType {
+  fun parseToPrimitiveType(input: String): PrimitiveType {
     return try {
       PrimitiveType.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
-      throw Exception(
+      throw ParseToPrimitiveTypeException(
         "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
       )
     }
@@ -170,7 +164,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
 
     try {
-      cliAdapter = BattleCliAdapter(loadAdapter.loadBattle(args[1]))
+      cliAdapter = BattleCliAdapter(args[1])
       cliAdapter.createTrainer(args[0])
     } catch (e: IllegalArgumentException) {
       println(e.message)
@@ -189,12 +183,12 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       val hp = parseToInt(args[1])
       val speed = parseToInt(args[2])
-      val type = parseToType(args[3])
+      val type = parseToPrimitiveType(args[3])
       val attackList: MutableList<Attack> = mutableListOf()
       for (attack in args.slice(4..args.size - 3).toList()) {
         attackList.add(parseToAttack(attack))
       }
-      val battle = loadAdapter.loadBattle(args[args.size - 1])
+      cliAdapter = BattleCliAdapter(args[args.size - 1])
 
       cliAdapter.addMonster(
         monsterName,
@@ -204,8 +198,8 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
         attackList,
         trainerName,
       )
-    } catch (e: Exception) {
-      println(COULD_NOT_PARSE_ERROR)
+    } catch (e: ParseToIntException) {
+      println(e)
       return
     }
   }
@@ -224,13 +218,13 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
 
     if (args[0].trim().lowercase() == "all") {
-      BattleCliAdapter.showAllBattles(loadAdapter.loadAllBattles())
+      BattleCliAdapter.showAllBattles()
       return
     }
 
     try {
-      val battle = loadAdapter.loadBattle(args[0])
-      cliAdapter.viewStatus(battle)
+      cliAdapter = BattleCliAdapter(args[0])
+      cliAdapter.viewStatus()
     } catch (e: IllegalArgumentException) {
       println(e.message)
     }
@@ -243,7 +237,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
 
     try {
-      cliAdapter = BattleCliAdapter(loadAdapter.loadBattle(args[0]))
+      cliAdapter = BattleCliAdapter(args[0])
       cliAdapter.performAttack(parseToAttack(args[1]))
     } catch (e: IllegalArgumentException) {
       println(e.message)
