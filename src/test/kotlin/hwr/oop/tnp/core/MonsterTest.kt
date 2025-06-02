@@ -133,7 +133,7 @@ class MonsterTest : AnnotationSpec() {
     fireMonster.attack(fireAttack, plantMonster)
     assert(
       plantMonster.stats.hp == 1000 ||
-          plantMonster.stats.hp == 1000 - Attack.LAVA_FLOOD.damage
+        plantMonster.stats.hp == 1000 - Attack.LAVA_FLOOD.damage
     )
   }
 
@@ -158,8 +158,8 @@ class MonsterTest : AnnotationSpec() {
     fireMonster.attack(fireAttack, waterMonster)
     assert(
       waterMonster.stats.hp == 1000 ||
-          waterMonster.stats.hp ==
-          (1000 - Attack.LAVA_FLOOD.damage * 0.25).toInt()
+        waterMonster.stats.hp ==
+        (1000 - Attack.LAVA_FLOOD.damage * 0.25).toInt()
     )
   }
 
@@ -201,8 +201,8 @@ class MonsterTest : AnnotationSpec() {
     fireMonster.attack(fireAttack, normalMonster)
     assert(
       normalMonster.stats.hp == 1000 ||
-          normalMonster.stats.hp ==
-          (1000 - Attack.LAVA_FLOOD.damage * 0.5).toInt()
+        normalMonster.stats.hp ==
+        (1000 - Attack.LAVA_FLOOD.damage * 0.5).toInt()
     )
   }
 
