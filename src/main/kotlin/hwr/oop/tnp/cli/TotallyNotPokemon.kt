@@ -2,16 +2,15 @@ package hwr.oop.tnp.cli
 
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.PrimitiveType
+import hwr.oop.tnp.persistency.LoadBattleException
 
 class TotallyNotPokemon(
-  private val args: List<String>,
+        private val args: List<String>,
 ) {
   private val COULD_NOT_PARSE_ERROR = "Some of the provided arguments could not be parsed correctly"
-  private val COULD_NOT_PARSE_TO_INT_ERROR =
-    "Some of the provided arguments could not be parsed to an Int"
 
   private val defaultHelp =
-    """.___________  _____  ___     _______
+          """.___________  _____  ___     _______
 ("     _   ")(\"   \|"  \   |   __ "\
  )__/  \\__/ |.\\   \    |  (. |__) :)
     \\_ /    |: \.   \\  |  |:  ____/
@@ -29,7 +28,7 @@ Totally Not Pokémon Usage: ./tnp command [arguments]
       help            - Shows this help message"""
 
   private val newTrainerHelp =
-    """._____          _                   _   _      _
+          """._____          _                   _   _      _
 |_   _| __ __ _(_)_ __   ___ _ __  | | | | ___| |_ __
   | || '__/ _` | | '_ \ / _ \ '__| | |_| |/ _ \ | '_ \
   | || | | (_| | | | | |  __/ |    |  _  |  __/ | |_) |
@@ -39,7 +38,7 @@ Totally Not Pokémon Usage: ./tnp command [arguments]
 Usage: ./tnp new_trainer <TRAINERNAME> <BATTLE_ID>"""
 
   private val addMonsterHelp =
-    """.   _       _     _   __  __                 _              _   _      _
+          """.   _       _     _   __  __                 _              _   _      _
    / \   __| | __| | |  \/  | ___  _ __  ___| |_ ___ _ __  | | | | ___| |_ __
   / _ \ / _` |/ _` | | |\/| |/ _ \| '_ \/ __| __/ _ \ '__| | |_| |/ _ \ | '_ \
  / ___ \ (_| | (_| | | |  | | (_) | | | \__ \ ||  __/ |    |  _  |  __/ | |_) |
@@ -49,7 +48,7 @@ Usage: ./tnp new_trainer <TRAINERNAME> <BATTLE_ID>"""
 Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER> <BATTLE_ID>"""
 
   private val newBattleHelp =
-    """._   _                 ____        _   _   _        _   _      _
+          """._   _                 ____        _   _   _        _   _      _
 | \ | | _____      __ | __ )  __ _| |_| |_| | ___  | | | | ___| |_ __
 |  \| |/ _ \ \ /\ / / |  _ \ / _` | __| __| |/ _ \ | |_| |/ _ \ | '_ \
 | |\  |  __/\ V  V /  | |_) | (_| | |_| |_| |  __/ |  _  |  __/ | |_) |
@@ -59,7 +58,7 @@ Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1
 Usage: ./tnp new_battle"""
 
   private val viewBattleHelp =
-    """__     ___                 ____        _   _   _        _   _      _
+          """__     ___                 ____        _   _   _        _   _      _
 \ \   / (_) _____      __ | __ )  __ _| |_| |_| | ___  | | | | ___| |_ __
  \ \ / /| |/ _ \ \ /\ / / |  _ \ / _` | __| __| |/ _ \ | |_| |/ _ \ | '_ \
   \ V / | |  __/\ V  V /  | |_) | (_| | |_| |_| |  __/ |  _  |  __/ | |_) |
@@ -76,7 +75,7 @@ Examples:
    - `./tnp view_battle ALL`"""
 
   private val attackHelp =
-    """.   _   _   _             _      _   _      _
+          """.   _   _   _             _      _   _      _
    / \ | |_| |_ __ _  ___| | __ | | | | ___| |_ __
   / _ \| __| __/ _` |/ __| |/ / | |_| |/ _ \ | '_ \
  / ___ \ |_| || (_| | (__|   <  |  _  |  __/ | |_) |
@@ -86,17 +85,17 @@ Examples:
 Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
   private val commands: List<String> =
-    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
+          listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
 
   private val commandsHelpMap: Map<String, String> =
-    mapOf(
-      commands[0] to newTrainerHelp,
-      commands[1] to addMonsterHelp,
-      commands[2] to newBattleHelp,
-      commands[3] to viewBattleHelp,
-      commands[4] to attackHelp,
-      commands[5] to defaultHelp,
-    )
+          mapOf(
+                  commands[0] to newTrainerHelp,
+                  commands[1] to addMonsterHelp,
+                  commands[2] to newBattleHelp,
+                  commands[3] to viewBattleHelp,
+                  commands[4] to attackHelp,
+                  commands[5] to defaultHelp,
+          )
 
   private lateinit var cliAdapter: BattleCliAdapter
 
@@ -142,7 +141,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       Attack.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToAttackException(
-        "Error: Failed to convert '$input' to Attack. Reason: ${e.message}"
+              "Error: Failed to convert '$input' to Attack. Reason: ${e.message}"
       )
     }
   }
@@ -152,7 +151,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       PrimitiveType.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToPrimitiveTypeException(
-        "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
+              "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
       )
     }
   }
@@ -167,6 +166,8 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       cliAdapter = BattleCliAdapter(args[1])
       cliAdapter.createTrainer(args[0])
     } catch (e: IllegalArgumentException) {
+      println(e.message)
+    } catch (e: LoadBattleException) {
       println(e.message)
     }
   }
@@ -191,16 +192,21 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       cliAdapter = BattleCliAdapter(args[args.size - 1])
 
       cliAdapter.addMonster(
-        monsterName,
-        hp,
-        speed,
-        type,
-        attackList,
-        trainerName,
+              monsterName,
+              hp,
+              speed,
+              type,
+              attackList,
+              trainerName,
       )
     } catch (e: ParseToIntException) {
-      println(e)
-      return
+      println(e.message)
+    } catch (e: LoadBattleException) {
+      println(e.message)
+    } catch (e: ParseToPrimitiveTypeException) {
+      println(e.message)
+    } catch (e: ParseToAttackException) {
+      println(e.message)
     }
   }
 
@@ -227,6 +233,8 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       cliAdapter.viewStatus()
     } catch (e: IllegalArgumentException) {
       println(e.message)
+    } catch (e: LoadBattleException) {
+      println(e.message)
     }
   }
 
@@ -240,6 +248,8 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       cliAdapter = BattleCliAdapter(args[0])
       cliAdapter.performAttack(parseToAttack(args[1]))
     } catch (e: IllegalArgumentException) {
+      println(e.message)
+    } catch (e: LoadBattleException) {
       println(e.message)
     }
   }

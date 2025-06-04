@@ -1,14 +1,15 @@
 package hwr.oop.tnp.core
 
-import hwr.oop.tnp.persistency.FileSystemBasedJSONPersistence
+import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.SaveBattlePort
+import java.util.UUID
 import kotlinx.serialization.Serializable
-import java.util.*
+import kotlinx.serialization.Transient
 
 @Serializable
 class Battle(
-  val battleId: String = UUID.randomUUID().toString(),
-  private val saveAdapter: SaveBattlePort = FileSystemBasedJSONPersistence(),
+        val battleId: String = UUID.randomUUID().toString(),
+        @Transient private val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence(),
 ) : BattleUsage {
   var trainerOne: Trainer = Trainer.EMPTY
     private set
@@ -24,9 +25,14 @@ class Battle(
     private set
 
   companion object {
+    fun fromBattleId(battleId: String): Battle {
+      val loadAdapter = FileSystemBasedJsonPersistence()
+      return loadAdapter.loadBattle(battleId)
+    }
+
     private fun determineBeginningTrainer(
-      trainerOne: Trainer,
-      trainerTwo: Trainer,
+            trainerOne: Trainer,
+            trainerTwo: Trainer,
     ): Trainer {
       val m1 = trainerOne.nextMonster()
       val m2 = trainerTwo.nextMonster()
@@ -35,7 +41,7 @@ class Battle(
     }
   }
 
-  override fun getTrainerByName(name: String): Trainer {
+  private fun getTrainerByName(name: String): Trainer {
     val one = trainerOne
     val two = trainerTwo
 
@@ -44,6 +50,12 @@ class Battle(
       two.name.equals(name, ignoreCase = true) -> two
       else -> throw IllegalArgumentException("Trainer '$name' not found.")
     }
+  }
+
+  override fun addMonsterToTrainer(trainerName: String, monster: Monster) {
+    val trainer = getTrainerByName(trainerName)
+    trainer.addMonster(monster)
+    saveAdapter.saveBattle(this)
   }
 
   override fun addTrainerToBattle(trainer: Trainer) {
@@ -69,6 +81,7 @@ class Battle(
   private fun advanceAndSaveRound() {
     if (determineWinner() != Trainer.EMPTY) {
       endBattle()
+      saveAdapter.saveBattle(this)
       return
     }
     currentRound++
@@ -84,9 +97,7 @@ class Battle(
       throw IllegalStateException("Battle is already finished")
     }
     if (currentTrainer == Trainer.EMPTY) {
-      throw IllegalStateException(
-        "Trainer needs to have been set for this operation"
-      )
+      throw IllegalStateException("Trainer needs to have been set for this operation")
     }
     val monster = currentTrainer.nextBattleReadyMonster()
     val opponent = getOpponent()
@@ -111,15 +122,14 @@ class Battle(
     }
   }
 
-  class EmptyTrainerException :
-    Exception("Trainer needs to have been set for this operation")
+  class EmptyTrainerException : Exception("Trainer needs to have been set for this operation")
 
   override fun toString(): String {
     return if (trainerOne != Trainer.EMPTY &&
-      trainerTwo != Trainer.EMPTY &&
-      currentTrainer != Trainer.EMPTY
+                    trainerTwo != Trainer.EMPTY &&
+                    currentTrainer != Trainer.EMPTY
     )
-      """Battle ($battleId):
+            """Battle ($battleId):
 ${trainerOne.name} vs. ${trainerTwo.name}
 Round: $currentRound
 Next Attacker: ${currentTrainer.name}"""

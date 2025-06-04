@@ -8,7 +8,7 @@ import hwr.oop.tnp.core.BattleUsage
 import hwr.oop.tnp.core.Monster
 import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.core.Trainer
-import hwr.oop.tnp.persistency.FileSystemBasedJSONPersistence
+import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.LoadBattlePort
 import hwr.oop.tnp.persistency.SaveBattlePort
 
@@ -16,7 +16,7 @@ class BattleCliAdapter(private val battleId: String) {
   private var battle: BattleUsage
 
   init {
-    battle = Battle(battleId)
+    battle = Battle.fromBattleId(battleId)
   }
 
   fun createTrainer(trainerName: String) {
@@ -29,17 +29,16 @@ class BattleCliAdapter(private val battleId: String) {
   }
 
   fun addMonster(
-    monsterName: String,
-    hp: Int,
-    speed: Int,
-    primitiveType: PrimitiveType,
-    attacks: List<Attack>,
-    trainerName: String,
+          monsterName: String,
+          hp: Int,
+          speed: Int,
+          primitiveType: PrimitiveType,
+          attacks: List<Attack>,
+          trainerName: String,
   ) {
     val monster = Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
     try {
-      val trainer = battle.getTrainerByName(trainerName)
-      trainer.addMonster(monster)
+      battle.addMonsterToTrainer(trainerName, monster)
     } catch (e: Battle.EmptyTrainerException) {
       println(e.message)
     }
@@ -51,14 +50,14 @@ class BattleCliAdapter(private val battleId: String) {
 
   companion object {
     fun initiateBattle() {
-      val saveAdapter: SaveBattlePort = FileSystemBasedJSONPersistence()
+      val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence()
       val battle = Battle()
       println(battle.toString())
       saveAdapter.saveBattle(battle)
     }
 
     fun showAllBattles() {
-      val loadAdapter: LoadBattlePort = FileSystemBasedJSONPersistence()
+      val loadAdapter: LoadBattlePort = FileSystemBasedJsonPersistence()
       val battles = loadAdapter.loadAllBattles()
       if (battles.isEmpty()) {
         println("No battles created yet")
