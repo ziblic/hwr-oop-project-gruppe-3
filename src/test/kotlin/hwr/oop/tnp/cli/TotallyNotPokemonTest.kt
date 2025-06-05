@@ -10,6 +10,7 @@ import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
 import java.io.File
+import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 
@@ -208,9 +209,14 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
   fun `Create new trainer`() {
     val battle = Battle("1")
     val saveAdapter = FileSystemBasedJsonPersistence()
+    val loadAdapter = saveAdapter
     saveAdapter.saveBattle(battle)
     val output =
             captureStandardOut { TotallyNotPokemon(listOf("new_trainer", "Kevin", "1")) }.trim()
+    assertThat(Json.encodeToString(loadAdapter.loadBattle("1")))
+            .isEqualTo("{\"battleId\":\"1\",\"trainerOne\":{\"name\":\"Kevin\"}}")
+    cleanUp()
+    saveAdapter.saveBattle(battle)
     assertThat(output)
             .isEqualTo(captureStandardOut { BattleCliAdapter("1").createTrainer("Kevin") }.trim())
   }
@@ -269,6 +275,32 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
                       )
                     }
                     .trim()
+    val loadAdapter = FileSystemBasedJsonPersistence()
+    assertThat(Json.encodeToString(loadAdapter.loadBattle("1")))
+            .isEqualTo(
+                    "{\"battleId\":\"1\",\"trainerOne\":{\"name\":\"Trainer_Kevin\",\"monsters\":[{\"name\":\"Bob\",\"stats\":{\"maxHp\":100,\"hp\":100,\"speed\":20},\"primitiveType\":\"FIRE\",\"attacks\":[\"PUNCH\"]},{\"name\":\"Bob\",\"stats\":{\"maxHp\":100,\"hp\":100,\"speed\":20},\"primitiveType\":\"FIRE\",\"attacks\":[\"PUNCH\",\"FIRE_VOW\",\"SPLASH\",\"FOLIAGE_STORM\"]}]}}"
+            )
+    cleanUp()
+    val output_3 = captureStandardOut {
+      TotallyNotPokemon(
+              listOf(
+                      "add_monster",
+                      "Bob",
+                      "100",
+                      "20",
+                      "Fire",
+                      "PUNCH",
+                      "FIRE_Vow",
+                      "Splash",
+                      "Foliage_storm",
+                      "Trainer_Kevin",
+                      battleId
+              ),
+      )
+    }
+    assertThat(output_3).contains("Could not find battle with id:")
+    val battle_new = Battle(battleId)
+    battle_new.addTrainerToBattle(Trainer("Trainer_Kevin"))
     assertThat(output)
             .isEqualTo(
                     captureStandardOut {
@@ -346,15 +378,9 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
   }
 
   @Test
-  fun `Start new battle`() {
-    // FIX: the test
-    TotallyNotPokemon(listOf("new_battle"))
-  }
-
-  @Test
-  fun `Start new battle with not enough or to many arguments`() {
+  fun `Start new battle with not enough or too many arguments`() {
     val output1 =
-            captureStandardOut { TotallyNotPokemon(listOf("new_battle", "to many args")) }.trim()
+            captureStandardOut { TotallyNotPokemon(listOf("new_battle", "too many args")) }.trim()
     assertThat(output1).isEqualTo(newBattleHelp)
   }
 

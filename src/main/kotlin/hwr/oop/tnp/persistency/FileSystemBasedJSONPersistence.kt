@@ -34,7 +34,7 @@ class FileSystemBasedJsonPersistence(
     val battles = mutableListOf<Battle>()
 
     val files =
-            dataFolder.listFiles { file -> file.isFile && file.extension == "json" }
+            dataFolder.listFiles()
                     ?: throw LoadBattleException("Failed to list files in directory $dataFolder")
 
     for (file in files) {

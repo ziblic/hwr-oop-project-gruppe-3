@@ -75,8 +75,11 @@ class FileBasedJsonPersistenceTest : AnnotationSpec() {
     val adapter = FileSystemBasedJsonPersistence(tmpDir)
 
     // Save two battles
+    // FIX:
     adapter.saveBattle(Battle("1"))
     adapter.saveBattle(Battle("2"))
+    File(tmpDir, "3").createNewFile()
+    File(tmpDir, "folder/").createNewFile()
 
     // Load all battles
     val battles = adapter.loadAllBattles()

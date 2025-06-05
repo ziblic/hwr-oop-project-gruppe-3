@@ -103,7 +103,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     parseArguments()
   }
 
-  fun parseArguments() {
+  private fun parseArguments() {
     if (args.isEmpty()) {
       printHelp()
       return
@@ -136,7 +136,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
   }
 
-  fun parseToAttack(input: String): Attack {
+  private fun parseToAttack(input: String): Attack {
     return try {
       Attack.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
@@ -146,7 +146,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
   }
 
-  fun parseToPrimitiveType(input: String): PrimitiveType {
+  private fun parseToPrimitiveType(input: String): PrimitiveType {
     return try {
       PrimitiveType.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
@@ -165,8 +165,6 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       cliAdapter = BattleCliAdapter(args[1])
       cliAdapter.createTrainer(args[0])
-    } catch (e: IllegalArgumentException) {
-      println(e.message)
     } catch (e: LoadBattleException) {
       println(e.message)
     }
@@ -215,6 +213,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       println(newBattleHelp)
       return
     }
+    BattleCliAdapter.initiateBattle()
   }
 
   private fun parseForViewBattle(args: List<String>) {
@@ -231,8 +230,6 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       cliAdapter = BattleCliAdapter(args[0])
       cliAdapter.viewStatus()
-    } catch (e: IllegalArgumentException) {
-      println(e.message)
     } catch (e: LoadBattleException) {
       println(e.message)
     }
@@ -247,8 +244,6 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       cliAdapter = BattleCliAdapter(args[0])
       cliAdapter.performAttack(parseToAttack(args[1]))
-    } catch (e: IllegalArgumentException) {
-      println(e.message)
     } catch (e: LoadBattleException) {
       println(e.message)
     }
