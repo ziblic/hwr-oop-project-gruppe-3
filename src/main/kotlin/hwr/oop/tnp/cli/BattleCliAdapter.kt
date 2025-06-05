@@ -29,12 +29,12 @@ class BattleCliAdapter(private val battleId: String) {
   }
 
   fun addMonster(
-          monsterName: String,
-          hp: Int,
-          speed: Int,
-          primitiveType: PrimitiveType,
-          attacks: List<Attack>,
-          trainerName: String,
+    monsterName: String,
+    hp: Int,
+    speed: Int,
+    primitiveType: PrimitiveType,
+    attacks: List<Attack>,
+    trainerName: String,
   ) {
     val monster = Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
     try {

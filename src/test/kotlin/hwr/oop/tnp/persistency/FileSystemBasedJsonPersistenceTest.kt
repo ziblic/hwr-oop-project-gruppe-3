@@ -2,10 +2,10 @@ package hwr.oop.tnp.persistency
 
 import hwr.oop.tnp.core.Battle
 import io.kotest.core.spec.style.AnnotationSpec
-import java.io.File
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import java.io.File
 
 class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
   private val tmpDir = File(System.getProperty("user.dir"), "tmp")
@@ -64,10 +64,10 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     val adapter = FileSystemBasedJsonPersistence(fakeDataFolder)
 
     assertThatThrownBy {
-              val battles = adapter.loadAllBattles()
-              assertThat(battles).isEmpty()
-            }
-            .hasMessageContaining("Failed to list files in directory")
+      val battles = adapter.loadAllBattles()
+      assertThat(battles).isEmpty()
+    }
+      .hasMessageContaining("Failed to list files in directory")
   }
 
   @Test
@@ -90,7 +90,7 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     // Compare the encoded JSON outputs, order-independent
     val encodedBattles = battles.map { Json.encodeToString(it) }
     assertThat(encodedBattles)
-            .containsExactlyInAnyOrder("""{"battleId":"1"}""", """{"battleId":"2"}""")
+      .containsExactlyInAnyOrder("""{"battleId":"1"}""", """{"battleId":"2"}""")
 
     tmpDir.deleteRecursively()
   }

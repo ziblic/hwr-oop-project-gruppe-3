@@ -1,12 +1,12 @@
 package hwr.oop.tnp.persistency
 
 import hwr.oop.tnp.core.Battle
-import java.io.File
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import java.io.File
 
 class FileSystemBasedJsonPersistence(
-        private val dataFolder: File = File(System.getProperty("user.dir"), "data"),
+  private val dataFolder: File = File(System.getProperty("user.dir"), "data"),
 ) : SaveBattlePort, LoadBattlePort {
   init {
     if (!dataFolder.exists()) {
@@ -34,8 +34,8 @@ class FileSystemBasedJsonPersistence(
     val battles = mutableListOf<Battle>()
 
     val files =
-            dataFolder.listFiles()
-                    ?: throw LoadBattleException("Failed to list files in directory $dataFolder")
+      dataFolder.listFiles()
+        ?: throw LoadBattleException("Failed to list files in directory $dataFolder")
 
     for (file in files) {
       try {

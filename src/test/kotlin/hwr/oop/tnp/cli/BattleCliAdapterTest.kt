@@ -7,9 +7,9 @@ import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.system.captureStandardOut
-import java.io.File
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
+import java.io.File
 
 class BattleCliAdapterTest : AnnotationSpec() {
   @AfterEach
@@ -35,18 +35,18 @@ class BattleCliAdapterTest : AnnotationSpec() {
     val battle = Battle("1")
     saveAdapter.saveBattle(battle)
     val output =
-            captureStandardOut {
-                      BattleCliAdapter("1")
-                              .addMonster(
-                                      "Pika",
-                                      100,
-                                      100,
-                                      PrimitiveType.FIRE,
-                                      listOf(Attack.PUNCH),
-                                      "Bob"
-                              )
-                    }
-                    .trim()
+      captureStandardOut {
+        BattleCliAdapter("1")
+          .addMonster(
+            "Pika",
+            100,
+            100,
+            PrimitiveType.FIRE,
+            listOf(Attack.PUNCH),
+            "Bob"
+          )
+      }
+        .trim()
     assertThat(output).isEqualTo("Trainer 'Bob' not found.")
   }
 
@@ -71,7 +71,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
 
     // 2. Delete all battle JSON files
     val deletedFiles =
-            dataFolder.listFiles { f -> f.name.endsWith(".json") }?.toList() ?: emptyList()
+      dataFolder.listFiles { f -> f.name.endsWith(".json") }?.toList() ?: emptyList()
     deletedFiles.forEach { it.delete() }
 
     // 3. Run showAllBattles and capture output

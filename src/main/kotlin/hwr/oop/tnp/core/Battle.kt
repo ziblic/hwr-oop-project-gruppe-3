@@ -2,14 +2,14 @@ package hwr.oop.tnp.core
 
 import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.SaveBattlePort
-import java.util.UUID
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.UUID
 
 @Serializable
 class Battle(
-        val battleId: String = UUID.randomUUID().toString(),
-        @Transient private val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence(),
+  val battleId: String = UUID.randomUUID().toString(),
+  @Transient private val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence(),
 ) : BattleUsage {
   var trainerOne: Trainer = Trainer.EMPTY
     private set
@@ -31,8 +31,8 @@ class Battle(
     }
 
     private fun determineBeginningTrainer(
-            trainerOne: Trainer,
-            trainerTwo: Trainer,
+      trainerOne: Trainer,
+      trainerTwo: Trainer,
     ): Trainer {
       val m1 = trainerOne.nextMonster()
       val m2 = trainerTwo.nextMonster()
@@ -126,10 +126,10 @@ class Battle(
 
   override fun toString(): String {
     return if (trainerOne != Trainer.EMPTY &&
-                    trainerTwo != Trainer.EMPTY &&
-                    currentTrainer != Trainer.EMPTY
+      trainerTwo != Trainer.EMPTY &&
+      currentTrainer != Trainer.EMPTY
     )
-            """Battle ($battleId):
+      """Battle ($battleId):
 ${trainerOne.name} vs. ${trainerTwo.name}
 Round: $currentRound
 Next Attacker: ${currentTrainer.name}"""
