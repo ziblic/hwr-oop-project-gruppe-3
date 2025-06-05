@@ -7,7 +7,7 @@ import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 
-class FileBasedJsonPersistenceTest : AnnotationSpec() {
+class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
   private val tmpDir = File(System.getProperty("user.dir"), "tmp")
 
   @BeforeEach
