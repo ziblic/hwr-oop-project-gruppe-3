@@ -1,166 +1,115 @@
 package hwr.oop.tnp.cli
 
+import hwr.oop.tnp.core.Attack
+import hwr.oop.tnp.core.Battle
+import hwr.oop.tnp.core.BattleStatus
+import hwr.oop.tnp.core.PrimitiveType
+import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.extensions.system.captureStandardOut
+import java.io.File
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 
 class BattleCliAdapterTest : AnnotationSpec() {
-  //
-  // private lateinit var cliAdapter: BattleCliAdapter
-  // private lateinit var battle: Battle
-  //
-  // @BeforeEach
-  // fun setUp() {
-  //   cliAdapter = BattleCliAdapter("1")
-  //   battle = Battle()
-  // }
-  //
-  // @AfterEach
-  // fun cleanUp() {
-  //   val file = File(System.getProperty("user.dir", "data/1"))
-  //   file.delete()
-  // }
-  //
-  // @Test
-  // fun `createTrainer should add trainer to battle`() {
-  //   cliAdapter.createTrainer("Ash")
-  //
-  //   val trainer = battle.getTrainerByName("Ash")
-  //   assertThat(trainer.name).isEqualTo("Ash")
-  // }
-  //
-  // @Test
-  // fun `createTrainer should print exception when battle already full`() {
-  //   battle.addTrainerToBattle(Trainer("Ash"))
-  //   battle.addTrainerToBattle(Trainer("Misty"))
-  //
-  //   val output = captureStandardOut { cliAdapter.createTrainer("Brock") }
-  //
-  //   assertThat(output).contains("Both trainers are already set.")
-  // }
-  //
-  // @Test
-  // fun `addMonster should add monster to trainer`() {
-  //   val trainerName = "Ash"
-  //   cliAdapter.createTrainer(trainerName)
-  //
-  //   cliAdapter.addMonster(
-  //           monsterName = "Pikachu",
-  //           hp = 100,
-  //           speed = 80,
-  //           primitiveType = PrimitiveType.FIRE,
-  //           attacks = listOf(Attack.PUNCH),
-  //           trainerName = trainerName,
-  //   )
-  //
-  //   val trainer = battle.getTrainerByName(trainerName)
-  //   assertThat(trainer.monsters).hasSize(1)
-  //   assertThat(trainer.monsters[0].name).isEqualTo("Pikachu")
-  // }
-  //
-  // @Test
-  // fun `addMonster should print exception when trainer not found`() {
-  //   val output = captureStandardOut {
-  //     cliAdapter.addMonster(
-  //             monsterName = "Charmander",
-  //             hp = 80,
-  //             speed = 60,
-  //             primitiveType = PrimitiveType.FIRE,
-  //             attacks = listOf(Attack.PUNCH),
-  //             trainerName = "UnknownTrainer",
-  //     )
-  //   }
-  //
-  //   assertThat(output).contains("Trainer 'UnknownTrainer' not found.")
-  // }
-  //
-  // @Test
-  // fun `viewStatus should print current battle status`() {
-  //   val output = captureStandardOut { cliAdapter.viewStatus() }
-  //   assertThat(output).contains("Battle")
-  // }
-  //
-  // @Test
-  // fun `showAllBattles should print each battle`() {
-  //   val battle1 = Battle()
-  //   val battle2 = Battle()
-  //
-  //   val output = captureStandardOut { BattleCliAdapter.showAllBattles() }
-  //
-  //   assertThat(output).contains("Battle").contains(battle1.battleId).contains(battle2.battleId)
-  // }
-  //
-  // @Test
-  // fun `showAllBattles should notify when list is empty`() {
-  //   val output = captureStandardOut { BattleCliAdapter.showAllBattles() }
-  //   assertThat(output).contains("No battles created yet")
-  // }
-  //
-  // @Test
-  // fun `performAttack should start battle if status is PREGAME`() {
-  //   val ash =
-  //           Trainer("Ash").apply {
-  //             addMonster(
-  //                     Monster(
-  //                             name = "Bulbasaur",
-  //                             stats = BattleStats(100, 50),
-  //                             primitiveType = PrimitiveType.PLANT,
-  //                             attacks = listOf(Attack.PUNCH)
-  //                     )
-  //             )
-  //           }
-  //
-  //   val gary =
-  //           Trainer("Gary").apply {
-  //             addMonster(
-  //                     Monster(
-  //                             name = "Charmander",
-  //                             stats = BattleStats(90, 60),
-  //                             primitiveType = PrimitiveType.FIRE,
-  //                             attacks = listOf(Attack.PUNCH)
-  //                     )
-  //             )
-  //           }
-  //
-  //   battle.addTrainerToBattle(ash)
-  //   battle.addTrainerToBattle(gary)
-  //
-  //   cliAdapter.performAttack(Attack.PUNCH)
-  //
-  //   assertThat(battle.status).isEqualTo(BattleStatus.STARTED)
-  // }
-  //
-  // @Test
-  // fun `check performAttack exception messages`() {
-  //   val output = captureStandardOut { cliAdapter.performAttack(Attack.PUNCH) }.trim()
-  //   assertThat(output).isEqualTo("Trainer needs to have been set for this operation")
-  //   val ash =
-  //           Trainer("Ash").apply {
-  //             addMonster(
-  //                     Monster(
-  //                             name = "Bulbasaur",
-  //                             stats = BattleStats(10, 50),
-  //                             primitiveType = PrimitiveType.PLANT,
-  //                             attacks = listOf(Attack.PUNCH)
-  //                     )
-  //             )
-  //           }
-  //
-  //   val gary =
-  //           Trainer("Gary").apply {
-  //             addMonster(
-  //                     Monster(
-  //                             name = "Charmander",
-  //                             stats = BattleStats(20, 60),
-  //                             primitiveType = PrimitiveType.FIRE,
-  //                             attacks = listOf(Attack.PUNCH)
-  //                     )
-  //             )
-  //           }
-  //
-  //   battle.addTrainerToBattle(ash)
-  //   battle.addTrainerToBattle(gary)
-  //   battle.startBattle()
-  //   cliAdapter.performAttack(Attack.PUNCH)
-  //   val output2 = captureStandardOut { cliAdapter.performAttack(Attack.PUNCH) }.trim()
-  //   assertThat(output2).isEqualTo("Battle is already finished")
-  // }
+  @AfterEach
+  fun cleanUp() {
+    File(System.getProperty("user.dir"), "data/1.json").delete()
+  }
+
+  @Test
+  fun `Test adding three trainer prints exception message`() {
+    val saveAdapter = FileSystemBasedJsonPersistence()
+    val battle = Battle("1")
+    saveAdapter.saveBattle(battle)
+    val battleAdapter = BattleCliAdapter("1")
+    battleAdapter.createTrainer("Kevin")
+    battleAdapter.createTrainer("Bob")
+    val output = captureStandardOut { battleAdapter.createTrainer("Ash") }.trim()
+    assertThat(output).isEqualTo("Both trainers are already set.")
+  }
+
+  @Test
+  fun `Trying to add a monster to a not existing trainer prints exception message`() {
+    val saveAdapter = FileSystemBasedJsonPersistence()
+    val battle = Battle("1")
+    saveAdapter.saveBattle(battle)
+    val output =
+            captureStandardOut {
+                      BattleCliAdapter("1")
+                              .addMonster(
+                                      "Pika",
+                                      100,
+                                      100,
+                                      PrimitiveType.FIRE,
+                                      listOf(Attack.PUNCH),
+                                      "Bob"
+                              )
+                    }
+                    .trim()
+    assertThat(output).isEqualTo("Trainer 'Bob' not found.")
+  }
+
+  @Test
+  fun `View status prints the right output`() {
+    val saveAdapter = FileSystemBasedJsonPersistence()
+    val battle = Battle("1")
+    saveAdapter.saveBattle(battle)
+    val output = captureStandardOut { BattleCliAdapter("1").viewStatus() }.trim()
+    assertThat(output).isEqualTo("Battle with ID: 1 is in a pregame state")
+  }
+
+  @Test
+  fun `For showAllBattles right output is printed`() {
+    val dataFolder = File(System.getProperty("user.dir"), "data/")
+    require(dataFolder.exists() && dataFolder.isDirectory) { "Data folder must exist." }
+
+    // 1. Load all battles into a list
+    val loadAdapter = FileSystemBasedJsonPersistence()
+    val saveAdapter = loadAdapter
+    val battles = loadAdapter.loadAllBattles()
+
+    // 2. Delete all battle JSON files
+    val deletedFiles =
+            dataFolder.listFiles { f -> f.name.endsWith(".json") }?.toList() ?: emptyList()
+    deletedFiles.forEach { it.delete() }
+
+    // 3. Run showAllBattles and capture output
+    val output = captureStandardOut { BattleCliAdapter.showAllBattles() }.trim()
+
+    // 4. Assert output is correct (no battles)
+    assertThat(output).isEqualTo("No battles created yet")
+
+    // 5. Create a battle and check the output
+    saveAdapter.saveBattle(Battle("1"))
+    val output_2 = captureStandardOut { BattleCliAdapter.showAllBattles() }.trim()
+    assertThat(output_2).isEqualTo("Battle with ID: 1 is in a pregame state")
+
+    // 6. Recreate all battles (re-save them)
+    battles.forEach { saveAdapter.saveBattle(it) }
+  }
+
+  @Test
+  fun `Test performAttack fully`() {
+    val saveAdapter = FileSystemBasedJsonPersistence()
+    val loadAdapter = saveAdapter
+    saveAdapter.saveBattle(Battle("1"))
+    val battleAdapter = BattleCliAdapter("1")
+    val output = captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
+    assertThat(output).isEqualTo("Trainer need to have been set for this operation")
+    battleAdapter.createTrainer("Bob")
+    battleAdapter.createTrainer("Kevin")
+    val output_1 = captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
+    assertThat(output_1).isEqualTo("No monsters available")
+    battleAdapter.addMonster("Pika", 10, 200, PrimitiveType.NORMAL, listOf(Attack.PUNCH), "Bob")
+    battleAdapter.addMonster("Glurak", 100, 100, PrimitiveType.FIRE, listOf(Attack.PUNCH), "Kevin")
+    var battle = loadAdapter.loadBattle("1")
+    assertThat(battle.status).isEqualTo(BattleStatus.PREGAME)
+    battleAdapter.performAttack(Attack.PUNCH)
+    battle = loadAdapter.loadBattle("1")
+    assertThat(battle.status).isEqualTo(BattleStatus.STARTED)
+    battleAdapter.performAttack(Attack.PUNCH)
+    val output_2 = captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
+    assertThat(output_2).isEqualTo("Battle is already finished")
+  }
 }

@@ -73,10 +73,14 @@ class BattleCliAdapter(private val battleId: String) {
       if (battle.status == BattleStatus.PREGAME) {
         battle.startBattle()
       }
-    } catch (e: IllegalArgumentException) {
+    } catch (e: IllegalStateException) {
+      println(e.message)
+      return
+    } catch (e: Battle.EmptyTrainerException) {
       println(e.message)
       return
     }
+
     try {
       battle.takeTurn(selectedAttack)
     } catch (e: IllegalStateException) {

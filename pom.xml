@@ -153,9 +153,9 @@
         <artifactId>pitest-maven</artifactId>
         <version>${pitest.version}</version>
         <configuration>
-<avoidCallsTo>
-<avoidCallsTo>kotlin.jvm.internal</avoidCallsTo>
-</avoidCallsTo>
+          <avoidCallsTo>
+            <avoidCallsTo>kotlin.jvm.internal</avoidCallsTo>
+          </avoidCallsTo>
           <excludedMethods>
             <param>deserialize</param>
           </excludedMethods>

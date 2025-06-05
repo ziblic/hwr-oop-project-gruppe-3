@@ -48,7 +48,7 @@ class Battle(
     return when {
       one.name.equals(name, ignoreCase = true) -> one
       two.name.equals(name, ignoreCase = true) -> two
-      else -> throw IllegalArgumentException("Trainer '$name' not found.")
+      else -> throw EmptyTrainerException("Trainer '$name' not found.")
     }
   }
 
@@ -118,11 +118,11 @@ class Battle(
 
   private fun requireNoTrainerIsEmpty() {
     if (trainerOne == Trainer.EMPTY || trainerTwo == Trainer.EMPTY) {
-      throw EmptyTrainerException()
+      throw EmptyTrainerException("Trainer need to have been set for this operation")
     }
   }
 
-  class EmptyTrainerException : Exception("Trainer needs to have been set for this operation")
+  class EmptyTrainerException(message: String) : Exception(message)
 
   override fun toString(): String {
     return if (trainerOne != Trainer.EMPTY &&

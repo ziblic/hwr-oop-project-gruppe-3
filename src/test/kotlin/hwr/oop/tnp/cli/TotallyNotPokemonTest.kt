@@ -151,6 +151,20 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
   }
 
   @Test
+  fun `Initiating new battle creates a new file and redirects to the right function`() {
+    val dataFolder = File(System.getProperty("user.dir"), "data/")
+    val filesBefore = dataFolder.listFiles()
+    val output = captureStandardOut { TotallyNotPokemon(listOf("new_battle")) }
+    val filesAfter = dataFolder.listFiles()?.toSet() ?: emptySet()
+    val newFiles = filesAfter - filesBefore
+
+    assertThat(newFiles.size).isEqualTo(1)
+    newFiles.first().delete()
+
+    assertThat(output).contains("Battle with ID:", "is in a pregame state")
+  }
+
+  @Test
   fun `Run invalid command`() {
     val output = captureStandardOut { TotallyNotPokemon(listOf("some_unknown_command")) }.trim()
     assertThat(output)
