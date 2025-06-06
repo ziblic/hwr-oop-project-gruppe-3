@@ -1,123 +1,138 @@
 package hwr.oop.tnp.core
 
+import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
+import hwr.oop.tnp.persistency.SaveBattlePort
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.util.UUID
-
-enum class BattleStatus {
-    PREGAME,
-    STARTED,
-    FINISHED,
-}
 
 @Serializable
 class Battle(
-    val battleId: String = UUID.randomUUID().toString(),
-) {
-    var trainerOne: Trainer = Trainer.EMPTY
-        private set
-    var trainerTwo: Trainer = Trainer.EMPTY
-        private set
-    var currentTrainer: Trainer = Trainer.EMPTY
-        private set
+  val battleId: String = UUID.randomUUID().toString(),
+  @Transient private val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence(),
+) : BattleUsage {
+  var trainerOne: Trainer = Trainer.EMPTY
+    private set
+  var trainerTwo: Trainer = Trainer.EMPTY
+    private set
+  var currentTrainer: Trainer = Trainer.EMPTY
+    private set
 
-    var status: BattleStatus = BattleStatus.PREGAME
-        private set
+  override var status: BattleStatus = BattleStatus.PREGAME
+    private set
 
-    var currentRound: Int = 1
-        private set
+  var currentRound: Int = 1
+    private set
 
-    companion object {
-        private fun determineBeginningTrainer(
-            trainerOne: Trainer,
-            trainerTwo: Trainer
-        ): Trainer {
-            val m1 = trainerOne.nextMonster()
-            val m2 = trainerTwo.nextMonster()
-
-            return if (m1.isFasterThan(m2)) trainerOne else trainerTwo
-        }
+  companion object {
+    fun fromBattleId(battleId: String): Battle {
+      val loadAdapter = FileSystemBasedJsonPersistence()
+      return loadAdapter.loadBattle(battleId)
     }
 
-    fun getTrainerByName(name: String): Trainer {
-        val one = trainerOne
-        val two = trainerTwo
+    private fun determineBeginningTrainer(
+      trainerOne: Trainer,
+      trainerTwo: Trainer,
+    ): Trainer {
+      val m1 = trainerOne.nextMonster()
+      val m2 = trainerTwo.nextMonster()
 
-        return when {
-            one.name.equals(name, ignoreCase = true) -> one
-            two.name.equals(name, ignoreCase = true) -> two
-            else -> throw IllegalArgumentException("Trainer '$name' not found.")
-        }
+      return if (m1.isFasterThan(m2)) trainerOne else trainerTwo
     }
+  }
 
-    fun addTrainerToBattle(trainer: Trainer) {
-        when {
-            trainerOne == Trainer.EMPTY -> trainerOne = trainer
-            trainerTwo == Trainer.EMPTY -> trainerTwo = trainer
-            else -> throw IllegalStateException("Both trainers are already set.")
-        }
+  private fun getTrainerByName(name: String): Trainer {
+    val one = trainerOne
+    val two = trainerTwo
+
+    return when {
+      one.name.equals(name, ignoreCase = true) -> one
+      two.name.equals(name, ignoreCase = true) -> two
+      else -> throw EmptyTrainerException("Trainer '$name' not found.")
     }
+  }
 
-    fun startBattle() {
-        require(trainerOne != Trainer.EMPTY && trainerTwo != Trainer.EMPTY) {
-            "Trainer need to have been set for this operation"
-        }
-        currentTrainer = determineBeginningTrainer(trainerOne, trainerTwo)
-        status = BattleStatus.STARTED
+  override fun addMonsterToTrainer(trainerName: String, monster: Monster) {
+    val trainer = getTrainerByName(trainerName)
+    trainer.addMonster(monster)
+    saveAdapter.saveBattle(this)
+  }
+
+  override fun addTrainerToBattle(trainer: Trainer) {
+    when {
+      trainerOne == Trainer.EMPTY -> trainerOne = trainer
+      trainerTwo == Trainer.EMPTY -> trainerTwo = trainer
+      else -> throw IllegalStateException("Both trainers are already set.")
     }
+    saveAdapter.saveBattle(this)
+  }
 
-    private fun endBattle() {
-        status = BattleStatus.FINISHED
+  override fun startBattle() {
+    requireNoTrainerIsEmpty()
+    currentTrainer = determineBeginningTrainer(trainerOne, trainerTwo)
+    status = BattleStatus.STARTED
+    saveAdapter.saveBattle(this)
+  }
+
+  private fun endBattle() {
+    status = BattleStatus.FINISHED
+  }
+
+  private fun advanceAndSaveRound() {
+    if (determineWinner() != Trainer.EMPTY) {
+      endBattle()
+      saveAdapter.saveBattle(this)
+      return
     }
+    currentRound++
+    saveAdapter.saveBattle(this)
+  }
 
-    private fun advanceRound() {
-        if (determineWinner() != Trainer.EMPTY) {
-            endBattle()
-            return
-        }
-        currentRound++
+  private fun getOpponent(): Trainer {
+    return if (currentTrainer == trainerOne) trainerTwo else trainerOne
+  }
+
+  override fun takeTurn(attack: Attack): Monster {
+    if (status == BattleStatus.FINISHED) {
+      throw IllegalStateException("Battle is already finished")
     }
-
-    private fun getOpponent(): Trainer {
-        return if (currentTrainer == trainerOne) trainerTwo else trainerOne
+    if (currentTrainer == Trainer.EMPTY) {
+      throw IllegalStateException("Trainer needs to have been set for this operation")
     }
+    val monster = currentTrainer.nextBattleReadyMonster()
+    val opponent = getOpponent()
+    val opponentMonster = opponent.nextBattleReadyMonster()
+    monster.attack(attack, opponentMonster)
+    currentTrainer = opponent
 
-    fun takeTurn(attack: Attack): Monster {
-        if (status == BattleStatus.FINISHED) {
-            throw IllegalStateException("Battle is already finished")
-        }
-        if (currentTrainer == Trainer.EMPTY) {
-            throw IllegalStateException(
-                "Trainer need to have been set for this operation"
-            )
-        }
-        val monster = currentTrainer.nextBattleReadyMonster()
-        val opponent = getOpponent()
-        val opponentMonster = opponent.nextBattleReadyMonster()
-        monster.attack(attack, opponentMonster)
-        currentTrainer = opponent
+    advanceAndSaveRound()
+    return opponentMonster
+  }
 
-        advanceRound()
-        return opponentMonster
+  override fun determineWinner(): Trainer {
+    requireNoTrainerIsEmpty()
+    if (trainerOne.isDefeated()) return trainerTwo
+    if (trainerTwo.isDefeated()) return trainerOne
+    return Trainer.EMPTY
+  }
+
+  private fun requireNoTrainerIsEmpty() {
+    if (trainerOne == Trainer.EMPTY || trainerTwo == Trainer.EMPTY) {
+      throw EmptyTrainerException("Trainer need to have been set for this operation")
     }
+  }
 
-    fun determineWinner(): Trainer {
-        require(trainerOne != Trainer.EMPTY && trainerTwo != Trainer.EMPTY) {
-            "Trainer need to have been set for this operation"
-        }
-        if (trainerOne.isDefeated()) return trainerTwo
-        if (trainerTwo.isDefeated()) return trainerOne
-        return Trainer.EMPTY
-    }
+  class EmptyTrainerException(message: String) : Exception(message)
 
-    override fun toString(): String {
-        return if (trainerOne != Trainer.EMPTY &&
-            trainerTwo != Trainer.EMPTY &&
-            currentTrainer != Trainer.EMPTY
-        )
-            """Battle ($battleId):
+  override fun toString(): String {
+    return if (trainerOne != Trainer.EMPTY &&
+      trainerTwo != Trainer.EMPTY &&
+      currentTrainer != Trainer.EMPTY
+    )
+      """Battle ($battleId):
 ${trainerOne.name} vs. ${trainerTwo.name}
 Round: $currentRound
 Next Attacker: ${currentTrainer.name}"""
-        else "Battle with ID: $battleId is in a pregame state"
-    }
+    else "Battle with ID: $battleId is in a pregame state"
+  }
 }
