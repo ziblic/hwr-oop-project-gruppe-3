@@ -38,10 +38,10 @@ enum class Attack(
   fun calculateDamageAgainst(monster: Monster): Int {
     val multiplier = primitiveType.calculateDamangeMultiplier(monster)
     return (
-      damage *
-        multiplier *
-        calculateMultiplierHitQuote()
-      ).toInt()
+        damage *
+            multiplier *
+            calculateMultiplierHitQuote()
+        ).toInt()
   }
 
   fun calculateMultiplierHitQuote(

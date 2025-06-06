@@ -1,13 +1,6 @@
 package hwr.oop.tnp.cli
 
-import hwr.oop.tnp.core.Attack
-import hwr.oop.tnp.core.Battle
-import hwr.oop.tnp.core.BattleStats
-import hwr.oop.tnp.core.BattleStatus
-import hwr.oop.tnp.core.BattleUsage
-import hwr.oop.tnp.core.Monster
-import hwr.oop.tnp.core.PrimitiveType
-import hwr.oop.tnp.core.Trainer
+import hwr.oop.tnp.core.*
 import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.LoadBattlePort
 import hwr.oop.tnp.persistency.SaveBattlePort
@@ -36,7 +29,8 @@ class BattleCliAdapter(private val battleId: String) {
     attacks: List<Attack>,
     trainerName: String,
   ) {
-    val monster = Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
+    val monster =
+      Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
     try {
       battle.addMonsterToTrainer(trainerName, monster)
     } catch (e: Battle.EmptyTrainerException) {

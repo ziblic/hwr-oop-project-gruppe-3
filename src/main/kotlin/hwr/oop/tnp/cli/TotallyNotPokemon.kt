@@ -7,7 +7,8 @@ import hwr.oop.tnp.persistency.LoadBattleException
 class TotallyNotPokemon(
   private val args: List<String>,
 ) {
-  private val COULD_NOT_PARSE_ERROR = "Some of the provided arguments could not be parsed correctly"
+  private val COULD_NOT_PARSE_ERROR =
+    "Some of the provided arguments could not be parsed correctly"
 
   private val defaultHelp =
     """.___________  _____  ___     _______
@@ -85,7 +86,14 @@ Examples:
 Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
   private val commands: List<String> =
-    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
+    listOf(
+      "new_trainer",
+      "add_monster",
+      "new_battle",
+      "view_battle",
+      "on",
+      "help"
+    )
 
   private val commandsHelpMap: Map<String, String> =
     mapOf(
@@ -124,6 +132,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
           printHelp()
         }
       }
+
       else -> println("'$command' is not a valid command. Use 'help' for usage.")
     }
   }

@@ -13,27 +13,30 @@ data class Trainer(
     val EMPTY = Trainer("Unknown")
   }
 
-    init {
+  init {
 
-        if( monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER){
-            throw TrainerHasTooManyMonstersException( "Too many monsters: $monsters")
-        }
+    if (monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+      throw TrainerHasTooManyMonstersException("Too many monsters: $monsters")
     }
-    fun addMonster(monster: Monster) {
+  }
 
-        if( monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER){
-            throw TrainerHasTooManyMonstersException(  "Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER")
-        }
-        monsters.add(monster)
+  fun addMonster(monster: Monster) {
+
+    if (monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+      throw TrainerHasTooManyMonstersException("Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER")
     }
-    class TrainerHasTooManyMonstersException(message: String) : Exception(message)
+    monsters.add(monster)
+  }
 
-    fun nextMonster(): Monster =
-        monsters.firstOrNull() ?: throw IllegalStateException("No monsters available")
+  class TrainerHasTooManyMonstersException(message: String) : Exception(message)
 
-    fun nextBattleReadyMonster(): Monster =
-        monsters.firstOrNull { !it.isKO() }
-            ?: throw IllegalStateException("No monster is alive anymore")
+  fun nextMonster(): Monster =
+    monsters.firstOrNull()
+      ?: throw IllegalStateException("No monsters available")
 
-    fun isDefeated(): Boolean = monsters.all { it.isKO() }
+  fun nextBattleReadyMonster(): Monster =
+    monsters.firstOrNull { !it.isKO() }
+      ?: throw IllegalStateException("No monster is alive anymore")
+
+  fun isDefeated(): Boolean = monsters.all { it.isKO() }
 }
