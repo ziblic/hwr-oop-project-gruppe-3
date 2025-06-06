@@ -42,7 +42,7 @@ enum class Attack(
       damage *
         multiplier *
         calculateMultiplierHitQuote()
-    ).toInt()
+      ).toInt()
   }
 
   fun calculateMultiplierHitQuote(random: Double = Math.random()): Double =
