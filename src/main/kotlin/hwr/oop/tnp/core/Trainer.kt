@@ -3,10 +3,15 @@ package hwr.oop.tnp.core
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Trainer(val name: String, val monsters: MutableList<Monster> = mutableListOf()) {
-    companion object {
-        val EMPTY = Trainer("Unknown")
-    }
+data class Trainer(
+  val name: String,
+  val monsters: MutableList<Monster> = mutableListOf(),
+) {
+  private val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
+
+  companion object {
+    val EMPTY = Trainer("Unknown")
+  }
 
     init {
 
