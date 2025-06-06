@@ -11,13 +11,15 @@ class Monster(
     val attacks: List<Attack>,
 ) {
     fun attack(attackUsed: Attack, otherMonster: Monster) {
-        require(attacks.contains(attackUsed)) {
-            "The used attack is not part of the attacks of the monster"
+        if(!attacks.contains(attackUsed)){
+            throw MonsterDoesNotHaveAttackException("The used attack is not part of the attacks of the monster")
         }
 
         val damageAmount = attackUsed.calculateDamageAgainst(otherMonster)
         otherMonster.takeDamage(damageAmount)
+
     }
+    class MonsterDoesNotHaveAttackException(message: String) : Exception(message)
 
     fun isKO(): Boolean {
         return stats.hp == 0

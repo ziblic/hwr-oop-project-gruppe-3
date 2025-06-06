@@ -9,17 +9,19 @@ data class Trainer(val name: String, val monsters: MutableList<Monster> = mutabl
     }
 
     init {
-        require(monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
-            "Too many monsters: $monsters"
+
+        if( monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER){
+            throw TrainerHasTooManyMonstersException( "Too many monsters: $monsters")
         }
     }
-
     fun addMonster(monster: Monster) {
-        require(monsters.size < MAX_ALLOWED_MONSTERS_PER_TRAINER) {
-            "Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER"
+
+        if( monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER){
+            throw TrainerHasTooManyMonstersException(  "Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER")
         }
         monsters.add(monster)
     }
+    class TrainerHasTooManyMonstersException(message: String) : Exception(message)
 
     fun nextMonster(): Monster =
         monsters.firstOrNull() ?: throw IllegalStateException("No monsters available")
