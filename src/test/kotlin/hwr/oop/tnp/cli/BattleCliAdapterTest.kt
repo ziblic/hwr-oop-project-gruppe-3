@@ -62,7 +62,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
   @Test
   fun `For showAllBattles right output is printed`() {
     val dataFolder = File(System.getProperty("user.dir"), "data/")
-    require(dataFolder.exists() && dataFolder.isDirectory) { "Data folder must exist." }
+    dataFolder.mkdir()
 
     // 1. Load all battles into a list
     val loadAdapter = FileSystemBasedJsonPersistence()
