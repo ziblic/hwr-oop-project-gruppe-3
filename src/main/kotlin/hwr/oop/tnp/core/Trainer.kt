@@ -22,7 +22,7 @@ data class Trainer(
 
   fun addMonster(monster: Monster) {
 
-    if (monsters.size <= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+    if (monsters.size >= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
       throw TrainerHasTooManyMonstersException("Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER")
     }
     monsters.add(monster)
