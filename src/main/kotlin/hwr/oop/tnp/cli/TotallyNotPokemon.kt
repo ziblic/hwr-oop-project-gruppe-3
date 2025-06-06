@@ -19,7 +19,7 @@ class TotallyNotPokemon(
     message: String,
   ) : Exception(message)
 
-  private val COULD_NOT_PARSE_ERROR =
+  private val couldNotParseErrorMessage =
     "Some of the provided arguments could not be parsed correctly"
 
   private val defaultHelp =

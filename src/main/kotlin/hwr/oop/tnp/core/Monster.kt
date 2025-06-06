@@ -27,6 +27,5 @@ class Monster(
     stats.takeDamage(amountOfDamage)
   }
 
-  fun isFasterThan(otherMonster: Monster): Boolean =
-    stats.speed > otherMonster.stats.speed
+  fun isFasterThan(otherMonster: Monster): Boolean = stats.speed > otherMonster.stats.speed
 }
