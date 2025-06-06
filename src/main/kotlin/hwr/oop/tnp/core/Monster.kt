@@ -22,11 +22,11 @@ class Monster(
     class MonsterDoesNotHaveAttackException(message: String) : Exception(message)
 
     fun isKO(): Boolean {
-        return stats.hp == 0
+        return stats.isKO()
     }
 
     private fun takeDamage(amountOfDamage: Int) {
-        stats.hp = max(stats.hp - amountOfDamage, 0)
+        stats.takeDamage(amountOfDamage)
     }
 
     fun isFasterThan(otherMonster: Monster): Boolean {
