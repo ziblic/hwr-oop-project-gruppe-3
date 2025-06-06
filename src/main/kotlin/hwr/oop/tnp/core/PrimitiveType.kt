@@ -5,16 +5,16 @@ enum class PrimitiveType {
   WATER,
   FIRE,
   PLANT,
-  SPIRIT;
+  SPIRIT,
+  ;
 
-  fun calculateDamangeMultiplier(monster: Monster): Double {
-    return when (monster.primitiveType) {
+  fun calculateDamangeMultiplier(monster: Monster): Double =
+    when (monster.primitiveType) {
       effectiveAgainst -> 2.0
       lessEffectiveAgainst -> 0.5
       noEffectAgainst -> 0.0
       else -> 1.0
     }
-  }
 
   val effectiveAgainst: PrimitiveType?
     get() =

@@ -12,7 +12,9 @@ import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.LoadBattlePort
 import hwr.oop.tnp.persistency.SaveBattlePort
 
-class BattleCliAdapter(private val battleId: String) {
+class BattleCliAdapter(
+  private val battleId: String,
+) {
   private var battle: BattleUsage
 
   init {
@@ -36,7 +38,8 @@ class BattleCliAdapter(private val battleId: String) {
     attacks: List<Attack>,
     trainerName: String,
   ) {
-    val monster = Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
+    val monster =
+      Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
     try {
       battle.addMonsterToTrainer(trainerName, monster)
     } catch (e: Battle.EmptyTrainerException) {

@@ -33,7 +33,8 @@ enum class Attack(
   SPOOKY_BALL(PrimitiveType.SPIRIT, 20, 0.1),
   SHADOW_CLAW(PrimitiveType.SPIRIT, 30, 0.8),
   SPIRIT_WAVE(PrimitiveType.SPIRIT, 25, 0.9),
-  NIGHT_SCREAM(PrimitiveType.SPIRIT, 40, 0.4);
+  NIGHT_SCREAM(PrimitiveType.SPIRIT, 40, 0.4),
+  ;
 
   fun calculateDamageAgainst(monster: Monster): Int {
     val multiplier = primitiveType.calculateDamangeMultiplier(monster)
@@ -44,9 +45,12 @@ enum class Attack(
       ).toInt()
   }
 
-  fun calculateMultiplierHitQuote(
-    random: Double = Math.random(),
-  ): Double {
-    return if (random < critChance) 1.5 else 1.0
-  }
+  fun calculateMultiplierHitQuote(random: Double = Math.random()): Double =
+    if (random <
+      critChance
+    ) {
+      1.5
+    } else {
+      1.0
+    }
 }

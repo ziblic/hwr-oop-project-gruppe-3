@@ -12,13 +12,17 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       PrimitiveType.NORMAL,
       attack.primitiveType,
-      "Type getter should return NORMAL for PUNCH"
+      "Type getter should return NORMAL for PUNCH",
     )
-    assertEquals(15, attack.damage, "Damage getter should return 15 for PUNCH")
+    assertEquals(
+      15,
+      attack.damage,
+      "Damage getter should return 15 for PUNCH",
+    )
     assertEquals(
       0.1,
       attack.critChance,
-      "HitQuote getter should return 0.1 for PUNCH"
+      "HitQuote getter should return 0.1 for PUNCH",
     )
   }
 
@@ -29,17 +33,17 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       PrimitiveType.FIRE,
       attack.primitiveType,
-      "Type getter should return FIRE for FLAME_WREATH"
+      "Type getter should return FIRE for FLAME_WREATH",
     )
     assertEquals(
       20,
       attack.damage,
-      "Damage getter should return 20 for FLAME_WREATH"
+      "Damage getter should return 20 for FLAME_WREATH",
     )
     assertEquals(
       0.4,
       attack.critChance,
-      "HitQuote getter should return 0.4 for FLAME_WREATH"
+      "HitQuote getter should return 0.4 for FLAME_WREATH",
     )
   }
 
@@ -50,13 +54,17 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       PrimitiveType.WATER,
       attack.primitiveType,
-      "Type getter should return WATER for SPLASH"
+      "Type getter should return WATER for SPLASH",
     )
-    assertEquals(20, attack.damage, "Damage getter should return 20 for SPLASH")
+    assertEquals(
+      20,
+      attack.damage,
+      "Damage getter should return 20 for SPLASH",
+    )
     assertEquals(
       0.7,
       attack.critChance,
-      "HitQuote getter should return 0.7 for SPLASH"
+      "HitQuote getter should return 0.7 for SPLASH",
     )
   }
 
@@ -67,17 +75,17 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       PrimitiveType.PLANT,
       attack.primitiveType,
-      "Type getter should return PLANT for LEAF_GUN"
+      "Type getter should return PLANT for LEAF_GUN",
     )
     assertEquals(
       20,
       attack.damage,
-      "Damage getter should return 20 for LEAF_GUN"
+      "Damage getter should return 20 for LEAF_GUN",
     )
     assertEquals(
       0.2,
       attack.critChance,
-      "HitQuote getter should return 0.2 for LEAF_GUN"
+      "HitQuote getter should return 0.2 for LEAF_GUN",
     )
   }
 
@@ -88,17 +96,17 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       PrimitiveType.SPIRIT,
       attack.primitiveType,
-      "Type getter should return SPIRIT for SPOOKY_BALL"
+      "Type getter should return SPIRIT for SPOOKY_BALL",
     )
     assertEquals(
       20,
       attack.damage,
-      "Damage getter should return 20 for SPOOKY_BALL"
+      "Damage getter should return 20 for SPOOKY_BALL",
     )
     assertEquals(
       0.1,
       attack.critChance,
-      "HitQuote getter should return 0.1 for SPOOKY_BALL"
+      "HitQuote getter should return 0.1 for SPOOKY_BALL",
     )
   }
 
@@ -110,7 +118,7 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       1.5,
       result,
-      "Expected multiplier should be 1.5 on critical hit"
+      "Expected multiplier should be 1.5 on critical hit",
     )
   }
 
@@ -122,7 +130,7 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       1.0,
       result,
-      "Expected multiplier should be 1.0 when no critical hit"
+      "Expected multiplier should be 1.0 when no critical hit",
     )
   }
 
@@ -134,7 +142,7 @@ class AttackTest : AnnotationSpec() {
     assertEquals(
       1.0,
       result,
-      "Expected multiplier should be 1.0 when no critical hit"
+      "Expected multiplier should be 1.0 when no critical hit",
     )
   }
 
@@ -145,12 +153,14 @@ class AttackTest : AnnotationSpec() {
         name = "Defender",
         stats = BattleStats(100, 10),
         primitiveType = PrimitiveType.PLANT,
-        attacks = listOf()
+        attacks = listOf(),
       )
 
     val damage = Attack.FLAME_WREATH.damage
     val multiplier =
-      Attack.FLAME_WREATH.primitiveType.calculateDamangeMultiplier(defender)
+      Attack.FLAME_WREATH.primitiveType.calculateDamangeMultiplier(
+        defender,
+      )
     val crit = 1.0
 
     val expected = (damage * multiplier * crit).toInt()
