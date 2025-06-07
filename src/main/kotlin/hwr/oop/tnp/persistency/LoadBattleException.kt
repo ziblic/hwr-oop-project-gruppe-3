@@ -1,5 +1,3 @@
 package hwr.oop.tnp.persistency
 
-class LoadBattleException(
-  message: String,
-) : Exception(message)
+class LoadBattleException(message: String) : Exception(message)

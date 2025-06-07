@@ -35,9 +35,7 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     val dataFile = File(tmpDir, "1.json")
     adapter.saveBattle(Battle("1"))
     assert(dataFile.exists())
-    assertThat(
-      dataFile.readLines(),
-    ).isEqualTo(listOf("{\"battleId\":\"1\"}"))
+    assertThat(dataFile.readLines()).isEqualTo(listOf("{\"battleId\":\"1\"}"))
     tmpDir.deleteRecursively()
   }
 
@@ -53,9 +51,7 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
   @Test
   fun `Throw IllegalArgumentException on loading non existing battle`() {
     val adapter = FileSystemBasedJsonPersistence(tmpDir)
-    assertThatThrownBy {
-      adapter.loadBattle("1")
-    }.hasMessage("Could not find battle with id: 1.")
+    assertThatThrownBy { adapter.loadBattle("1") }.hasMessage("Could not find battle with id: 1.")
     tmpDir.deleteRecursively()
   }
 
@@ -70,7 +66,8 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     assertThatThrownBy {
       val battles = adapter.loadAllBattles()
       assertThat(battles).isEmpty()
-    }.hasMessageContaining("Failed to list files in directory")
+    }
+      .hasMessageContaining("Failed to list files in directory")
   }
 
   @Test
@@ -93,10 +90,7 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     // Compare the encoded JSON outputs, order-independent
     val encodedBattles = battles.map { Json.encodeToString(it) }
     assertThat(encodedBattles)
-      .containsExactlyInAnyOrder(
-        """{"battleId":"1"}""",
-        """{"battleId":"2"}""",
-      )
+      .containsExactlyInAnyOrder("""{"battleId":"1"}""", """{"battleId":"2"}""")
 
     tmpDir.deleteRecursively()
   }
