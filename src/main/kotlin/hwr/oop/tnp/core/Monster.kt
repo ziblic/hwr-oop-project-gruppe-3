@@ -9,12 +9,16 @@ class Monster(
   val primitiveType: PrimitiveType,
   val attacks: List<Attack>,
 ) {
-  fun attack(attackUsed: Attack, otherMonster: Monster) {
+  fun attack(
+    attackUsed: Attack,
+    otherMonster: Monster,
+    damageStrategy: DamageStrategy,
+  ) {
     if (!attacks.contains(attackUsed)) {
       throw MonsterDoesNotHaveAttackException("The used attack is not part of the attacks of the monster")
     }
 
-    val damageAmount = attackUsed.calculateDamageAgainst(otherMonster)
+    val damageAmount = attackUsed.calculateDamageAgainst(this, otherMonster, damageStrategy)
     otherMonster.takeDamage(damageAmount)
 
   }
