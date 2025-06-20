@@ -5,6 +5,7 @@ import hwr.oop.tnp.core.Battle
 import hwr.oop.tnp.core.BattleStats
 import hwr.oop.tnp.core.BattleStatus
 import hwr.oop.tnp.core.BattleUsage
+import hwr.oop.tnp.core.DamageStrategy
 import hwr.oop.tnp.core.Monster
 import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.core.Trainer
@@ -34,12 +35,21 @@ class BattleCliAdapter(
     monsterName: String,
     hp: Int,
     speed: Int,
+    attack: Int,
+    specialAttack: Int,
+    defense: Int,
+    specialDefense: Int,
     primitiveType: PrimitiveType,
     attacks: List<Attack>,
     trainerName: String,
   ) {
     val monster =
-      Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
+      Monster(
+        monsterName,
+        BattleStats(hp, speed, attack, specialAttack, defense, specialDefense),
+        primitiveType,
+        attacks,
+      )
     try {
       battle.addMonsterToTrainer(trainerName, monster)
     } catch (e: Battle.EmptyTrainerException) {
@@ -52,9 +62,9 @@ class BattleCliAdapter(
   }
 
   companion object {
-    fun initiateBattle() {
+    fun initiateBattle(strategy: DamageStrategy) {
       val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence()
-      val battle = Battle()
+      val battle = Battle(damageStrategy = strategy)
       println(battle.toString())
       saveAdapter.saveBattle(battle)
     }

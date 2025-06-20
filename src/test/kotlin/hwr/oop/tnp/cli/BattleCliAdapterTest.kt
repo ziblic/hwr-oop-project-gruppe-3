@@ -3,6 +3,7 @@ package hwr.oop.tnp.cli
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Battle
 import hwr.oop.tnp.core.BattleStatus
+import hwr.oop.tnp.core.DamageStrategy
 import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import io.kotest.core.spec.style.AnnotationSpec
@@ -20,7 +21,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
   @Test
   fun `Test adding three trainer prints exception message`() {
     val saveAdapter = FileSystemBasedJsonPersistence()
-    val battle = Battle("1")
+    val battle = Battle("1", DamageStrategy.DETERMINISTIC)
     saveAdapter.saveBattle(battle)
     val battleAdapter = BattleCliAdapter("1")
     battleAdapter.createTrainer("Kevin")
@@ -37,7 +38,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
   @Test
   fun `Trying to add a monster to a not existing trainer prints exception message`() {
     val saveAdapter = FileSystemBasedJsonPersistence()
-    val battle = Battle("1")
+    val battle = Battle("1", DamageStrategy.DETERMINISTIC)
     saveAdapter.saveBattle(battle)
     val output =
       captureStandardOut {
@@ -46,6 +47,10 @@ class BattleCliAdapterTest : AnnotationSpec() {
             "Pika",
             100,
             100,
+            20,
+            20,
+            20,
+            20,
             PrimitiveType.FIRE,
             listOf(Attack.PUNCH),
             "Bob",
@@ -57,7 +62,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
   @Test
   fun `View status prints the right output`() {
     val saveAdapter = FileSystemBasedJsonPersistence()
-    val battle = Battle("1")
+    val battle = Battle("1", DamageStrategy.DETERMINISTIC)
     saveAdapter.saveBattle(battle)
     val output =
       captureStandardOut {
@@ -90,7 +95,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
     assertThat(output).isEqualTo("No battles created yet")
 
     // 5. Create a battle and check the output
-    saveAdapter.saveBattle(Battle("1"))
+    saveAdapter.saveBattle(Battle("1", DamageStrategy.DETERMINISTIC))
     val output2 = captureStandardOut { BattleCliAdapter.showAllBattles() }.trim()
     assertThat(
       output2,
@@ -104,7 +109,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
   fun `Test performAttack fully`() {
     val saveAdapter = FileSystemBasedJsonPersistence()
     val loadAdapter = saveAdapter
-    saveAdapter.saveBattle(Battle("1"))
+    saveAdapter.saveBattle(Battle("1", DamageStrategy.DETERMINISTIC))
     val battleAdapter = BattleCliAdapter("1")
     val output = captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
     assertThat(
@@ -118,6 +123,10 @@ class BattleCliAdapterTest : AnnotationSpec() {
       "Pika",
       10,
       200,
+      20,
+      20,
+      20,
+      20,
       PrimitiveType.NORMAL,
       listOf(Attack.PUNCH),
       "Bob",
@@ -126,6 +135,10 @@ class BattleCliAdapterTest : AnnotationSpec() {
       "Glurak",
       100,
       100,
+      20,
+      20,
+      20,
+      20,
       PrimitiveType.FIRE,
       listOf(Attack.PUNCH),
       "Kevin",

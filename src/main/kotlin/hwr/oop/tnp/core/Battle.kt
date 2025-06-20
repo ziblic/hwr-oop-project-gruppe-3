@@ -9,8 +9,8 @@ import java.util.UUID
 @Serializable
 class Battle(
   val battleId: String = UUID.randomUUID().toString(),
-  @Transient private val saveAdapter: SaveBattlePort =
-    FileSystemBasedJsonPersistence(),
+  val damageStrategy: DamageStrategy,
+  @Transient private val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence(),
 ) : BattleUsage {
   var trainerOne: Trainer = Trainer.EMPTY
     private set
@@ -66,9 +66,10 @@ class Battle(
     when {
       trainerOne == Trainer.EMPTY -> trainerOne = trainer
       trainerTwo == Trainer.EMPTY -> trainerTwo = trainer
-      else -> throw IllegalStateException(
-        "Both trainers are already set.",
-      )
+      else ->
+        throw IllegalStateException(
+          "Both trainers are already set.",
+        )
     }
     saveAdapter.saveBattle(this)
   }
@@ -95,9 +96,7 @@ class Battle(
   }
 
   private fun getOpponent(): Trainer =
-    if (currentTrainer ==
-      trainerOne
-    ) {
+    if (currentTrainer == trainerOne) {
       trainerTwo
     } else {
       trainerOne
@@ -115,7 +114,7 @@ class Battle(
     val monster = currentTrainer.nextBattleReadyMonster()
     val opponent = getOpponent()
     val opponentMonster = opponent.nextBattleReadyMonster()
-    monster.attack(attack, opponentMonster)
+    monster.attack(attack, opponentMonster, damageStrategy)
     currentTrainer = opponent
 
     advanceAndSaveRound()

@@ -3,6 +3,7 @@ package hwr.oop.tnp.cli
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.Battle
 import hwr.oop.tnp.core.BattleStats
+import hwr.oop.tnp.core.DamageStrategy
 import hwr.oop.tnp.core.Monster
 import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.core.Trainer
@@ -51,7 +52,7 @@ Usage: ./tnp new_trainer <TRAINERNAME> <BATTLE_ID>"""
 /_/   \_\__,_|\__,_| |_|  |_|\___/|_| |_|___/\__\___|_|    |_| |_|\___|_| .__/
                                                                         |_|
 
-Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER> <BATTLE_ID>"""
+Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <ATTACK_VALUE> <SPECIAL_ATTACK_VALUE> <DEFENSE_VALUE> <SPECIAL_DEFENSE_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER> <BATTLE_ID>"""
 
   private val newBattleHelp =
     """._   _                 ____        _   _   _        _   _      _
@@ -61,7 +62,7 @@ Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1
 |_| \_|\___| \_/\_/   |____/ \__,_|\__|\__|_|\___| |_| |_|\___|_| .__/
                                                                 |_|
 
-Usage: ./tnp new_battle"""
+Usage: ./tnp new_battle <DAMAGE_STRATEGY: [random| deterministic]>"""
 
   private val viewBattleHelp =
     """__     ___                 ____        _   _   _        _   _      _
@@ -105,6 +106,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             "Bob",
             "abc",
             "abc",
+            "abc",
+            "abc",
+            "abc",
+            "abc",
             "Fire",
             "PUNCH",
             "Trainer_Kevin",
@@ -122,6 +127,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             "add_monster",
             "Bob",
             "100",
+            "20",
+            "20",
+            "20",
+            "20",
             "20",
             "Hello",
             "PUNCH",
@@ -141,6 +150,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             "Bob",
             "100",
             "20",
+            "20",
+            "20",
+            "20",
+            "20",
             "Fire",
             "Tackle_3",
             "Trainer_Kevin",
@@ -151,13 +164,25 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     assertThat(
       output3,
     ).contains("Error: Failed to convert", "to Attack. Reason:")
+    val output4 =
+      captureStandardOut {
+        TotallyNotPokemon(
+          listOf(
+            "new_battle",
+            "unknown_strat",
+          ),
+        )
+      }.trim()
+    assertThat(
+      output4,
+    ).contains("Error: Failed to convert", "to Damage Strategy. Reason:")
   }
 
   @Test
   fun `Initiating new battle creates a new file and redirects to the right function`() {
     val dataFolder = File(System.getProperty("user.dir"), "data/")
     val filesBefore = dataFolder.listFiles()
-    val output = captureStandardOut { TotallyNotPokemon(listOf("new_battle")) }
+    val output = captureStandardOut { TotallyNotPokemon(listOf("new_battle", "random")) }
     val filesAfter = dataFolder.listFiles()?.toSet() ?: emptySet()
     val newFiles = filesAfter - filesBefore
 
@@ -226,7 +251,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
   @Test
   fun `Create new trainer`() {
-    val battle = Battle("1")
+    val battle = Battle("1", DamageStrategy.DETERMINISTIC)
     val saveAdapter = FileSystemBasedJsonPersistence()
     val loadAdapter = saveAdapter
     saveAdapter.saveBattle(battle)
@@ -234,7 +259,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       captureStandardOut { TotallyNotPokemon(listOf("new_trainer", "Kevin", "1")) }.trim()
     assertThat(Json.encodeToString(loadAdapter.loadBattle("1")))
       .isEqualTo(
-        "{\"battleId\":\"1\",\"trainerOne\":{\"name\":\"Kevin\"}}",
+        "{\"battleId\":\"1\",\"damageStrategy\":\"DETERMINISTIC\",\"trainerOne\":{\"name\":\"Kevin\"}}",
       )
     cleanUp()
     saveAdapter.saveBattle(battle)
@@ -260,7 +285,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
   @Test
   fun `Add new monster`() {
     val battleId = "1"
-    val battle = Battle(battleId)
+    val battle = Battle(battleId, DamageStrategy.DETERMINISTIC)
     battle.addTrainerToBattle(Trainer("Trainer_Kevin"))
 
     val output =
@@ -270,6 +295,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             "add_monster",
             "Bob",
             "100",
+            "20",
+            "20",
+            "20",
+            "20",
             "20",
             "FIRE",
             "PUNCH",
@@ -286,6 +315,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             "Bob",
             "100",
             "20",
+            "20",
+            "20",
+            "20",
+            "20",
             "Fire",
             "PUNCH",
             "FIRE_Vow",
@@ -299,7 +332,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     val loadAdapter = FileSystemBasedJsonPersistence()
     assertThat(Json.encodeToString(loadAdapter.loadBattle("1")))
       .isEqualTo(
-        "{\"battleId\":\"1\",\"trainerOne\":{\"name\":\"Trainer_Kevin\",\"monsters\":[{\"name\":\"Bob\",\"stats\":{\"maxHp\":100,\"hp\":100,\"speed\":20},\"primitiveType\":\"FIRE\",\"attacks\":[\"PUNCH\"]},{\"name\":\"Bob\",\"stats\":{\"maxHp\":100,\"hp\":100,\"speed\":20},\"primitiveType\":\"FIRE\",\"attacks\":[\"PUNCH\",\"FIRE_VOW\",\"SPLASH\",\"FOLIAGE_STORM\"]}]}}",
+        "{\"battleId\":\"1\",\"damageStrategy\":\"DETERMINISTIC\",\"trainerOne\":{\"name\":\"Trainer_Kevin\",\"monsters\":[{\"name\":\"Bob\",\"stats\":{\"maxHp\":100,\"hp\":100,\"speed\":20,\"attack\":20,\"specialAttack\":20,\"defense\":20,\"specialDefense\":20},\"primitiveType\":\"FIRE\",\"attacks\":[\"PUNCH\"]},{\"name\":\"Bob\",\"stats\":{\"maxHp\":100,\"hp\":100,\"speed\":20,\"attack\":20,\"specialAttack\":20,\"defense\":20,\"specialDefense\":20},\"primitiveType\":\"FIRE\",\"attacks\":[\"PUNCH\",\"FIRE_VOW\",\"SPLASH\",\"FOLIAGE_STORM\"]}]}}",
       )
     cleanUp()
     val output3 =
@@ -309,6 +342,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             "add_monster",
             "Bob",
             "100",
+            "20",
+            "20",
+            "20",
+            "20",
             "20",
             "Fire",
             "PUNCH",
@@ -321,7 +358,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
         )
       }
     assertThat(output3).contains("Could not find battle with id:")
-    val battleNew = Battle(battleId)
+    val battleNew = Battle(battleId, DamageStrategy.DETERMINISTIC)
     battleNew.addTrainerToBattle(Trainer("Trainer_Kevin"))
     assertThat(output)
       .isEqualTo(
@@ -330,6 +367,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             .addMonster(
               "Bob",
               100,
+              20,
+              20,
+              20,
+              20,
               20,
               PrimitiveType.FIRE,
               listOf(Attack.PUNCH),
@@ -344,6 +385,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             .addMonster(
               "Bob",
               100,
+              20,
+              20,
+              20,
+              20,
               20,
               PrimitiveType.FIRE,
               listOf(
@@ -374,6 +419,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
             "Bob",
             "100",
             "20",
+            "20",
+            "20",
+            "20",
+            "20",
             "FIRE",
             "Flame_Wreath",
             "PUNCH",
@@ -388,7 +437,16 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     val output2 =
       captureStandardOut {
         TotallyNotPokemon(
-          listOf("add_monster", "Bob", "100", "20", "FIRE", "PUNCH"),
+          listOf(
+            "add_monster",
+            "Bob",
+            "100",
+            "20",
+            "20",
+            "20",
+            "FIRE",
+            "PUNCH",
+          ),
         )
       }.trim()
     assertThat(output1).isEqualTo(addMonsterHelp)
@@ -398,13 +456,15 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
   @Test
   fun `Start new battle with not enough or too many arguments`() {
     val output1 =
-      captureStandardOut { TotallyNotPokemon(listOf("new_battle", "too many args")) }.trim()
+      captureStandardOut {
+        TotallyNotPokemon(listOf("new_battle", "random", "too many args"))
+      }.trim()
     assertThat(output1).isEqualTo(newBattleHelp)
   }
 
   @Test
   fun `View battle status`() {
-    val battle = Battle("1")
+    val battle = Battle("1", DamageStrategy.DETERMINISTIC)
     val saveAdapter = FileSystemBasedJsonPersistence()
     saveAdapter.saveBattle(battle)
     val output = captureStandardOut { TotallyNotPokemon(listOf("view_battle", "1")) }.trim()
@@ -435,7 +495,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
   @Test
   fun `Attack enemy`() {
-    val battle = Battle("1")
+    val battle = Battle("1", DamageStrategy.DETERMINISTIC)
     val t1 = Trainer("Trainer_Kevin")
     val t2 = Trainer("Trainer_Bob")
     battle.addTrainerToBattle(t1)
@@ -444,7 +504,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       "Trainer_Kevin",
       Monster(
         "Pika",
-        BattleStats(100, 20),
+        BattleStats(100, 20, 20, 20, 20, 20),
         PrimitiveType.FIRE,
         listOf(Attack.PUNCH),
       ),
@@ -453,7 +513,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       "Trainer_Bob",
       Monster(
         "Glurak",
-        BattleStats(100, 20),
+        BattleStats(100, 20, 20, 20, 20, 20),
         PrimitiveType.FIRE,
         listOf(Attack.PUNCH),
       ),
@@ -483,13 +543,15 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
   @Test
   fun `Attack enemy with not enough or to many arguments`() {
+    val battle = Battle("1", DamageStrategy.DETERMINISTIC)
+    FileSystemBasedJsonPersistence(File(System.getProperty("user.dir"), "data/")).saveBattle(battle)
     val output1 =
-      captureStandardOut { TotallyNotPokemon(listOf("on", "0", "PUNCH", "too many args")) }
+      captureStandardOut { TotallyNotPokemon(listOf("on", "1", "PUNCH", "too many args")) }
         .trim()
     val output2 =
       captureStandardOut {
         TotallyNotPokemon(
-          listOf("on", "0"),
+          listOf("on", "1"),
         )
       }.trim()
     assertThat(output1).isEqualTo(attackHelp)

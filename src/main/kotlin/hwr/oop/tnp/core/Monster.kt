@@ -12,12 +12,13 @@ class Monster(
   fun attack(
     attackUsed: Attack,
     otherMonster: Monster,
+    damageStrategy: DamageStrategy,
   ) {
     require(attacks.contains(attackUsed)) {
       "The used attack is not part of the attacks of the monster"
     }
 
-    val damageAmount = attackUsed.calculateDamageAgainst(otherMonster)
+    val damageAmount = attackUsed.calculateDamageAgainst(this, otherMonster, damageStrategy)
     otherMonster.takeDamage(damageAmount)
   }
 

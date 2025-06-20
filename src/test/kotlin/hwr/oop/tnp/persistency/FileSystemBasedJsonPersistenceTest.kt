@@ -1,6 +1,7 @@
 package hwr.oop.tnp.persistency
 
 import hwr.oop.tnp.core.Battle
+import hwr.oop.tnp.core.DamageStrategy
 import io.kotest.core.spec.style.AnnotationSpec
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
@@ -33,29 +34,27 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
   fun `Save battle`() {
     val adapter = FileSystemBasedJsonPersistence(tmpDir)
     val dataFile = File(tmpDir, "1.json")
-    adapter.saveBattle(Battle("1"))
+    adapter.saveBattle(Battle("1", DamageStrategy.DETERMINISTIC))
     assert(dataFile.exists())
     assertThat(
       dataFile.readLines(),
-    ).isEqualTo(listOf("{\"battleId\":\"1\"}"))
+    ).isEqualTo(listOf("{\"battleId\":\"1\",\"damageStrategy\":\"DETERMINISTIC\"}"))
     tmpDir.deleteRecursively()
   }
 
   @Test
   fun `Load Battle correctly`() {
     val adapter = FileSystemBasedJsonPersistence(tmpDir)
-    adapter.saveBattle(Battle("1"))
+    adapter.saveBattle(Battle("1", DamageStrategy.DETERMINISTIC))
     val battleJson = Json.encodeToString(adapter.loadBattle("1"))
-    assertThat(battleJson).isEqualTo("{\"battleId\":\"1\"}")
+    assertThat(battleJson).isEqualTo("{\"battleId\":\"1\",\"damageStrategy\":\"DETERMINISTIC\"}")
     tmpDir.deleteRecursively()
   }
 
   @Test
   fun `Throw IllegalArgumentException on loading non existing battle`() {
     val adapter = FileSystemBasedJsonPersistence(tmpDir)
-    assertThatThrownBy {
-      adapter.loadBattle("1")
-    }.hasMessage("Could not find battle with id: 1.")
+    assertThatThrownBy { adapter.loadBattle("1") }.hasMessage("Could not find battle with id: 1.")
     tmpDir.deleteRecursively()
   }
 
@@ -78,9 +77,8 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     val adapter = FileSystemBasedJsonPersistence(tmpDir)
 
     // Save two battles
-    // FIX:
-    adapter.saveBattle(Battle("1"))
-    adapter.saveBattle(Battle("2"))
+    adapter.saveBattle(Battle("1", DamageStrategy.DETERMINISTIC))
+    adapter.saveBattle(Battle("2", DamageStrategy.DETERMINISTIC))
     File(tmpDir, "3").createNewFile()
     File(tmpDir, "folder/").createNewFile()
 
@@ -94,8 +92,8 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     val encodedBattles = battles.map { Json.encodeToString(it) }
     assertThat(encodedBattles)
       .containsExactlyInAnyOrder(
-        """{"battleId":"1"}""",
-        """{"battleId":"2"}""",
+        "{\"battleId\":\"1\",\"damageStrategy\":\"DETERMINISTIC\"}",
+        "{\"battleId\":\"2\",\"damageStrategy\":\"DETERMINISTIC\"}",
       )
 
     tmpDir.deleteRecursively()
