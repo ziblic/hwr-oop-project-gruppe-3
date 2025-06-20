@@ -4,7 +4,7 @@ import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.SaveBattlePort
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import java.util.UUID
+import java.util.*
 
 @Serializable
 class Battle(
@@ -53,10 +53,7 @@ class Battle(
     }
   }
 
-  override fun addMonsterToTrainer(
-    trainerName: String,
-    monster: Monster,
-  ) {
+  override fun addMonsterToTrainer(trainerName: String, monster: Monster) {
     val trainer = getTrainerByName(trainerName)
     trainer.addMonster(monster)
     saveAdapter.saveBattle(this)
@@ -66,10 +63,7 @@ class Battle(
     when {
       trainerOne == Trainer.EMPTY -> trainerOne = trainer
       trainerTwo == Trainer.EMPTY -> trainerTwo = trainer
-      else ->
-        throw IllegalStateException(
-          "Both trainers are already set.",
-        )
+      else -> throw IllegalStateException("Both trainers are already set.")
     }
     saveAdapter.saveBattle(this)
   }
@@ -94,22 +88,17 @@ class Battle(
     currentRound++
     saveAdapter.saveBattle(this)
   }
-
-  private fun getOpponent(): Trainer =
-    if (currentTrainer == trainerOne) {
-      trainerTwo
-    } else {
-      trainerOne
-    }
+  
+  private fun getOpponent(): Trainer {
+    return if (currentTrainer == trainerOne) trainerTwo else trainerOne
+  }
 
   override fun takeTurn(attack: Attack): Monster {
     if (status == BattleStatus.FINISHED) {
       throw IllegalStateException("Battle is already finished")
     }
     if (currentTrainer == Trainer.EMPTY) {
-      throw IllegalStateException(
-        "Trainer needs to have been set for this operation",
-      )
+      throw IllegalStateException("Trainer needs to have been set for this operation")
     }
     val monster = currentTrainer.nextBattleReadyMonster()
     val opponent = getOpponent()
@@ -130,26 +119,21 @@ class Battle(
 
   private fun requireNoTrainerIsEmpty() {
     if (trainerOne == Trainer.EMPTY || trainerTwo == Trainer.EMPTY) {
-      throw EmptyTrainerException(
-        "Trainer need to have been set for this operation",
-      )
+      throw EmptyTrainerException("Trainer need to have been set for this operation")
     }
   }
 
-  class EmptyTrainerException(
-    message: String,
-  ) : Exception(message)
+  class EmptyTrainerException(message: String) : Exception(message)
 
-  override fun toString(): String =
-    if (trainerOne != Trainer.EMPTY &&
+  override fun toString(): String {
+    return if (trainerOne != Trainer.EMPTY &&
       trainerTwo != Trainer.EMPTY &&
       currentTrainer != Trainer.EMPTY
-    ) {
+    )
       """Battle ($battleId):
 ${trainerOne.name} vs. ${trainerTwo.name}
 Round: $currentRound
 Next Attacker: ${currentTrainer.name}"""
-    } else {
-      "Battle with ID: $battleId is in a pregame state"
-    }
+    else "Battle with ID: $battleId is in a pregame state"
+  }
 }

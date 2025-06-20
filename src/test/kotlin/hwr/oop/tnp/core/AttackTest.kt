@@ -56,14 +56,12 @@ class AttackTest : AnnotationSpec() {
         name = "Defender",
         stats = BattleStats(100, 10, 20, 20, 20, 20),
         primitiveType = PrimitiveType.PLANT,
-        attacks = listOf(),
+        attacks = listOf()
       )
 
     val damage = Attack.FLAME_WREATH.damage
     val multiplier =
-      Attack.FLAME_WREATH.primitiveType.calculateDamangeMultiplier(
-        defender,
-      )
+      Attack.FLAME_WREATH.primitiveType.calculateDamangeMultiplier(defender)
     val crit = 1.0
 
     val expected = (damage * multiplier * crit).toInt()

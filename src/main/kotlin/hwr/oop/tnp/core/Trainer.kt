@@ -7,24 +7,32 @@ data class Trainer(
   val name: String,
   val monsters: MutableList<Monster> = mutableListOf(),
 ) {
-  private val maxAllowedMonsterPerTrainer = 6
+  private val MAX_ALLOWED_MONSTERS_PER_TRAINER = 6
 
   companion object {
     val EMPTY = Trainer("Unknown")
   }
 
   init {
-    require(monsters.size <= maxAllowedMonsterPerTrainer) { "Too many monsters: $monsters" }
+
+    if (monsters.size > MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+      throw TrainerHasTooManyMonstersException("Too many monsters: $monsters")
+    }
   }
 
   fun addMonster(monster: Monster) {
-    require(monsters.size < maxAllowedMonsterPerTrainer) {
-      "Too many monsters: maximum allowed is $maxAllowedMonsterPerTrainer"
+
+    if (monsters.size >= MAX_ALLOWED_MONSTERS_PER_TRAINER) {
+      throw TrainerHasTooManyMonstersException("Too many monsters: maximum allowed is $MAX_ALLOWED_MONSTERS_PER_TRAINER")
     }
     monsters.add(monster)
   }
 
-  fun nextMonster(): Monster = monsters.firstOrNull() ?: throw IllegalStateException("No monsters available")
+  class TrainerHasTooManyMonstersException(message: String) : Exception(message)
+
+  fun nextMonster(): Monster =
+    monsters.firstOrNull()
+      ?: throw IllegalStateException("No monsters available")
 
   fun nextBattleReadyMonster(): Monster =
     monsters.firstOrNull { !it.isKO() }

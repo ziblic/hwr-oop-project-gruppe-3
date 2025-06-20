@@ -7,12 +7,7 @@ import java.io.File
 
 class FileSystemBasedJsonPersistence(
   private val dataFolder: File = File(System.getProperty("user.dir"), "data"),
-) : SaveBattlePort,
-  LoadBattlePort {
-  class LoadBattleException(
-    message: String,
-  ) : Exception(message)
-
+) : SaveBattlePort, LoadBattlePort {
   init {
     if (!dataFolder.exists()) {
       dataFolder.mkdirs()
@@ -29,9 +24,7 @@ class FileSystemBasedJsonPersistence(
   override fun loadBattle(battleId: String): Battle {
     val battleFile = File(dataFolder, "$battleId.json")
     if (!battleFile.exists()) {
-      throw LoadBattleException(
-        "Could not find battle with id: $battleId.",
-      )
+      throw LoadBattleException("Could not find battle with id: $battleId.")
     }
 
     return Json.decodeFromString<Battle>(battleFile.readText())
@@ -42,9 +35,7 @@ class FileSystemBasedJsonPersistence(
 
     val files =
       dataFolder.listFiles()
-        ?: throw LoadBattleException(
-          "Failed to list files in directory $dataFolder",
-        )
+        ?: throw LoadBattleException("Failed to list files in directory $dataFolder")
 
     for (file in files) {
       try {

@@ -3,7 +3,7 @@ package hwr.oop.tnp.cli
 import hwr.oop.tnp.core.Attack
 import hwr.oop.tnp.core.DamageStrategy
 import hwr.oop.tnp.core.PrimitiveType
-import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
+import hwr.oop.tnp.persistency.LoadBattleException
 
 class TotallyNotPokemon(
   private val args: List<String>,
@@ -23,9 +23,6 @@ class TotallyNotPokemon(
   class ParseToDamageStrategyException(
     message: String,
   ) : Exception(message)
-
-  private val couldNotParseErrorMessage =
-    "Some of the provided arguments could not be parsed correctly"
 
   private val defaultHelp =
     """.___________  _____  ___     _______
@@ -109,7 +106,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       "new_battle",
       "view_battle",
       "on",
-      "help",
+      "help"
     )
 
   private val commandsHelpMap: Map<String, String> =
@@ -149,39 +146,38 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
           printHelp()
         }
       }
-      else ->
-        println(
-          "'$command' is not a valid command. Use 'help' for usage.",
-        )
+
+      else -> println("'$command' is not a valid command. Use 'help' for usage.")
     }
   }
 
-  private fun parseToInt(argument: String): Int =
-    try {
+  private fun parseToInt(argument: String): Int {
+    return try {
       argument.toInt()
     } catch (e: NumberFormatException) {
-      throw ParseToIntException(
-        "Error: Failed to convert '$argument' to int. Reason: ${e.message}",
-      )
+      throw ParseToIntException("Error: Failed to convert '$argument' to int. Reason: ${e.message}")
     }
+  }
 
-  private fun parseToAttack(input: String): Attack =
-    try {
+  private fun parseToAttack(input: String): Attack {
+    return try {
       Attack.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToAttackException(
-        "Error: Failed to convert '$input' to Attack. Reason: ${e.message}",
+        "Error: Failed to convert '$input' to Attack. Reason: ${e.message}"
       )
     }
+  }
 
-  private fun parseToPrimitiveType(input: String): PrimitiveType =
-    try {
+  private fun parseToPrimitiveType(input: String): PrimitiveType {
+    return try {
       PrimitiveType.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToPrimitiveTypeException(
-        "Error: Failed to convert '$input' to Type. Reason: ${e.message}",
+        "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
       )
     }
+  }
 
   private fun parseToStrategy(input: String): DamageStrategy =
     try {
@@ -201,7 +197,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       cliAdapter = BattleCliAdapter(args[1])
       cliAdapter.createTrainer(args[0])
-    } catch (e: FileSystemBasedJsonPersistence.LoadBattleException) {
+    } catch (e: LoadBattleException) {
       println(e.message)
     }
   }
@@ -243,7 +239,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
       )
     } catch (e: ParseToIntException) {
       println(e.message)
-    } catch (e: FileSystemBasedJsonPersistence.LoadBattleException) {
+    } catch (e: LoadBattleException) {
       println(e.message)
     } catch (e: ParseToPrimitiveTypeException) {
       println(e.message)
@@ -279,7 +275,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       cliAdapter = BattleCliAdapter(args[0])
       cliAdapter.viewStatus()
-    } catch (e: FileSystemBasedJsonPersistence.LoadBattleException) {
+    } catch (e: LoadBattleException) {
       println(e.message)
     }
   }
@@ -293,7 +289,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       cliAdapter = BattleCliAdapter(args[0])
       cliAdapter.performAttack(parseToAttack(args[1]))
-    } catch (e: FileSystemBasedJsonPersistence.LoadBattleException) {
+    } catch (e: LoadBattleException) {
       println(e.message)
     }
   }

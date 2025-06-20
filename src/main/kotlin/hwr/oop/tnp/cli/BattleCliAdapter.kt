@@ -13,9 +13,7 @@ import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.LoadBattlePort
 import hwr.oop.tnp.persistency.SaveBattlePort
 
-class BattleCliAdapter(
-  private val battleId: String,
-) {
+class BattleCliAdapter(private val battleId: String) {
   private var battle: BattleUsage
 
   init {

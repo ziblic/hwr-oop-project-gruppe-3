@@ -27,11 +27,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
     battleAdapter.createTrainer("Kevin")
     battleAdapter.createTrainer("Bob")
     val output =
-      captureStandardOut {
-        battleAdapter.createTrainer(
-          "Ash",
-        )
-      }.trim()
+      captureStandardOut { battleAdapter.createTrainer("Ash") }.trim()
     assertThat(output).isEqualTo("Both trainers are already set.")
   }
 
@@ -53,9 +49,10 @@ class BattleCliAdapterTest : AnnotationSpec() {
             20,
             PrimitiveType.FIRE,
             listOf(Attack.PUNCH),
-            "Bob",
+            "Bob"
           )
-      }.trim()
+      }
+        .trim()
     assertThat(output).isEqualTo("Trainer 'Bob' not found.")
   }
 
@@ -65,11 +62,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
     val battle = Battle("1", DamageStrategy.DETERMINISTIC)
     saveAdapter.saveBattle(battle)
     val output =
-      captureStandardOut {
-        BattleCliAdapter(
-          "1",
-        ).viewStatus()
-      }.trim()
+      captureStandardOut { BattleCliAdapter("1").viewStatus() }.trim()
     assertThat(output).isEqualTo("Battle with ID: 1 is in a pregame state")
   }
 
@@ -85,7 +78,8 @@ class BattleCliAdapterTest : AnnotationSpec() {
 
     // 2. Delete all battle JSON files
     val deletedFiles =
-      dataFolder.listFiles { f -> f.name.endsWith(".json") }?.toList() ?: emptyList()
+      dataFolder.listFiles { f -> f.name.endsWith(".json") }?.toList()
+        ?: emptyList()
     deletedFiles.forEach { it.delete() }
 
     // 3. Run showAllBattles and capture output
@@ -111,14 +105,14 @@ class BattleCliAdapterTest : AnnotationSpec() {
     val loadAdapter = saveAdapter
     saveAdapter.saveBattle(Battle("1", DamageStrategy.DETERMINISTIC))
     val battleAdapter = BattleCliAdapter("1")
-    val output = captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
-    assertThat(
-      output,
-    ).isEqualTo("Trainer need to have been set for this operation")
+    val output =
+      captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
+    assertThat(output).isEqualTo("Trainer need to have been set for this operation")
     battleAdapter.createTrainer("Bob")
     battleAdapter.createTrainer("Kevin")
-    val output1 = captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
-    assertThat(output1).isEqualTo("No monsters available")
+    val output_1 =
+      captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
+    assertThat(output_1).isEqualTo("No monsters available")
     battleAdapter.addMonster(
       "Pika",
       10,
@@ -129,7 +123,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
       20,
       PrimitiveType.NORMAL,
       listOf(Attack.PUNCH),
-      "Bob",
+      "Bob"
     )
     battleAdapter.addMonster(
       "Glurak",
@@ -141,7 +135,7 @@ class BattleCliAdapterTest : AnnotationSpec() {
       20,
       PrimitiveType.FIRE,
       listOf(Attack.PUNCH),
-      "Kevin",
+      "Kevin"
     )
     var battle = loadAdapter.loadBattle("1")
     assertThat(battle.status).isEqualTo(BattleStatus.PREGAME)
@@ -149,7 +143,8 @@ class BattleCliAdapterTest : AnnotationSpec() {
     battle = loadAdapter.loadBattle("1")
     assertThat(battle.status).isEqualTo(BattleStatus.STARTED)
     battleAdapter.performAttack(Attack.PUNCH)
-    val output2 = captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
-    assertThat(output2).isEqualTo("Battle is already finished")
+    val output_2 =
+      captureStandardOut { battleAdapter.performAttack(Attack.PUNCH) }.trim()
+    assertThat(output_2).isEqualTo("Battle is already finished")
   }
 }
