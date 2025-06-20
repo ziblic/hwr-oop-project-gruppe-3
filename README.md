@@ -52,12 +52,12 @@ Additionally, we prioritized intuitive user interface design through usability t
 
 | Number |      Feature     | Tests |
 |--------|------------------|-------|
-| 1      | ./tnp            | 12    |
-| 2      | ./tnp help       | 18    |
+| 1      | ./tnp            | 5     |
+| 2      | ./tnp help       | 13    |
 | 3      | ./tnp add_monster| 20    |
-| 4      | ./tnp new_battle | 13    |
-| 5      | ./tnp view_battle| 12    |
-| 6      | ./tnp on         | 15    |
+| 4      | ./tnp new_battle | 21    |
+| 5      | ./tnp view_battle| 15    |
+| 6      | ./tnp on         | 13    |
 
 ## Additional Dependencies
 
