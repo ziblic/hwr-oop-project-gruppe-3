@@ -9,6 +9,7 @@ enum class DamageStrategy {
     attack: Attack,
     attacker: Monster,
     defender: Monster,
+    randomChance: Double = Math.random(),
   ): Int {
     val multiplier = attack.primitiveType.calculateDamangeMultiplier(defender)
 
@@ -29,7 +30,7 @@ enum class DamageStrategy {
     return when (this) {
       DETERMINISTIC -> (baseDamage * multiplier).toInt()
       RANDOM -> {
-        val crit = if (Math.random() < attack.critChance) 1.5 else 1.0
+        val crit = if (randomChance < attack.critChance) 1.5 else 1.0
         (baseDamage * multiplier * crit).toInt()
       }
     }

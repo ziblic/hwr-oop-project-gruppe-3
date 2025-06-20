@@ -218,7 +218,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       val hp = parseToInt(args[1])
       val speed = parseToInt(args[2])
-      val attack_val = parseToInt(args[3])
+      val attackVal = parseToInt(args[3])
       val specialAttack = parseToInt(args[4])
       val defense = parseToInt(args[5])
       val specialDefense = parseToInt(args[6])
@@ -233,7 +233,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
         monsterName,
         hp,
         speed,
-        attack_val,
+        attackVal,
         specialAttack,
         defense,
         specialDefense,
