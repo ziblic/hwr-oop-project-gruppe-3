@@ -69,8 +69,7 @@ class FileSystemBasedJsonPersistenceTest : AnnotationSpec() {
     assertThatThrownBy {
       val battles = adapter.loadAllBattles()
       assertThat(battles).isEmpty()
-    }
-      .hasMessageContaining("Failed to list files in directory")
+    }.hasMessageContaining("Failed to list files in directory")
   }
 
   @Test

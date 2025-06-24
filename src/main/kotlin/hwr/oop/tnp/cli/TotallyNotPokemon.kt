@@ -70,7 +70,7 @@ Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <ATTACK_VALUE> <
 |_| \_|\___| \_/\_/   |____/ \__,_|\__|\__|_|\___| |_| |_|\___|_| .__/
                                                                 |_|
 
-Usage: ./tnp new_battle <DAMAGE_STRATEGY: [random| deterministic]>"""
+Usage: ./tnp new_battle <DAMAGE_STRATEGY: [random | deterministic]>"""
 
   private val viewBattleHelp =
     """__     ___                 ____        _   _   _        _   _      _
@@ -100,14 +100,7 @@ Examples:
 Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
   private val commands: List<String> =
-    listOf(
-      "new_trainer",
-      "add_monster",
-      "new_battle",
-      "view_battle",
-      "on",
-      "help"
-    )
+    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
 
   private val commandsHelpMap: Map<String, String> =
     mapOf(
@@ -146,40 +139,36 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
           printHelp()
         }
       }
-
       else -> println("'$command' is not a valid command. Use 'help' for usage.")
     }
   }
 
-  private fun parseToInt(argument: String): Int {
-    return try {
+  private fun parseToInt(argument: String): Int =
+    try {
       argument.toInt()
     } catch (e: NumberFormatException) {
       throw ParseToIntException("Error: Failed to convert '$argument' to int. Reason: ${e.message}")
     }
-  }
 
-  private fun parseToAttack(input: String): Attack {
-    return try {
+  private fun parseToAttack(input: String): Attack =
+    try {
       Attack.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToAttackException(
-        "Error: Failed to convert '$input' to Attack. Reason: ${e.message}"
+        "Error: Failed to convert '$input' to Attack. Reason: ${e.message}",
       )
     }
-  }
 
-  private fun parseToPrimitiveType(input: String): PrimitiveType {
-    return try {
+  private fun parseToPrimitiveType(input: String): PrimitiveType =
+    try {
       PrimitiveType.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToPrimitiveTypeException(
-        "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
+        "Error: Failed to convert '$input' to Type. Reason: ${e.message}",
       )
     }
-  }
 
-  private fun parseToStrategy(input: String): DamageStrategy =
+  private fun parseToDamageStrategy(input: String): DamageStrategy =
     try {
       DamageStrategy.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
@@ -249,20 +238,20 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
   }
 
   private fun prepareForNewBattle(args: List<String>) {
-    if (args.isEmpty() || args.size != 1) {
+    if (args.size != 1) {
       println(newBattleHelp)
       return
     }
 
     try {
-      BattleCliAdapter.initiateBattle(parseToStrategy(args[0]))
+      BattleCliAdapter.initiateBattle(parseToDamageStrategy(args[0]))
     } catch (e: ParseToDamageStrategyException) {
       println(e.message)
     }
   }
 
   private fun prepareForViewBattle(args: List<String>) {
-    if (args.isEmpty() || args.size != 1) {
+    if (args.size != 1) {
       println(viewBattleHelp)
       return
     }

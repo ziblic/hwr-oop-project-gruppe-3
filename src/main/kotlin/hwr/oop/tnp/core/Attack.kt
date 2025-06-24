@@ -35,16 +35,4 @@ enum class Attack(
   SHADOW_CLAW(PrimitiveType.SPIRIT, 30, 0.8, AttackCategory.PHYSICAL),
   SPIRIT_WAVE(PrimitiveType.SPIRIT, 25, 0.9, AttackCategory.SPECIAL),
   NIGHT_SCREAM(PrimitiveType.SPIRIT, 40, 0.4, AttackCategory.SPECIAL),
-  ;
-
-  fun calculateDamageAgainst(
-    attacker: Monster,
-    defender: Monster,
-    damageStrategy: DamageStrategy,
-  ): Int =
-    damageStrategy.calculateDamage(
-      this,
-      attacker,
-      defender,
-    )
 }

@@ -7,7 +7,8 @@ import java.io.File
 
 class FileSystemBasedJsonPersistence(
   private val dataFolder: File = File(System.getProperty("user.dir"), "data"),
-) : SaveBattlePort, LoadBattlePort {
+) : SaveBattlePort,
+  LoadBattlePort {
   init {
     if (!dataFolder.exists()) {
       dataFolder.mkdirs()

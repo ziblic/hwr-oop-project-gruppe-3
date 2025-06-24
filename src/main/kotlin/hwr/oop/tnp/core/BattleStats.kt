@@ -26,7 +26,5 @@ data class BattleStats(
     hp = max(hp - amountOfDamage, 0)
   }
 
-  fun isKO(): Boolean {
-    return hp == 0
-  }
+  fun isKO(): Boolean = hp == 0
 }
