@@ -1,14 +1,28 @@
 package hwr.oop.tnp.cli
 
 import hwr.oop.tnp.core.Attack
+import hwr.oop.tnp.core.DamageStrategy
 import hwr.oop.tnp.core.PrimitiveType
 import hwr.oop.tnp.persistency.LoadBattleException
 
 class TotallyNotPokemon(
   private val args: List<String>,
 ) {
-  private val COULD_NOT_PARSE_ERROR =
-    "Some of the provided arguments could not be parsed correctly"
+  class ParseToIntException(
+    message: String,
+  ) : Exception(message)
+
+  class ParseToPrimitiveTypeException(
+    message: String,
+  ) : Exception(message)
+
+  class ParseToAttackException(
+    message: String,
+  ) : Exception(message)
+
+  class ParseToDamageStrategyException(
+    message: String,
+  ) : Exception(message)
 
   private val defaultHelp =
     """.___________  _____  ___     _______
@@ -46,7 +60,7 @@ Usage: ./tnp new_trainer <TRAINERNAME> <BATTLE_ID>"""
 /_/   \_\__,_|\__,_| |_|  |_|\___/|_| |_|___/\__\___|_|    |_| |_|\___|_| .__/
                                                                         |_|
 
-Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER> <BATTLE_ID>"""
+Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <ATTACK_VALUE> <SPECIAL_ATTACK_VALUE> <DEFENSE_VALUE> <SPECIAL_DEFENSE_VALUE> <TYPE> <ATTACK 1> [<ATTACK 2> <ATTACK 3> <ATTACK 4>] <TRAINER> <BATTLE_ID>"""
 
   private val newBattleHelp =
     """._   _                 ____        _   _   _        _   _      _
@@ -56,7 +70,7 @@ Usage: ./tnp add_monster <MONSTERNAME> <HP_VALUE> <SPEED_VALUE> <TYPE> <ATTACK 1
 |_| \_|\___| \_/\_/   |____/ \__,_|\__|\__|_|\___| |_| |_|\___|_| .__/
                                                                 |_|
 
-Usage: ./tnp new_battle"""
+Usage: ./tnp new_battle <DAMAGE_STRATEGY: [random | deterministic]>"""
 
   private val viewBattleHelp =
     """__     ___                 ____        _   _   _        _   _      _
@@ -86,14 +100,7 @@ Examples:
 Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
 
   private val commands: List<String> =
-    listOf(
-      "new_trainer",
-      "add_monster",
-      "new_battle",
-      "view_battle",
-      "on",
-      "help"
-    )
+    listOf("new_trainer", "add_monster", "new_battle", "view_battle", "on", "help")
 
   private val commandsHelpMap: Map<String, String> =
     mapOf(
@@ -121,10 +128,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     val arguments = args.slice(1..args.size - 1)
     when (command) {
       commands[0] -> prepareForCreateTrainer(arguments)
-      commands[1] -> parseForAddMonster(arguments)
-      commands[2] -> parseForNewBattle(arguments)
-      commands[3] -> parseForViewBattle(arguments)
-      commands[4] -> parseForPerformAttack(arguments)
+      commands[1] -> prepareForAddMonster(arguments)
+      commands[2] -> prepareForNewBattle(arguments)
+      commands[3] -> prepareForViewBattle(arguments)
+      commands[4] -> prepareForPerformAttack(arguments)
       commands[5] -> {
         if (args.size > 1) {
           printHelp(args[1])
@@ -132,38 +139,43 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
           printHelp()
         }
       }
-
       else -> println("'$command' is not a valid command. Use 'help' for usage.")
     }
   }
 
-  private fun parseToInt(argument: String): Int {
-    return try {
+  private fun parseToInt(argument: String): Int =
+    try {
       argument.toInt()
     } catch (e: NumberFormatException) {
       throw ParseToIntException("Error: Failed to convert '$argument' to int. Reason: ${e.message}")
     }
-  }
 
-  private fun parseToAttack(input: String): Attack {
-    return try {
+  private fun parseToAttack(input: String): Attack =
+    try {
       Attack.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToAttackException(
-        "Error: Failed to convert '$input' to Attack. Reason: ${e.message}"
+        "Error: Failed to convert '$input' to Attack. Reason: ${e.message}",
       )
     }
-  }
 
-  private fun parseToPrimitiveType(input: String): PrimitiveType {
-    return try {
+  private fun parseToPrimitiveType(input: String): PrimitiveType =
+    try {
       PrimitiveType.valueOf(input.uppercase())
     } catch (e: IllegalArgumentException) {
       throw ParseToPrimitiveTypeException(
-        "Error: Failed to convert '$input' to Type. Reason: ${e.message}"
+        "Error: Failed to convert '$input' to Type. Reason: ${e.message}",
       )
     }
-  }
+
+  private fun parseToDamageStrategy(input: String): DamageStrategy =
+    try {
+      DamageStrategy.valueOf(input.uppercase())
+    } catch (e: IllegalArgumentException) {
+      throw ParseToDamageStrategyException(
+        "Error: Failed to convert '$input' to Damage Strategy. Reason: ${e.message}",
+      )
+    }
 
   private fun prepareForCreateTrainer(args: List<String>) {
     if (args.size != 2) {
@@ -179,8 +191,8 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
   }
 
-  private fun parseForAddMonster(args: List<String>) {
-    if (args.isEmpty() || !(args.size >= 7 && args.size <= 10)) {
+  private fun prepareForAddMonster(args: List<String>) {
+    if (args.isEmpty() || !(args.size >= 11 && args.size <= 14)) {
       println(addMonsterHelp)
       return
     }
@@ -191,9 +203,13 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     try {
       val hp = parseToInt(args[1])
       val speed = parseToInt(args[2])
-      val type = parseToPrimitiveType(args[3])
+      val attackVal = parseToInt(args[3])
+      val specialAttack = parseToInt(args[4])
+      val defense = parseToInt(args[5])
+      val specialDefense = parseToInt(args[6])
+      val type = parseToPrimitiveType(args[7])
       val attackList: MutableList<Attack> = mutableListOf()
-      for (attack in args.slice(4..args.size - 3).toList()) {
+      for (attack in args.slice(8..args.size - 3).toList()) {
         attackList.add(parseToAttack(attack))
       }
       cliAdapter = BattleCliAdapter(args[args.size - 1])
@@ -202,6 +218,10 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
         monsterName,
         hp,
         speed,
+        attackVal,
+        specialAttack,
+        defense,
+        specialDefense,
         type,
         attackList,
         trainerName,
@@ -217,16 +237,21 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
   }
 
-  private fun parseForNewBattle(args: List<String>) {
-    if (!args.isEmpty()) {
+  private fun prepareForNewBattle(args: List<String>) {
+    if (args.size != 1) {
       println(newBattleHelp)
       return
     }
-    BattleCliAdapter.initiateBattle()
+
+    try {
+      BattleCliAdapter.initiateBattle(parseToDamageStrategy(args[0]))
+    } catch (e: ParseToDamageStrategyException) {
+      println(e.message)
+    }
   }
 
-  private fun parseForViewBattle(args: List<String>) {
-    if (args.isEmpty() || args.size != 1) {
+  private fun prepareForViewBattle(args: List<String>) {
+    if (args.size != 1) {
       println(viewBattleHelp)
       return
     }
@@ -244,7 +269,7 @@ Usage: ./tnp on <BATTLE_ID> <ATTACKNAME>"""
     }
   }
 
-  private fun parseForPerformAttack(args: List<String>) {
+  private fun prepareForPerformAttack(args: List<String>) {
     if (args.isEmpty() || args.size != 2) {
       println(attackHelp)
       return

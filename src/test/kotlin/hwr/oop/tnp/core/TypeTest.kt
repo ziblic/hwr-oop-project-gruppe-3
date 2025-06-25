@@ -34,4 +34,11 @@ class TypeTest : AnnotationSpec() {
   fun `Test type NORMAL has no effect against SPIRIT`() {
     assertThat(PrimitiveType.NORMAL.noEffectAgainst).isEqualTo(PrimitiveType.SPIRIT)
   }
+
+  @Test
+  fun `Test type FIRE has no effect against nothing`() {
+    assertThat(
+      PrimitiveType.FIRE.noEffectAgainst,
+    ).isEqualTo(null)
+  }
 }

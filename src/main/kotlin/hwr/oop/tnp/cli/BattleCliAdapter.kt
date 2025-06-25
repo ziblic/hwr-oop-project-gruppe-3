@@ -1,11 +1,21 @@
 package hwr.oop.tnp.cli
 
-import hwr.oop.tnp.core.*
+import hwr.oop.tnp.core.Attack
+import hwr.oop.tnp.core.Battle
+import hwr.oop.tnp.core.BattleStats
+import hwr.oop.tnp.core.BattleStatus
+import hwr.oop.tnp.core.BattleUsage
+import hwr.oop.tnp.core.DamageStrategy
+import hwr.oop.tnp.core.Monster
+import hwr.oop.tnp.core.PrimitiveType
+import hwr.oop.tnp.core.Trainer
 import hwr.oop.tnp.persistency.FileSystemBasedJsonPersistence
 import hwr.oop.tnp.persistency.LoadBattlePort
 import hwr.oop.tnp.persistency.SaveBattlePort
 
-class BattleCliAdapter(private val battleId: String) {
+class BattleCliAdapter(
+  private val battleId: String,
+) {
   private var battle: BattleUsage
 
   init {
@@ -25,12 +35,21 @@ class BattleCliAdapter(private val battleId: String) {
     monsterName: String,
     hp: Int,
     speed: Int,
+    attack: Int,
+    specialAttack: Int,
+    defense: Int,
+    specialDefense: Int,
     primitiveType: PrimitiveType,
     attacks: List<Attack>,
     trainerName: String,
   ) {
     val monster =
-      Monster(monsterName, BattleStats(hp, speed), primitiveType, attacks)
+      Monster(
+        monsterName,
+        BattleStats(hp, speed, attack, specialAttack, defense, specialDefense),
+        primitiveType,
+        attacks,
+      )
     try {
       battle.addMonsterToTrainer(trainerName, monster)
     } catch (e: Battle.EmptyTrainerException) {
@@ -43,9 +62,9 @@ class BattleCliAdapter(private val battleId: String) {
   }
 
   companion object {
-    fun initiateBattle() {
+    fun initiateBattle(strategy: DamageStrategy) {
       val saveAdapter: SaveBattlePort = FileSystemBasedJsonPersistence()
-      val battle = Battle()
+      val battle = Battle(damageStrategy = strategy)
       println(battle.toString())
       saveAdapter.saveBattle(battle)
     }
